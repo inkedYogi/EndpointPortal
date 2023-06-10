@@ -10,6 +10,7 @@ class Node {
 
   ArrayList<Factoid> facts;
   WorldModifier enitySlot;
+  PVector pos;
 
   Node() {
     address = new Int[4];
