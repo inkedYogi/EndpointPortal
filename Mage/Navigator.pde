@@ -1,4 +1,4 @@
-class Navigator { 
+/*class Navigator {
   int[][] navMap;  //holds the index of the order added to nodes in 2d array
   int[][] domain;  //binary one or zero for potential to move to
   int startIndex = -1;  //start Cell
@@ -13,12 +13,12 @@ class Navigator {
   Navigator() {
     openSet = new ArrayList();
     closedSet = new ArrayList();
-    nodes = new ArrayList(); 
+    nodes = new ArrayList();
     path = new ArrayList();
     trimmedPath = new ArrayList();
   }
 
-  void reset() {  
+  void reset() {
     openSet.clear();
     closedSet.clear();
     path.clear();
@@ -26,23 +26,23 @@ class Navigator {
   }
 
   void trimPath() {
-   trimmedPath.clear();
-   int index = 0;
-   trimmedPath.add(path.get(0));
-   while (index < path.size()-1) {
-     Node base = (Node)path.get(index);
-     for (int j=path.size()-1; j>index; j--) {
-       Node check = (Node)path.get(j);
-       float dx = abs(base.pos.x - check.pos.x);
-       float dy = abs(base.pos.y - check.pos.y);
-       if ((dx==1) && (dy==1)) {
-         index = j-1;
-         break;
-       }
-     }
-     index++;
-     trimmedPath.add(path.get(index));
-   }
+    trimmedPath.clear();
+    int index = 0;
+    trimmedPath.add(path.get(0));
+    while (index < path.size()-1) {
+      Node base = (Node)path.get(index);
+      for (int j=path.size()-1; j>index; j--) {
+        Node check = (Node)path.get(j);
+        float dx = abs(base.pos.x - check.pos.x);
+        float dy = abs(base.pos.y - check.pos.y);
+        if ((dx==1) && (dy==1)) {
+          index = j-1;
+          break;
+        }
+      }
+      index++;
+      trimmedPath.add(path.get(index));
+    }
   }
 
   void makeDomain() {
@@ -53,16 +53,16 @@ class Navigator {
   }
 
   void filterDomain(PImage F, int W, int R, int G, int B) {
-    F.loadPixels();    
+    F.loadPixels();
     for (int i=0; i<domain.length; i++)  for (int j=0; j<domain[0].length; j++ ) {
       color c = F.get(i, j);
       if (c == color(255, 255, 255))     domain[i][j] *= W;
-      if (c == color(255,   0,   0))     domain[i][j] *= R;
-      if (c == color(  0, 255,   0))     domain[i][j] *= G;
-      if (c == color(  0,   0, 255))     domain[i][j] *= B; 
-      if (c == color(  0,   0,   0))     domain[i][j] *= 0;
+      if (c == color(255, 0, 0))     domain[i][j] *= R;
+      if (c == color(  0, 255, 0))     domain[i][j] *= G;
+      if (c == color(  0, 0, 255))     domain[i][j] *= B;
+      if (c == color(  0, 0, 0))     domain[i][j] *= 0;
     }
-  }  
+  }
 
   void loadMap(PImage I) {                                                    //creates a navMap with nodes at cells only in the domain
     int cols = manager.world.subgridSq;                                                     //sets the size of the navgrid
@@ -73,10 +73,10 @@ class Navigator {
     for (int i=0; i<cols; i++)  for (int j=0; j<rows; j++ )  navMap[i][j] = -1;     //for every square in the subgrid set the default to -1
     for (int i=0; i<cols; i++)  for (int j=0; j<rows; j++ ) {                       //for every square in the subgrid
       if (domain[i][j] == 1) {                                                      //if the domain of the cell is set to 1
-        nodes.add(new Node(manager.world.subgrid[i][j]));                                   //include that cell in the navgrid
+        nodes.add(new Node(manager.world.subgrid[i][j]));                           //include that cell in the navgrid
         navMap[i][j] = nodes.size()-1;                                              //save the index of the nodes array in the navgrid
       }
-    }    
+    }
     for (int i=0; i<cols; i++)  for (int j=0; j<rows; j++ ) {                       //for every square in the subgrid
       if (domain[i][j] == 1) {
         int k = i + j*cols;                                                         //find the index of the cell in pixels[]
@@ -87,7 +87,7 @@ class Navigator {
             n2.addNbor((Node)nodes.get(navMap[i-1][j]), cost);                      //we add the valid cell as a neighbor with a cost
             ((Node)nodes.get(navMap[i-1][j])).addNbor(n2, cost);                    //and we add the reciprocal connection onto that cell
           }
-        }    
+        }
         if (j>0) {                                                                  //with the exception of the first row
           if (navMap[i][j-1]!=-1) {                                                 //if the up adjacent cell in navMap is valid
             Node n2 = (Node)nodes.get(navMap[i][j]);                                //set n2 to be the cell we just included
@@ -103,15 +103,15 @@ class Navigator {
     return sqrt(abs(y2-y1)+abs(x2-x1));
   }
 
-  boolean astar(Cell S, Cell E) {    
+  boolean astar(Cell S, Cell E) {
     //unwraps iStart and iEnd in terms of screen coordinates
     int s = navMap[(int)S.screenCoordinates().x][(int)S.screenCoordinates().y];
     int e = navMap[(int)E.screenCoordinates().x][(int)E.screenCoordinates().y];
     return astar(s, e);
   }
 
-  boolean astar(int iStart, int iEnd) {       
-    //returns true if a path from iStart to iEnd is found, 
+  boolean astar(int iStart, int iEnd) {
+    //returns true if a path from iStart to iEnd is found,
     //returns false if there is no path in the navMap
     float endX = ((Node)nodes.get(iEnd)).pos.x;
     float endY = ((Node)nodes.get(iEnd)).pos.y;
@@ -168,19 +168,103 @@ class Navigator {
     return false;
   }
 }
+*/
 
 //Cell {0} -> {selected} -> {targeted} -> {endCell} -> {goal} => {path endpoint}
+class Navigator {
+  NavigableNetwork network;
+  ArrayList<Node> openSet;
+  ArrayList<Node> closedSet;
+  ArrayList<Node> path;
+  ArrayList<Node> trimmedPath;
 
-/*
-Fields:
-Tile[] nbrhood
-ArrayList<Tile> route
-boolean navSet
+  Navigator(NavigableNetwork network) {
+    this.network = network;
+    openSet = new ArrayList<>();
+    closedSet = new ArrayList<>();
+    path = new ArrayList<>();
+    trimmedPath = new ArrayList<>();
+  }
 
-Methods:
-void update()
-void disp()
-void setTarget(Tile T)
-boolean navSet()
-void updateNbrhood()
-*/
+  void reset() {
+    openSet.clear();
+    closedSet.clear();
+    path.clear();
+  }
+
+  void trimPath() {
+    trimmedPath.clear();
+    int index = 0;
+    trimmedPath.add(path.get(0));
+    while (index < path.size() - 1) {
+      Node base = path.get(index);
+      for (int j = path.size() - 1; j > index; j--) {
+        Node check = path.get(j);
+        float dx = network.getDistance(base, check);
+        if (dx == 1) {
+          index = j - 1;
+          break;
+        }
+      }
+      index++;
+      trimmedPath.add(path.get(index));
+    }
+  }
+
+  boolean astar(Node start, Node end) {
+    reset();
+    openSet.add(start);
+    start.parentAddress = -1;
+    start.goalAddress = 0;
+    start.heuristicScore = network.getHeuristicCost(start, end);
+
+    while (!openSet.isEmpty()) {
+      Node current = getLowestFScoreNode();
+      if (current.equals(end)) {
+        reconstructPath(current);
+        return true;
+      }
+
+      openSet.remove(current);
+      closedSet.add(current);
+
+      for (Node neighbor : network.getNeighbors(current)) {
+        if (closedSet.contains(neighbor)) {
+          continue;
+        }
+
+        int tentativeGScore = current.goalAddress + network.getCost(current, neighbor);
+        if (!openSet.contains(neighbor)) {
+          openSet.add(neighbor);
+        } else if (tentativeGScore >= neighbor.goalAddress) {
+          continue;
+        }
+
+        neighbor.parentAddress = nodes.indexOf(current);
+        neighbor.goalAddress = tentativeGScore;
+        neighbor.heuristicScore = network.getHeuristicCost(neighbor, end);
+      }
+    }
+
+    return false;
+  }
+
+  Node getLowestFScoreNode() {
+    Node lowestFScoreNode = openSet.get(0);
+    for (Node node : openSet) {
+      if (node.goalAddress + node.heuristicScore < lowestFScoreNode.goalAddress + lowestFScoreNode.heuristicScore) {
+        lowestFScoreNode = node;
+      }
+    }
+    return lowestFScoreNode;
+  }
+
+  void reconstructPath(Node endNode) {
+    Node current = endNode;
+    while (current.parentAddress != -1) {
+      path.add(current);
+      current = nodes.get(current.parentAddress);
+    }
+    Collections.reverse(path);
+  }
+}
