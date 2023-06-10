@@ -1,0 +1,24 @@
+mountain
+dry mountain
+wet mountain
+peak mountain
+forest
+tundra forest
+rain forest
+dead forest
+plains
+lush plains
+dry plains
+rocky plains
+desert
+high desert
+windy desert
+cold desert
+ocean
+reef ocean
+shallow ocean
+deep ocean
+snow
+glacier
+beach coast
+cliff coast

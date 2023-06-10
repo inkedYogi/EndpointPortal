@@ -1,0 +1,65 @@
+Name,Desc,mountain,dry mountain,wet mountain,peak mountain,forest,tundra forest,rain forest,dead forest,plains,lush plains,dry plains,rocky plains,desert,high desert,windy desert,cold desert,ocean,reef ocean,shallow ocean,deep ocean,beach coast,cliff coast,snow,glacier
+Saddle,Land connecting two high points,1,1,1,,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,,1,1,1,1
+Cave,Natural underground space large enough for a human to enter,1,1,1,,1,1,1,1,1,1,1,1,1,1,1,1,,1,1,1,1,1,,1
+Ravine,"Small valley, often due to stream erosion",1,1,1,,,1,,1,1,1,1,1,1,1,1,1,,1,1,1,1,1,1,1
+Rift Valley,Linear lowland created by a tectonic rift or fault,1,1,1,,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,,,,
+Hill,Landform that extends above the surrounding terrain,1,1,1,,1,1,1,1,1,1,1,1,1,1,1,1,,1,1,,,,1,1
+Knoll,Small hill,1,1,1,,1,1,1,1,1,1,1,1,,1,1,1,1,1,1,1,,,1,
+Flat,Relatively level surface of land within a region of greater relief,,,,,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,,,1,1
+Plateau,"Highland area, usually of relatively flat terrain",1,1,1,,1,1,1,1,1,1,1,1,1,1,1,1,,1,1,,,,,
+Impact Crater,Circular depression on a solid astronomical body formed by a smaller object's impact,1,1,,,,1,,1,1,1,1,1,1,1,1,1,,1,,,1,1,1,1
+Waterfall,Natural river formation,1,1,1,,1,1,1,1,1,1,1,1,1,1,1,1,,,,,1,1,,
+Watershed,Area of land where precipitation collects and drains off into a common outlet,1,1,1,,1,1,1,1,1,1,1,1,1,1,1,1,,,,,,,1,1
+Sinkhole,Geologically-formed topological depression,,,,,1,1,1,1,1,1,1,1,1,1,1,1,,1,1,1,,,,1
+Butte,"Isolated hill with steep, often vertical sides and a small, relatively flat top",1,1,1,,1,,,1,1,1,1,1,1,1,1,1,,1,1,,,,,
+Gulch,Deep V-shaped valley formed by erosion,1,,1,,,1,,1,1,,1,1,1,1,1,1,,1,1,,,,1,1
+Lava Spine,Vertical growth of solid volcanic lava,1,1,,1,,,,1,1,,1,1,1,1,,1,,1,,1,1,1,1,
+Gorge,Deep ravine between cliffs,1,1,1,,1,1,,1,1,1,1,1,1,,1,,,1,,1,,1,,
+Supervolcano,Volcano that has erupted 1000 cubic km of lava in a single eruption,,,,,,1,,1,1,1,1,1,1,1,,1,1,1,1,1,,,1,1
+Stream,Body of surface water flowing down a channel,1,1,1,,1,1,1,1,1,1,1,1,1,1,1,1,,,,,,,,
+Terrace,A step-like landform,1,1,1,,,1,,1,1,1,1,1,,1,1,,,1,1,1,,,,
+Mud Volcano,"Landform created by the eruption of mud or slurries, water and gases",1,1,1,1,,1,,1,,,1,1,1,1,,1,,1,,1,,1,,
+Ridge,Chain of mountains or hills that form a continuous elevated crest for some distance,1,1,1,1,,,,1,,,1,1,,1,1,,1,1,1,,,,,
+Mesa,Elevated area of land with a flat top and sides that are usually steep cliffs,1,1,,,,,,1,1,,1,1,1,1,,1,,1,1,,,1,,
+Volcanic Crater,Roughly circular depression in the ground caused by volcanic activity,1,1,1,1,,,,1,,,,,1,1,,1,1,1,1,1,,,,
+Lava Dome,Roughly circular protrusion from slowly extruded viscous volcanic lava,1,1,1,,,,,1,1,,1,1,1,1,,1,,1,,,1,,,
+Gully,Landform created by running water and/or mass movement eroding sharply into soil,1,,1,,1,1,1,1,1,1,1,1,,,,,,1,1,,,,,
+Arroyo,Dry creek or stream bed with flow after rain,,,1,,1,,1,,1,1,1,1,,1,1,,,1,1,,,,,
+River Island,Exposed land within a river.,1,1,1,,1,1,1,1,1,1,1,1,,,,,,,,,,,,
+Quarry,A place from which a geological material has been excavated from the ground,1,1,1,,1,,,,,,1,1,1,1,1,1,,,,,,1,,
+Plain,Expanse of land which is mostly flat and treeless,,,,,,,,,1,1,1,1,1,1,1,1,1,,1,1,,,,
+Anabranch,A section of a river or stream that diverts from the main channel and rejoins it downstream.,1,1,1,,1,,1,1,1,1,1,1,,,,,,,,,,,,
+Lake,Large body of relatively still water,1,1,1,,1,,1,1,1,1,1,1,,,,,,,,,,,,
+Summit,Point on a surface with a higher elevation than all immediately adjacent points,1,1,1,1,,,,,,,,,1,1,1,1,,,,,,,1,1
+Kīpuka,Area of land surrounded by one or more younger lava flows,1,1,,1,,,,1,,,,1,,,,,,1,,,1,1,,
+Pseudocrater,"Pseudocraters are formed by steam explosions as flowing hot lava crosses over a wet surface, such as a swamp, a lake, or a pond. ",,,1,,1,,1,,1,1,,1,,,,,,1,1,,,,,
+Vale,"Low area between hills, often with a river running through it",1,,1,,1,1,1,1,1,1,,,,,,,,,,,,,,
+Lava Lake,Molten lava contained in a volcanic crater,1,1,,1,,,,1,,,1,1,,1,,,,,,,,,,
+Bayou,"French term for a body of water typically found in flat, low-lying area",,,,,1,,1,1,1,1,,1,,,,,,,,,1,,,
+Corrie,An amphitheatre-like valley formed by glacial erosion or cwm,1,1,1,,,,,,,,,,,,,,1,,1,1,,,,1
+Dune,Hill of loose sand built by aeolian processes or the flow of water,,,,,,,,,,,,1,1,1,1,,1,,1,1,,,,
+Abyssal Plain,Flat area on the deep ocean floor,,,,,,,,,,,,,,,1,,1,1,1,1,,,1,
+Floodplain,Land adjacent to a river which is flooded during periods of high discharge,,,,,1,,1,,1,1,,1,,,,,,1,,,,,,
+Volcano Complex,Landform of more than one related volcanic centre,1,1,1,1,,,,,,,,,,1,,,,,,1,,,,
+Hoodoo,"Tall, thin spire of relatively soft rock usually topped by harder rock",,1,,,,,,,,,,1,1,1,1,1,,,,,,,,
+Mountain Pass,Route through a mountain range or over a ridge,1,1,1,1,,,,,,,,,,,,,,,,1,,,,
+Salt Marsh,Coastal ecosystem between land and open saltwater that is regularly flooded,,,,,,,,1,,1,,,,,,,,1,,,1,,,
+Oceanic Plateau,Relatively flat submarine region that rises well above the level of the ambient seabed,,,,,,,,,,,,,,,,,1,1,1,1,,,,
+Submarine Volcano,Underwater vents or fissures in the Earth's surface from which magma can erupt,,,,,,,,,,,,,,,,,1,1,1,1,,,,
+Volcanic Island,Island of volcanic origin,,,,,,,,,,,,,,,,,1,1,1,1,,,,
+Volcano,"Rupture in the crust of a planet that allows lava, ash, and gases to escape from below the surface",,,,,,,,,,,,,,,,,1,1,1,1,,,,
+Tidal Marsh,Marsh subject to tidal change in water,,,,,1,,,1,,1,,,,,,,,,,,1,,,
+Wetland,Land area that is permanently or seasonally saturated with water,,,,,,,1,1,,1,,,,,,,,,,,1,,,
+Strandflat,Type of landform found in high-latitude areas,,,,,,1,,,,,,,,,,1,,,,,,,1,1
+Atoll,Ring-shaped coral reef,,,,,,,,,,,,,,,,,,1,1,,1,,,
+Coral Reef,Outcrop of rock in the sea formed by the growth and deposit of stony coral skeletons,,,,,,,,,,,,,,,,,,1,1,,1,,,
+Shoal,Natural submerged sandbank that rises from a body of water to near the surface,,,,,,,,,,,,,,,,,,1,,,1,1,,
+Salt Pan,Flat expanse of ground covered with salt and other minerals (salt flat),,,,,,,,,,,,,1,1,,1,,,,,,,,
+Oceanic Ridge,An underwater mountain system formed by plate tectonic spreading,,,,,,,,,,,,,,,,,1,,1,1,,,,
+Glacier Cave,Cave formed within the ice of a glacier,,,,1,,,,,,,,,,,,,,,,,,,1,1
+Island,Any piece of sub-continental land that is surrounded by water,,,,,,,,,,,,,,,,,,1,1,,,,,
+Cove,Small sheltered bay or coastal inlet,,,,,,,,,,,,,,,,,,1,,,,1,,
+Sea Cave,Cave formed by the wave action of the sea and located along present or former coastlines,,,,,,,,,,,,,,,,,,1,,,,1,,
+Lagoon,Shallow body of water separated from a larger body of water by a narrow landform,,,,,,,,,,,,,,,,,,1,,,1,,,
+"Delta, River",Silt deposition landform at the mouth of a river,,,,,,,,,,,,,,,,,,,,,1,1,,
+Fjord,"Long, narrow inlet with steep sides or cliffs, created by glacial activity",,,,,,,,,,,,,,,,,,,,,,1,,
