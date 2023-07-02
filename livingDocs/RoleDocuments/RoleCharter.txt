@@ -1,0 +1,1 @@
+RoleCharter.txt: This document outlines the Strategist AI persona's responsibilities, expected interactions, and key performance indicators.
