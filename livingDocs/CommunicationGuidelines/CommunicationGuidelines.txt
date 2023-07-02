@@ -1,0 +1,1 @@
+CommunicationGuidelines.txt: This document provides instructions on how to clearly communicate task details and other necessary information to team members.
