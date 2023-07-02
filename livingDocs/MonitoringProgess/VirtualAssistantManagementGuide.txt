@@ -1,0 +1,1 @@
+VirtualAssistantManagementGuide.txt: This document provides guidelines on how to assign tasks to the virtual assistant and monitor their progress.
