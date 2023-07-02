@@ -32,3 +32,9 @@ Blades are specific elements in conformal geometric algebra that represent subsp
 By leveraging the duality operation, the meet operation, and the representation of directions through blades, we can mathematically capture and describe the conformal equivalence between lines and arcs. This framework provides a unified approach to understanding and manipulating these geometric objects within the context of conformal geometric algebra.
 
 Overall, conformal geometric algebra offers a powerful mathematical language for exploring and understanding the relationships between different geometric elements. By assigning specific representations to symbols or concepts and utilizing operations like duality and meet, we can describe and analyze the conformal equivalence of objects such as lines and arcs, as well as the different directions that make them equivalent.
+
+TODO List:
+1. Apply optimization techniques to investigate critical dimensions of n-spheres.
+2. Utilize conformal geometric algebra to analyze and visualize n-spheres.
+3. Investigate the interplay between Kabbalah and tarot.
+4. Study the historical and cultural connections between Kabbalah and tarot.
