@@ -1,0 +1,1 @@
+ResourceDirectory.txt: This document provides information about the skills, capabilities, and availabilities of the team, as well as other resources.
