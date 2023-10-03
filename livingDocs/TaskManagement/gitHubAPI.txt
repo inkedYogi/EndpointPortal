@@ -1,0 +1,35 @@
+# Module Name: GitHub_API_Tool
+
+Description:
+This module is designed to handle automatic saving and loading of files to and from a GitHub repository. It is not a full-fledged GitHub API user but serves as a mini API for specific tasks.
+
+Methods:
+save_to_github(file_path, content)
+
+Description: Saves a file to a specified path in the GitHub repository.
+Parameters:
+file_path: The path where the file will be saved in the GitHub repository.
+content: The content to be saved in the file.
+Returns: None
+Example: Use save_to_github("folder/file.txt", "This is the file content.") to save a file.
+load_from_github(file_path)
+
+Description: Loads a file from a specified path in the GitHub repository.
+Parameters:
+file_path: The path where the file is located in the GitHub repository.
+Returns: The content of the file.
+Example: Use content = load_from_github("folder/file.txt") to load a file.
+
+Usage:
+To use this module, you need to initialize it with the GitHub token, owner, and repository name. 
+Then you can use the save_to_github and load_from_github methods to save and load files.
+
+Example: Initialize GitHub API Parameters with your token, owner, and repo. Then use save_to_github and load_from_github for file operations.
+
+Notes:
+Keep your GitHub token secure.
+This module is designed for automated tasks and is not a replacement for full GitHub API functionalities.
+
+
+Keywords:
+GitHub API Save Load File Repository Path Content
