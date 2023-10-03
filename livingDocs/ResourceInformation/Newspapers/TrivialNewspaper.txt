@@ -1,1 +1,0 @@
-This is a success message for the trivial newspaper.
