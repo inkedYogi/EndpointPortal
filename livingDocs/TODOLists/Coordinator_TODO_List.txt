@@ -1,15 +1,26 @@
-Review project timelines and ensure milestones are on track.
-Coordinate with external partners to gather necessary data and resources for ongoing projects.
-Schedule meetings and conference calls with consortium members to discuss project updates and address any challenges.
-Facilitate communication between consortium members, ensuring all relevant stakeholders are informed.
-Review and analyze project budgets, expenses, and resource allocation.
-Identify potential risks or bottlenecks in project execution and propose mitigation strategies.
-Coordinate the creation and distribution of progress reports to consortium members and key stakeholders.
-Conduct regular check-ins with human performers to track task progress and provide support as needed.
-Delegate administrative tasks, such as document management and data entry, to the virtual assistant.
-Coordinate the preparation and submission of project deliverables, such as reports and presentations.
-Organize training sessions or workshops to enhance the skills and knowledge of consortium members.
-Stay updated on industry trends and best practices relevant to the consortium's objectives.
-Collaborate with the inner circle to develop long-term strategies and goals for the consortium.
-Assist in recruiting and onboarding new consortium members, ensuring a smooth integration into ongoing projects.
-Maintain a repository of project documentation and ensure its accessibility to consortium members.
+Create in the Mage: Caravan TTRPG folder the directories:
+
+Codex Directory:
+
+Sub-directories for each age or time-space, containing the codex files for that period.
+Avatars Directory:
+
+Sub-directories for each player, containing files for each of their avatars. This could also have a subsection for player-edit suggestions.
+Items Directory:
+
+A single file for each item detailing its properties, and sub-files or pointers within each age sub-directory indicating the item's location and state during that age.
+Caravan Reports Directory:
+
+Housing procedural caravan reports, categorized by age or other relevant groupings.
+Historical Events Directory:
+
+Text or image links describing historical events used as background narrative, categorized by age or other relevant groupings.
+Bubble Trails Directory:
+
+Files representing different bubble trails detailing actions, events, and outcomes.
+Sage Management Directory:
+
+Detailing the sages, their actions, and game-breaking alterations made.
+API Scripts and Documentation Directory:
+
+Python scripts for GitHub API interaction, packaging tools, and generating preliminary documentation along with files containing documentation on the GitHub structure, game rules, and other essential information.
