@@ -1,1 +1,85 @@
 Here's How to Save and Load to Drive and GitHub
+
+# Google Drive Libraries
+import gspread
+from google.colab import auth
+import google.auth
+
+# GitHub Libraries
+import json
+import base64
+import requests
+
+# ============== Google Drive Section ==============
+
+# Authentication and Authorization for Google Drive
+auth.authenticate_user()
+gc = gspread.authorize(google.auth.default()[0])
+
+# Initialize Google Drive parameters
+spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1ttuL3cBNt00wfEzzLW2-OEofBLGuqrddErUOzUgtX4Y/edit#gid=0'
+worksheet_name = 'Title Page'
+
+# Open Google Sheet and Worksheet
+workbook = gc.open_by_url(spreadsheet_url)
+worksheet = workbook.worksheet(worksheet_name)
+
+# Function to save data to Google Drive
+def save_to_drive(data):
+    worksheet.append_row([data])
+
+# Function to load data from Google Drive
+def load_from_drive(row_number):
+    return worksheet.row_values(row_number)
+
+# ============== GitHub Section ==============
+
+# Initialize GitHub API Parameters
+token = "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"
+owner = "inkedYogi"
+repo = "EndpointPortal"
+file_path = "livingDocs/data/Here's How to Save and Load to Drive and GitHub"
+
+# Prepare headers for GitHub
+headers = {
+    'Authorization': f'token {token}',
+    'Accept': 'application/vnd.github.v3+json',
+}
+
+# Function to save data to GitHub
+def save_to_github(data):
+    save_url = f"https://api.github.com/repos/{owner}/{repo}/contents/{file_path}"
+    encoded_content = base64.b64encode(data.encode('utf-8')).decode('utf-8')
+    data = {"message": "saving data", "content": encoded_content}
+    response = requests.put(save_url, headers=headers, data=json.dumps(data))
+    return response.status_code
+
+# Function to load data from GitHub
+def load_from_github():
+    load_url = f"https://api.github.com/repos/{owner}/{repo}/contents/{file_path}"
+    response = requests.get(load_url, headers=headers)
+    if response.status_code == 200:
+        encoded_content = response.json()['content']
+        return base64.b64decode(encoded_content).decode('utf-8')
+    else:
+        return None
+
+# ============== Execution Section ==============
+
+# Example data
+example_data = "Here's How to Save and Load to Drive and GitHub"
+
+# Save to Google Drive
+save_to_drive(example_data)
+
+# Load from Google Drive
+loaded_data_drive = load_from_drive(1)  # Assuming the data is in the first row
+print(f"Data loaded from Drive: {loaded_data_drive}")
+
+# Save to GitHub
+save_status = save_to_github(example_data)
+print(f"Save to GitHub status code: {save_status}")
+
+# Load from GitHub
+loaded_data_github = load_from_github()
+print(f"Data loaded from GitHub: {loaded_data_github}")
