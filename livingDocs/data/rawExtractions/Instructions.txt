@@ -1,0 +1,3 @@
+Overwrite this with real instructions for saving into this repo:
+  create a summary document (include source reference for credit and future investigation)
+  create a subfolder with name matching summary document with code
