@@ -11,10 +11,51 @@ from models import DQN, PPO, A3C, ACER
 from adapters import DQN2PPO, PPO2A3C, A3C2ACER
 
 class ReplayBuffer():
-    # ... (same as in the raw DQN)
+    def __init__(self):
+        self.buffer = collections.deque(maxlen=buffer_limit)
+    
+    def put(self, transition):
+        self.buffer.append(transition)
+    
+    def sample(self, n):
+        mini_batch = random.sample(self.buffer, n)
+        s_lst, a_lst, r_lst, s_prime_lst, done_mask_lst = [], [], [], [], []
+        
+        for transition in mini_batch:
+            s, a, r, s_prime, done_mask = transition
+            s_lst.append(s)
+            a_lst.append([a])
+            r_lst.append([r])
+            s_prime_lst.append(s_prime)
+            done_mask_lst.append([done_mask])
+
+        return torch.tensor(s_lst, dtype=torch.float), torch.tensor(a_lst), \
+               torch.tensor(r_lst), torch.tensor(s_prime_lst, dtype=torch.float), \
+               torch.tensor(done_mask_lst)
+    
+    def size(self):
+        return len(self.buffer)
 
 class Qnet(nn.Module):
-    # ... (same as in the raw DQN)
+    def __init__(self):
+        super(Qnet, self).__init__()
+        self.fc1 = nn.Linear(4, 128)
+        self.fc2 = nn.Linear(128, 128)
+        self.fc3 = nn.Linear(128, 2)
+
+    def forward(self, x):
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
+      
+    def sample_action(self, obs, epsilon):
+        out = self.forward(obs)
+        coin = random.random()
+        if coin < epsilon:
+            return random.randint(0,1)
+        else : 
+            return out.argmax().item()
 
 class NeoDQN(Qnet):
     def __init__(self, environment, model_chain, learning_rate=0.0005, gamma=0.98):
@@ -72,3 +113,6 @@ class NeoDQN(Qnet):
 model_chain = [DQN2PPO(), PPO(), PPO2A3C(), A3C(), A3C2ACER(), ACER()]
 neo_dqn = NeoDQN(environment='NLE-env', model_chain=model_chain)
 neo_dqn.train(episodes=1000)
+
+# Note: Original file path - inkedYogi/minimalRL/dqn.py
+ 
