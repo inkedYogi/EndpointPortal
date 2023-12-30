@@ -1,5 +1,14 @@
 # ND_Plotter_Module v1.0
 
+def plotter_module():
+    global data_title
+    new_title = input("Enter title for data: ")
+    data_title = new_title
+    get_file_from_github(owner, target_repo, folder+file_to_load, token)
+    data = prepare_data(file_to_load)
+    makeYaml(data, data_title)
+    plot_data(data, 'plot_style.yaml')
+    
 def makeYaml(data, plot_title = 'Default Name', yaml_filename='plot_style.yaml'):
     default_style = {
         'figure_size': [6, 4],
