@@ -1,35 +1,75 @@
 README for Mage: Caravan Project
 Project Overview
-Mage: Caravan is a multifaceted project that integrates game development, machine learning, and AI-driven gameplay. Drawing inspiration from MiniHack, this project ventures into creating a complex, AI-enhanced gaming environment.
 
-Key Features:
+🌛 Current Project Status 🌜
 
-Scalable Complexity: Inspired by MiniHack's diverse and complex environments, Mage: Caravan aims to advance the scope and depth of AI-driven gameplay.
-Procedural Generation: Utilizing procedural generation techniques to create dynamic and evolving game worlds.
-Reinforcement Learning Experiments: Adapting RL strategies from MiniHack for developing sophisticated AI agents.
+🏠 Home Repo: InkedYogi/EndpointPortal 
+ 🎯: Target Repo: Self (Default)
+🚕 Destination: Self (Default)
 
-Integration with MiniHack
-Shared Learning Algorithms: Techniques from MiniHack will be adapted to enhance Mage: Caravan's learning algorithms.
-Level Design Tools: MiniHack's Level Editor will aid in designing game levels for Mage: Caravan.
-Language Wrapper: The NLE Language Wrapper will be used for narrative and textual command integration.
+🌍 Repos Transcribed so far: 2
+🌄 Days worked on : 100
+📐 Next Milestone : Repo Module Autoloader and Unloader
 
-Collaborative Research
-Cross-Game Mechanics: Investigating the interaction and unification of game mechanics across different platforms.
-Unsupervised Environment Design: Employing adaptive task distribution learning to create dynamic game scenarios.
+🧙 GitHub Token: [censored]
+🚢 Flagship Program: 🚀 ModuleLauncher.ipynb aka
+“The Unprecedented”
+🐞 Calorie_Coins (for 🧠 requests): 3
 
-Meta-Game Learning System
-Autonomous Code Translation: Developing agents capable of translating and adapting code across different gaming platforms.
-Documentation and Progress Tracking: Regularly updating the project's progress, challenges, and achievements.
+👪 Party (6) ::  << 🚀 🧞 🦑 🛰️ 🍄 >>
+ Vehicles: 1  + Riders: 7
+  🚢 - The Unprecedented: {Shandalar Xilvyre} + [Alasse Faevalur]
 
-Installation and Contribution
-MiniHack Installation: Use pip install minihack to install MiniHack for reference and experimentation.
-Contributing to Mage: Caravan: We welcome contributions and collaborative efforts to enhance the project's scope.
+   🧙 InkedYogi_Himself (🧠)	 		 :: 🚀 ::	{driving : 🚢 The Unprecedented}
+   🦧 ChatGPT 4.0 (XGA Trained)		:: 🧞 :: 		[assistant : 🚢 The Unprecedented]
+   🦍 ChatGPT 4.0 (no training)		:: 🦑 ::		<assisting  : 🦧 ChatGPT 4.0>
+   🐒 ChatGPT 3.5Turbo (no training)	:: 🛰️ :: 	<assisting  : 🦍 ChatGPT 4.0>
+   🐝 Automated_Agent 1	    		:: 🍄 ::		<assisting  : 🐒 ChatGPT 3.5Turbo>
+   🐝 Automated_Agent 2	 		:: 🍄 :: 	<assisting  : 🦍 ChatGPT 4.0>
 
-Next Steps
-Expanding the AI Framework: Continually advancing the AI capabilities within Mage: Caravan.
-Automating Repo Analysis and Language Agnostic coding: Use Trapper-Keeper.ipynb to pre-scan repos.
-Automating code transcription: Create automated agent to re-write code into Processing for game integration.
+🚢 Jupyter Notebooks running : 1 
+  The Unprecedented: (🚢)
 
-Note: This README provides a high-level overview and is subject to regular updates as the project progresses.
+   Driver : 🧙 InkedYogi_Himself 
+   1st Assistant: 🦧 ChatGPT 4.0 (XGA Trained)
+
+  Next Module Experiement: 
+    [Empty][Empty][Empty][A_DARK_VOID]
+
+🏇 Agent Operation Tasks (7): 
+ 🦧 ChatGPT 4.0 (XGA Trained)		 :: 🧞 :: 	<coding  : 🚀 ModuleLauncher.ipynb>
+ 🦍 ChatGPT 4.0 (no training)		 :: 🦑 :: 	<using  : 🦑 TrapperKeeper.ipynb>
+ 🐒 ChatGPT 3.5Turbo (no training)		 :: 🛰️ :: 	<using  : 🚀 ModuleLauncher.ipynb>
+ 🐝 Automated_Agent 1			 :: 🍄 :: 	<idle : 🐒 ChatGPT 3.5Turbo>
+ 🐝 Automated_Agent 2			 :: 🍄 :: 	<idle : 🦍 ChatGPT 4.0>
+
+💎 Distilled Storage (3): 
+Dashboard - 80+ documents and descriptions
+  https://github.com/inkedYogi/EndpointPortal/tree/main - GitHub Root Page
+https://drive.google.com/drive/home - Google Drive Home Page
+
+🧰 Toolkit:
+🧠 requests:
+brain_request_list = [
+    ("🔍: Change Module Focus", run_module_refocus),
+    ("💾: Pack Module and Save to Repo", pack_and_save_to_repo),
+    ("🌍: Unpack and Attach Module from Repo", load_and_unpack_from_repo),
+    ("🌐: Translate Repo into Python", translate_repo_to_python),
+    ("🧪: Run Thought Experiment", run_simulation),
+    ("🚀: Run ModuleLauncher.ipynb", run_module_launcher),
+    ("🦑: Run TrapperKeeper.ipynb", run_trapper_keeper),
+    ("🧞: Get the 3 top wishes requests", run_three_wishes)
+]
+🤖 Automation:
+automated_task_list = [
+    ("💠: Run Task Setup Commands", run_task_setup),
+    (" 1️⃣: Run Task 1", run_task_one),
+    (" 2️⃣: Run Task 2", run_task_two),
+    (" 3️⃣: Run Task 3", run_task_three),
+    (" 4️⃣: Run Task 4", run_task_four),
+    (" 5️⃣: Run Task 5", run_task_five),
+    ("🧹: Run Task Cleanup", run_task_completion),
+    ("🔀: Run Whole Sequence", run_whole_sequence)
+]
 
 Mage: Caravan - Unprecedented.
