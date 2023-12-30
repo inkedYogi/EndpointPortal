@@ -9,6 +9,22 @@ program_functions = [
     generate_rna_strand, assemble_beep_alert, play_beep_alert, peek_library, 
     assemble_function_list, scribe_file
 ]
+
+module_functions = [
+    zero_mapping, matrix_by_name, tensor_product_by_name, 
+    solve_quadratic, distance_3d, distance_from_origin, n_flat_dist, 
+    non_euclidean_distance, trans, 
+    prepare_data, makeYaml, plot_data, calc_half_life, 
+    calc_reaction_rate, determine_charge, get_bond_energy, hamming_distance, 
+    is_complement_palindrome, is_dna_palindrome, complement_dna_strand, 
+    generate_rna_strand
+]
+
+core_program_functions = [
+    time_execution, remove_extension, get_file_from_github, 
+    criteria_function, assemble_beep_alert, play_beep_alert, peek_library, 
+    assemble_function_list, scribe_file
+]
 # List of functions with all included internal variable names
 time_execution(func, start_time, result, end_time, execution_time)
 
