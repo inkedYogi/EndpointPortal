@@ -1,0 +1,16 @@
+game:
+  locations:
+    - cottage: "You are in a cozy cottage."
+    - garden: "You are in a beautiful garden."
+  connections:
+    - cottage:
+        out: garden
+    - garden:
+        in: cottage
+  items:
+    - key:
+        description: "A small, rusty key lies on the table."
+        location: cottage
+        attributes: [gettable]
+  victory_conditions:
+    - inventory_contains: key
