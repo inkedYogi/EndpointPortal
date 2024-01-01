@@ -1,0 +1,7 @@
+item_id,description,location,attributes
+key,"A rusty key rests on the nighstand.",bedroom,"heavy, mysterious"
+torch,"A lit torch illuminates the dark cave.",cave,"light source"
+map,"A detailed map of the island is folded in the cellar corner.",cellar,"informative"
+crystal,"A glowing crystal shard glistens in the cave.",cave,"magical"
+seashell,"A beautiful seashell lies on the beach sand.",beach,"collectible"
+treasure_chest,"A locked treasure chest is hidden behind the waterfall.",waterfall,"locked"
