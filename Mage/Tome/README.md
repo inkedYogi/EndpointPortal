@@ -1,4 +1,4 @@
-# Mage: Archive
+# 🧙 Mage: Archive 🧙
 
 Contained within this repo are the raw components needed to create your own world.
 
