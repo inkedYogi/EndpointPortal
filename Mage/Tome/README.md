@@ -4,15 +4,23 @@ Contained within this repo are the raw components needed to create your own worl
 
 🧰 Tools we Have developed for automated use:
 
-🦑 Trapper-Keeper: Scans repos; recursively searches all subfolders and files, and reports on found data: File types, counts, and folder structure. It also presents the user with an input field to summarize the findings that is automatically saved to this repo.
+🦑 Trapper-Keeper: Scans repos; recursively searches all subfolders and files, and reports on found data: File types, counts, and folder structure. It also presents the user with an input field to summarize the findings that are automatically saved to this repo.
 
 🔬 Single-File Scanner: Delivers in-depth details about a program file. Currently supports Python only.
 
+🦗 PolyGlyph: Encode, Decode, Scan, and Zero-Map a Python code file. 
+
+🗺️ TradeNetwork: Builds Network Animations and Storyboards, still a work in progress, takes images, and works with coordinates provided by Mage: Caravan.
+
+🧭 A turn-based, phase-based game played on a board to symbolize various aspects and a player 'memory' tracking system that can take and remember notes each round.
+
+👶 NPC builder: A Workbook dense with game-specific information for the WIP world U'asa.
+
 📚 The Codex: A Workbook with many worksheets dense in information, with special consideration on mathematics and the rigorous symbolic decoding and encoding capabilities.
 
-🧠 PRETTY_PLEASE commands: A human-ai API-like interface designed to extend and augment LLM capabilities. Resource-intensive use with care.
-
 📖 Tome: This tool is a procedurally generated Choose-Your-Own-Adventure style text-based game, that generates a comic book of the adventure after each encounter (Still under development). 
+
+🧠 PRETTY_PLEASE commands: A human-ai API-like interface designed to extend and augment LLM capabilities. Resource-intensive use with care.
 
 🐫 Caravan: This simulator is a game that puts the player as a faction leader, managing a network of traders, mercenaries, and caravan protectors. Also under development. Future feature: Integrate Tome as a Choose-Your-Own-Sidequest within this larger game framework.
 
