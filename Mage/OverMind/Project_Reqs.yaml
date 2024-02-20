@@ -21,3 +21,43 @@ OverlordControl:
     - Script
     - New_Definition
     - Locations
+
+Interfaces:
+  Splash_Screen:
+    Description: Initial display screen upon application launch, showcasing branding and entry point.
+  Main_Overview:
+    Description: Central dashboard providing a snapshot of the entire system's status and quick access to major functions.
+  Command_Palette:
+    Description: A dynamic tool for executing commands, searching functions, and accessing various parts of the system quickly.
+  Message_Box:
+    Description: Interface for displaying notifications, warnings, and messages to the user.
+  Procedure_Edit_Screen:
+    Description: A detailed editor for creating, modifying, and managing procedures within workflows.
+  Procedure_Run_Screen:
+    Description: Visualization and control panel for executing procedures, monitoring progress, and managing runtime options.
+  Settings_Screen:
+    Description: Central location for configuring system preferences, user settings, and application options.
+  Connected_Devices_Screen:
+    Description: Overview of all devices currently connected to the system, including status and basic controls.
+  Subdevices_Screen:
+    Description: Dedicated area for displaying information and outputs from connected devices, intended for direct device communication without system processing.
+  Connected_Setups_Screen:
+    Description: Interface for managing and viewing configurations of connected setups, including device groups and workflow associations.
+  Lab_Setup_Screen:
+    Description: Detailed configuration screen for setting up and managing laboratory setups, including equipment and procedure mappings.
+  Toggleable_Options_Screen:
+    Description: Interface for managing system-wide toggleable options, enhancing customization and flexibility.
+  Events_Screen:
+    General:
+      Description: Display for general system events, including informational updates.
+    Setup:
+      Description: Events related to system setup changes, configuration updates, and initialization processes.
+    Schedule:
+      Description: Schedule-related events, including procedure timings, alerts, and calendar integrations.
+    Export:
+      Description: Interface for managing data export events, configurations, and options.
+    Logs:
+      Description: Comprehensive log viewer for system operations, error tracking, and audit trails.
+    Script:
+      Description: Events and interfaces related to script execution, including script logs and outcomes.
+
