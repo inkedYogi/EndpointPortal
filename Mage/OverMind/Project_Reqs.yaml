@@ -1,26 +1,69 @@
 OverlordControl:
   Flow:
-    - loop
-    - exit_loop
-    - branch
-    - call_function
-    - exit_function
-    - exit_run
-    - wait_for_input
+    - loop:
+        - Description: "Enables the construction of procedures that repeat actions multiple times."
+        - Fixed_Loop:
+            - Description: "Allows specifying a fixed number of iterations for the loop."
+            - Usage: "Enter a loop count or select a variable to determine the number of iterations dynamically."
+        - Variable_Control:
+            - Description: "Utilizes a variable to control the number of loop iterations."
+            - Select_Variable: "Choose a variable to set the loop count, allowing for variable-driven loop counts."
+        - Accessible_Looping_Variable:
+            - Description: "Facilitates tracking of the current loop iteration."
+            - Usage: "Enable the use of a variable counter to access and display the loop's current iteration within the loop body."
+        - Advanced_Looping:
+            - Description: "Allows customization of the loop's starting value and step increment."
+            - Usage: "Adjust the loop to start from a non-default value and specify step increments for complex iteration patterns."
+        - Conditional_Looping:
+            - Description: "Enables looping based on a condition, allowing for more dynamic control over loop execution."
+            - Loop_While_Variable:
+                - Description: "Continues looping as long as a variable meets specified conditions."
+            - Loop_Until_Timer_Complete:
+                - Description: "Loops until a specified timer reaches its target time, integrating timer conditions into loop control."
+            - Loop_While_Device:
+                - Description: "Tests device states (Busy or Idle) as conditions for continuing or exiting the loop."
+  - exit_loop
+  - branch:
+      - Description: "Allows conditional logic based on variable states."
+      - Variables: "Enables comparison of variables for branching decisions."
+      - Conditions: 
+          - Equals
+          - Does not equal
+          - Greater than
+          - Less than
+          - Greater than or equal to
+          - Less than or equal to
+      - Advanced: "Supports multiple conditions akin to SELECT CASE for complex branching."
+      - Status: "Checks the runtime state of Connected_Devices to guide flow direction."
+  - call_function
+  - exit_function
+  - exit_run
+  - wait_for_input
+
   Actions:
     - Relocate
     - add_Action
     - remove_Action
     - group_Action
+    
   Inclusions:
     - Create_Variable
     - Set_Variable
     - Message_Box
     - User_Input
-    - Timers
+    - Timers:
+        - Description: "Facilitates conditional flow based on the state of system-defined timers."
+        - Application: "Allows workflows to branch based on timer conditions, such as Running or Expired, enhancing control over timing-dependent actions."
+        - Timer_States:
+            - Running: "The timer is actively counting down."
+            - Expired: "The timer has completed its countdown."
+        - Branching_Based_on_Timer_State:
+            - If_Running: "Follow a predefined path for scenarios where the timer is still active."
+            - If_Expired: "Take an alternative path suitable for when the timer has completed its duration."
     - Script
     - New_Definition
     - Locations
+
 
 Interfaces:
   Splash_Screen:
