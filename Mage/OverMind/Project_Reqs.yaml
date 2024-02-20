@@ -35,9 +35,16 @@ OverlordControl:
           - Less than or equal to
       - Advanced: "Supports multiple conditions akin to SELECT CASE for complex branching."
       - Status: "Checks the runtime state of Connected_Devices to guide flow direction."
-  - call_function
-  - exit_function
-  - exit_run
+  - call_function:
+      - Description: "Executes a predefined function within the workflow."
+      - Selection: "Choose from a list or browse to avoid typos."
+      - Execution: "Confirm to integrate and optionally view the function before calling."
+  - exit_function:
+      - Description: "Terminates the current function's execution and returns control."
+      - Usage: "Invoke to exit a function at any point, based on defined logic or conditions."
+  - exit_run:
+      - Description: "Ends the current workflow or run entirely."
+      - Usage: "Can be invoked at any point to terminate the workflow execution."
   - wait_for_input
 
   Actions:
@@ -47,8 +54,15 @@ OverlordControl:
     - group_Action
     
   Inclusions:
-    - Create_Variable
-    - Set_Variable
+    - Create_Variables:
+        - Description: "Resets all declared variables to default values."
+        - Implementation: "Variables are reset within the Variables Window, ensuring a clean slate for workflow execution."
+    - Set_Variables:
+        - Description: "Assigns specific values to variables, supporting numeric, text, and boolean types."
+        - Variable_Selection: "Choose variables for modification from a dropdown list, with type indication."
+        - Value_Assignment: "Allows input of values or equations for dynamic variable management."
+        - Equations_Support: "Enables the use of equations in value assignments for complex logic implementation."
+        - Multiple_Assignments: "Supports assigning multiple variables in a single action, with equation support for each."
     - Message_Box
     - User_Input
     - Timers:
