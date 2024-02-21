@@ -1,7 +1,7 @@
 OverlordControl:
   Flow:
     - loop:
-        - Description: "Enables the construction of procedures that repeat actions multiple times."
+        - Description: "Enables the construction of functions that repeat actions multiple times."
         - Fixed_Loop:
             - Description: "Allows specifying a fixed number of iterations for the loop."
             - Usage: "Enter a loop count or select a variable to determine the number of iterations dynamically."
@@ -63,8 +63,29 @@ OverlordControl:
         - Value_Assignment: "Allows input of values or equations for dynamic variable management."
         - Equations_Support: "Enables the use of equations in value assignments for complex logic implementation."
         - Multiple_Assignments: "Supports assigning multiple variables in a single action, with equation support for each."
-    - Message_Box
-    - User_Input
+
+    - Message_Box:
+      - Description: "Facilitates communication with the user, asking them to perform tasks or enter information."
+      - Core_Features_Always_Included:
+          - Output_Check: "Verify message content and variable display."
+          - Dismiss_Box: "User acknowledgment to proceed."
+      - First_Layer_of_Optional_Features:
+          - Cancel_Button: "Allows the user to cancel the action if applicable."
+          - Symbol_Customization: "Icons to indicate the nature of the message (Information, Exclamation, Error)."
+      - Second_Layer_of_Optional_Features:
+          - Variable_Integration:
+              - Description: "Enables dynamic content by incorporating variables into the message."
+          - User_Input:
+              - Description: "Solicits input from the user during workflow execution."
+              - Input_Types: "Supports value, yes/no, and filename inputs."
+              - Question_Prompt: "Customizable prompt for user input."
+              - Input_Assignment: "Captures user input into specified variables for later use."
+      - Third_Layer_of_Optional_Features:
+          - Image_Feedback: "Include images for visual cues."
+          - Audio_Feedback: "Attach sound files for auditory alerts or instructions."
+      - Fourth_Layer_of_Optional_Features:
+          - Advanced_Audio_Options: "Extended controls for audio feedback, including recording in any language, testing, and looping."
+  
     - Timers:
         - Description: "Facilitates conditional flow based on the state of system-defined timers."
         - Application: "Allows workflows to branch based on timer conditions, such as Running or Expired, enhancing control over timing-dependent actions."
@@ -74,9 +95,150 @@ OverlordControl:
         - Branching_Based_on_Timer_State:
             - If_Running: "Follow a predefined path for scenarios where the timer is still active."
             - If_Expired: "Take an alternative path suitable for when the timer has completed its duration."
-    - Script
-    - New_Definition
+    
+    - Barcode_Tracking:
+        - Description: "Utilizes barcodes as unique identifiers for actions, devices, or data packets within the network."
+        - Implementation_Notes:
+            - Dynamic_Encoding: "Barcodes encode operational metadata, allowing dynamic interpretation and action based on scanned input."
+            - Secure_Keys: "Physical objects with barcodes act as secure keys for accessing or initiating system functions."
+            - Update_Mechanism: "System supports dynamic updates to the barcode dictionary, accommodating new items or operational paradigms."
+        - Real_Object_Linkage:
+            - Description: "Links real-world objects to digital operations, enabling tangible interaction points with the system."
+            - Security_Applications: "Physical barcodes serve as tangible security tokens for system access or function initiation."
+    
+    - Dataflow_Management:
+        - Description: "Ensures the integrity and seamless flow of data across the caravan network, aligning physical/logistical movements with corresponding data."
+        - Implementation_Notes:
+            - Data_As_Commodity: "Treats data as the primary commodity of interest, with its flow and management being central to system operation."
+            - Network_Layers: "Adapts to various operational scales, from broad caravan movements to detailed transactions within a town."
+            - Data_Tracking_And_Encoding: "Employs barcode tracking for data packets, ensuring accurate tracking and management of information across the network."
+    
+    - Scripts:
+        - Description: "Sequenced lists of operational instructions for instruments or connected devices, encoded as barcodes."
+        - Implementation_Notes:
+            - Instruction_Sets: "Scripts are designed as easy-to-follow instructions, encoded into barcodes for dynamic system interaction."
+            - Targeted_Devices: "Instructions can target any connected device, automating tasks or controlling actions."
+            - Barcode_Based_Scripts: "Scripts utilize barcode encoding to facilitate complex operations through simple scans."
+        - Placeholder_for_Script_Editor:
+            - Description: "Reserved space for a future Script Editor tool to facilitate script management."
+            - Status: "Deferred development, with architecture preparation in place."
+    
+Function_Management:
+    - Properties:
+        - Description: "Accesses and modifies the details of any function step, akin to viewing or editing step properties."
+        - Implementation: "Command line operation or textual input to view/edit properties of a function step."
+    - Action_View:
+        - Description: "Allows switching between different representations of a function step: Text Only or Command Only."
+        - Options:
+            - Text_Only: "Displays comments or descriptions relating to the function step."
+            - Command_Only: "Shows the command or action in a simplified, textual format."
+    - Define_Function:
+        - Description: "Creates a new function or modifies an existing one."
+        - Commands: ["new function [FunctionName]", "modify function [FunctionName]"]
+    - Function_Operations:
+        - Clone: "Creates a copy of an existing function."
+        - Delete: "Removes a function from the system."
+        - Call: "Instantiates a function for execution."
+
+  Function_Creation:
+    - New_Function_Command: "new function [FunctionName]"
+    - Function_Types:
+        - Standard_Function:
+            - Description: "Performs a range of operations, from data processing to device control."
+        - Move_Command_Function:
+            - Description: "Handles data or item movements within the network."
+        - Scheduled_Function:
+            - Description: "Executes based on predefined timing conditions."
+            
+Runtime_Control:
+    - Description: "Facilitates execution and management of functions in real-time, with controls similar to media playback."
+    - Controls:
+        - Run: "Executes the current function."
+        - Run_Stepwise: "Executes the current function step-by-step, requiring user input to proceed after each step."
+        - Pause: "Pauses the ongoing function execution."
+        - Stop: "Stops the current function, with confirmation required to either terminate or resume."
+        - Validate: "Checks the current function for errors or inconsistencies."
+        - Analyze_Schedule: "Previews the estimated order and duration of actions in a Scheduled function."
+        - View_Logfiles: "Accesses runtime logs for review and analysis."      
+    - Runtime_Output:
+        - Description: "Shows output logs and error messages from procedure executions."
+        - Commands: ["view runtime_output", "view error_log"]
+        
+  Environmental_Controls:
+    - Main_Controls:
+        - Description: "Provides options for customizing the user interface environment, such as color schemes and layouts."
+        - Functions:
+            - Restore_Default: "Reverts to the system's default environment settings."
+            - Save_Favorite: "Saves the current environment settings as a favorite for quick access."
+            - Restore_Favorite: "Applies previously saved favorite environment settings."
+            
+    - Help:
+        - Description: "Offers access to system documentation and support resources."
+        - Implementation: "Includes a help command that displays a dialog or menu with Contents, Index, and Search functions."
+        
+    - About:
+        - Description: "Displays version information and copyright details of the OverlordControl system."
+        - Implementation: "A command or option that reveals system version and legal information."
+        
+  Command_Management:
+    - Command_Palette:
+        - Description: "Organizes commands into categories for easy access."
+        - Categories: ["Flow", "Plugins", "Devices"]
+    - Favorites:
+        - Description: "Enables customization of frequently used commands."
+        - Commands: ["add to favorites", "remove from favorites"]
+
+  Schedule_Management:
+    - Dynamic_Schedule_Construction:
+        - Description: "Automatically builds and updates a linear sequence of procedure steps in real time as nodes are added or modified."
+        - Implementation: "Utilizes a background thread for continuous schedule construction, ensuring an up-to-date framework is always available."
+        
+    - Virtual_Step_Handoff:
+        - Description: "Treats each action or node as a 'virtual step' within the schedule, acknowledging its completion and output handoff potential."
+        - Implementation: "Integrates with data flow management to facilitate dynamic interactions and dependencies between steps."
+        
+    - Schedule_Visibility:
+        - Description: "Offers tools for users to view, analyze, and manage the dynamically constructed schedule of procedures."
+        - Tools: ["view schedule", "estimate complexity", "identify interactions"]
+        
+    - Schedule_Flexibility:
+        - Description: "Allows for adjustments and modifications to the schedule as procedure details become finalized or change."
+        - Implementation: "Supports real-time updates to the schedule, including resequencing, parameter finalization, and node detail completion."
+
+ 
+  Variable_Management:
+    - Description: "Manages the variables within the OverlordControl environment, allowing for definition, modification, and organization."
+    - Commands:
+        - Add_Variable: "Adds a new variable to the system."
+        - Sort_Variables: "Sorts variables by name or type."
+        - Initialize_Variables: "Resets variables to default states at the beginning of a run."
+        - Set_Variable: "Changes the value of an existing variable."
+        - Delete_Variable: "Removes a variable from the system."
+    - Types:
+        - Text: "Handles textual information."
+        - Numeric: "Manages numerical data."
+        - Boolean: "True/False values for state management."
+        - Object: "Complex data structures for advanced data handling."
+  
     - Locations
+Device_Management:
+    - Status_Check:
+        - Description: "Displays the current operational status of devices (Idle, Busy, Error)."
+        - Command: "check device_status"
+    - Device_Configuration:
+        - Description: "Allows for the addition, removal, or modification of device configurations."
+        - Commands: ["add device", "remove device", "modify device"]
+
+Atlas_Management:
+    - Description: "Aggregates and interlinks device position and status information across regions to create a comprehensive operational atlas."
+    - Overlap_Zones:
+        - Description: "Defines shared areas between regions for seamless data integration."
+    - Navigation_System:
+        - Description: "Enables queries across the atlas for aggregated views and reports."
+    - Dynamic_Updates:
+        - Description: "Ensures the atlas reflects real-time operational conditions."
+    - Visualization_Tools:
+        - Description: "Provides optional graphical overlays or heatmaps for enhanced data visualization."
 
 
 Interfaces:
@@ -88,10 +250,10 @@ Interfaces:
     Description: A dynamic tool for executing commands, searching functions, and accessing various parts of the system quickly.
   Message_Box:
     Description: Interface for displaying notifications, warnings, and messages to the user.
-  Procedure_Edit_Screen:
-    Description: A detailed editor for creating, modifying, and managing procedures within workflows.
-  Procedure_Run_Screen:
-    Description: Visualization and control panel for executing procedures, monitoring progress, and managing runtime options.
+  function_Edit_Screen:
+    Description: A detailed editor for creating, modifying, and managing functions within workflows.
+  function_Run_Screen:
+    Description: Visualization and control panel for executing functions, monitoring progress, and managing runtime options.
   Settings_Screen:
     Description: Central location for configuring system preferences, user settings, and application options.
   Connected_Devices_Screen:
@@ -101,7 +263,7 @@ Interfaces:
   Connected_Setups_Screen:
     Description: Interface for managing and viewing configurations of connected setups, including device groups and workflow associations.
   Lab_Setup_Screen:
-    Description: Detailed configuration screen for setting up and managing laboratory setups, including equipment and procedure mappings.
+    Description: Detailed configuration screen for setting up and managing laboratory setups, including equipment and function mappings.
   Toggleable_Options_Screen:
     Description: Interface for managing system-wide toggleable options, enhancing customization and flexibility.
   Events_Screen:
@@ -110,7 +272,7 @@ Interfaces:
     Setup:
       Description: Events related to system setup changes, configuration updates, and initialization processes.
     Schedule:
-      Description: Schedule-related events, including procedure timings, alerts, and calendar integrations.
+      Description: Schedule-related events, including function timings, alerts, and calendar integrations.
     Export:
       Description: Interface for managing data export events, configurations, and options.
     Logs:
