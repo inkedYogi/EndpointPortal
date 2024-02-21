@@ -1,0 +1,52 @@
+Bioloab_Setup:
+  Operations:
+    - Operation_Name: "Collect Sample"
+      Description: "Initiates sample collection from specified source."
+      Properties:
+        Retry_on_error: true
+        Comments: "Ensure source is prepared before collection."
+
+    - Operation_Name: "Process Sample"
+      Loop:
+        Count_Variable: "[Samples]"
+        Condition: "[Sample_Ready] == true"
+      Actions:
+        - Action: "Analyze Sample"
+          Properties:
+            Wait_until_Idle: false
+            Breakpoint: true
+
+    - Operation_Name: "Data Collection"
+      Conditional_Execution:
+        Conditions:
+          - "[Analysis_Complete] == true"
+        Actions:
+          - Action: "Collect Data"
+            Properties:
+              Comment: "Collect and store analysis data."
+
+  Schedules:
+    - Schedule_Name: "Daily Sample Analysis"
+      Operations: ["Collect Sample", "Process Sample", "Data Collection"]
+      Loop:
+        Fixed: true
+        Count: 5
+
+Device_Management:
+  Devices:
+    - Device_Name: "Incubator"
+      Status_Check: "Idle | Busy | Error"
+    - Device_Name: "SpectraMax Plate Reader"
+      Configuration: "Pre-set methods for luminescence analysis"
+
+Variable_Management:
+  Variables:
+    - Name: "Samples"
+      Type: "Numeric"
+      Initial_Value: 5
+    - Name: "Sample_Ready"
+      Type: "Boolean"
+      Initial_Value: false
+    - Name: "Analysis_Complete"
+      Type: "Boolean"
+      Initial_Value: false
