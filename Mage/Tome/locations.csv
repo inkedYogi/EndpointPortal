@@ -1,3 +1,3 @@
-Location_ID,Name,Description,Type,Accessibility,Special_Features,Environmental_Conditions,Mana_Interaction
-INN,The White Lotus Inn,"A welcoming haven for travelers of all kinds.",Inn,All,None,"Temperate",None
-SHIP,The Flagship,"Command center and primary vessel of exploration.",Vessel,Crew,None,"Normal",None 
+Location_ID,Name,Description,Type,Accessibility,Current_City,Special_Features,Environmental_Conditions,Mana_Interaction
+INN,The White Lotus Inn,"A welcoming haven for travelers of all kinds.",Inn,All,Unnamed,None,"Temperate",None
+SHIP,The Flagship,"Command center and primary vessel of exploration.",Vessel,Crew,Unnamed,None,"Normal",None 
