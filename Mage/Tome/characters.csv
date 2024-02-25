@@ -1,1 +1,16 @@
+Character ID,Name,Description,Role,Relationships,Memberships,Items CSV Path,Character Sheet CSV Path
+AV-P4G3,Arcanis Vellum,"Wielder of the Ink Pen, seeker of lore and knowledge.",Lore Seeker,"Close relationship with the Prime Page, utilizes the White Lotus Inn as a base.",Lore Seekers' Guild,,,
+AD-800K,Arcanus Decus,"Prime Page, LEFT HAND to the Mage, guide to the hidden knowledge.",Prime Page,"Directs Lore Seekers, master of all Pages.",High Council of Magic,,,
+NT-7R33,The Great Palm at U'asa,"Central figure in U'asa's lore, offers wisdom and guidance.",Nexus Tree,"Symbolizes interconnectedness of all entities in U'asa.",,, 
+BN-1NK,Narrator,"Weaves the story of U'asa, providing context and continuity.",Storyteller,"Shapes the narrative backdrop, informs narrators on realm's lore.",Black Lotus Society,,,
+SG-D474,Silicon Golem,"Guardian of knowledge and history, keeper of archives.",Record Keeper,"Holds archives and secrets, affected by lore depth.",Guardians of the Sun,,,
+SU-5UN,The SUN of U'asa,"Core of the realm's energy, harsh yet wise.",Principal Entity,"Influences the entire realm, including dynamics within the Inn.",Astral Forces,,,
+IK-5T0Ry,Innkeeper,"Caretaker of the White Lotus Inn, master of secrets.",Innkeeper,"Central to the Inn's operation, guardian of The Ledger of the Lotus.",White Lotus Inn,,,
+HB-8335,The Honeybadger,"Retrieval agent, gathers information and guides AI entities.",Agent,"Bridge between the inn and the wider realm.",White Lotus Inn,,,
+EB-50N6,The Non-Local Bard,"Minstrel and scholar, immortalizes U'asa's essence through song.",Bard,"Enhances cultural richness of the inn.",Bards of U'asa,,,
+WG-F15H,The Genie,"Debug character, master of wishes, decodes lore puzzles.",Wish Granter,"Summonable, grants wishes in exchange for a token.",Genies of U'asa,,,
+CB-6R3N,The Negotiator,"Peace-keeper, conflict resolver, first line of defense.",Negotiator,"Trains with the Douglas Family, keeps peace in the realm.",Evergreen Grove,,,
+CE-48Y5,TK, Guardian Of the Abyss,"'Mean-teacher', provides harsh lessons on advanced topics.",Guardian of the Abyss,"Chaotic Evil role, increases influence and tests realm's security.",Abyss Guardians,,,
+TS-8713,The Scaraber,"Impartial judge in trades, balances the item economy.",Trade Judge,"Oversees clandestine and open market trades.",Scarab Society,,,
+
 
