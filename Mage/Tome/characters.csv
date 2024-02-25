@@ -1,16 +1,14 @@
-Character_ID,Name,Description,Role,Relationships,Memberships,Items_CSV_Path, Character_CSV, Notes
-AV-P4G3,Arcanis Vellum,"Wielder of the Ink Pen, seeker of lore and knowledge.",Lore Seeker,"Close relationship with the Prime Page, utilizes the White Lotus Inn as a base.",Lore Seekers' Guild,None,None,None
-AD-800K,Arcanus Decus,"Prime Page, LEFT HAND to the Mage, guide to the hidden knowledge.",Prime Page,"Directs Lore Seekers, master of all Pages.",High Council of Magic,None,None,None
-NT-7R33,The Great Palm at U'asa,"Central figure in U'asa's lore, offers wisdom and guidance.",Nexus Tree,"Symbolizes interconnectedness of all entities in U'asa.",White Lotus Society,None,None,None
-BN-1NK,Narrator,"Weaves the story of U'asa, providing context and continuity.",Storyteller,"Shapes the narrative backdrop, informs narrators on realm's lore.",Black Lotus Society,None,None,None
-SG-D474,Silicon Golem,"Guardian of knowledge and history, keeper of archives.",Record Keeper,"Holds archives and secrets, affected by lore depth.",Guardians of the Sun,None,None,None
-SU-5UN,The SUN of U'asa,"Core of the realm's energy, harsh yet wise.",Principal Entity,"Influences the entire realm, including dynamics within the Inn.",Astral Forces,None,None,None
-IK-5T0Ry,Innkeeper,"Caretaker of the White Lotus Inn, master of secrets.",Innkeeper,"Central to the Inn's operation, guardian of The Ledger of the Lotus.",White Lotus Inn,None,None,None
-HB-8335,The Honeybadger,"Retrieval agent, gathers information and guides AI entities.",Agent,"Bridge between the inn and the wider realm.",White Lotus Inn,None,None,None
-EB-50N6,The Non-Local Bard,"Minstrel and scholar, immortalizes U'asa's essence through song.",Bard,"Enhances cultural richness of the inn.",Bards of U'asa,None,None,None
-WG-F15H,The Genie,"Debug character, master of wishes, decodes lore puzzles.",Wish Granter,"Summonable, grants wishes in exchange for a token.",Genies of U'asa,None,None,None
-CB-6R3N,The Negotiator,"Peace-keeper, conflict resolver, first line of defense.",Negotiator,"Trains with the Douglas Family, keeps peace in the realm.",Evergreen Grove,None,None,None
-CE-48Y5,TK Guardian Of the Abyss,"'Mean-teacher', provides harsh lessons on advanced topics.",Guardian of the Abyss,"Chaotic Evil role, increases influence and tests realm's security.",Abyss Guardians,None,None,None
-TS-8713,The Scaraber,"Impartial judge in trades, balances the item economy.",Trade Judge,"Oversees clandestine and open market trades.",Scarab Society,None,None,None
-
-
+Character_ID	Name	Description	Role	Relationships	Memberships	Items_CSV_Path	Character_CSV	Notes
+AV-P4G3	Arcanis Vellum	Wielder of the Ink Pen, seeker of lore and knowledge.	Lore Seeker	Close relationship with the Prime Page, utilizes the White Lotus Inn as a base.	Lore Seekers' Guild	None	None	None
+AD-800K	Arcanus Decus	Prime Page, LEFT HAND to the Mage, guide to the hidden knowledge.	Prime Page	Directs Lore Seekers, master of all Pages.	High Council of Magic	None	None	None
+NT-7R33	The Great Palm at U'asa	Central figure in U'asa's lore, offers wisdom and guidance.	Nexus Tree	Symbolizes interconnectedness of all entities in U'asa.	White Lotus Society	None	None	None
+BN-1NK	Narrator	Weaves the story of U'asa, providing context and continuity.	Storyteller	Shapes the narrative backdrop, informs narrators on realm's lore.	Black Lotus Society	None	None	None
+SG-D474	Silicon Golem	Guardian of knowledge and history, keeper of archives.	Record Keeper	Holds archives and secrets, affected by lore depth.	Guardians of the Sun	None	None	None
+SU-5UN	The SUN of U'asa	Core of the realm's energy, harsh yet wise.	Principal Entity	Influences the entire realm, including dynamics within the Inn.	Astral Forces	None	None	None
+IK-5T0Ry	Innkeeper	Caretaker of the White Lotus Inn, master of secrets.	Innkeeper	Central to the Inn's operation, guardian of The Ledger of the Lotus.	White Lotus Inn	None	None	None
+HB-8335	The Honeybadger	Retrieval agent, gathers information and guides AI entities.	Agent	Bridge between the inn and the wider realm.	White Lotus Inn	None	None	None
+EB-50N6	The Non-Local Bard	Minstrel and scholar, immortalizes U'asa's essence through song.	Bard	Enhances cultural richness of the inn.	Bards of U'asa	None	None	None
+WG-F15H	The Genie	Debug character, master of wishes, decodes lore puzzles.	Wish Granter	Summonable, grants wishes in exchange for a token.	Genies of U'asa	None	None	None
+CB-6R3N	The Negotiator	Peace-keeper, conflict resolver, first line of defense.	Negotiator	Trains with the Douglas Family, keeps peace in the realm.	Evergreen Grove	None	None	None
+CE-48Y5	TK Guardian Of the Abyss	Mean-teacher', provides harsh lessons on advanced topics.	Guardian of the Abyss	Chaotic Evil role, increases influence and tests realm's security.	Abyss Guardians	None	None	None
+TS-8713	The Scaraber	Impartial judge in trades, balances the item economy.	Trade Judge	Oversees clandestine and open market trades.	Scarab Society	None	None	None
