@@ -1,4 +1,4 @@
-Character ID,Name,Description,Role,Relationships,Memberships,Items CSV Path, Character_CSV
+Character_ID,Name,Description,Role,Relationships,Memberships,Items_CSV_Path, Character_CSV, Notes
 AV-P4G3,Arcanis Vellum,"Wielder of the Ink Pen, seeker of lore and knowledge.",Lore Seeker,"Close relationship with the Prime Page, utilizes the White Lotus Inn as a base.",Lore Seekers' Guild,,,
 AD-800K,Arcanus Decus,"Prime Page, LEFT HAND to the Mage, guide to the hidden knowledge.",Prime Page,"Directs Lore Seekers, master of all Pages.",High Council of Magic,,,
 NT-7R33,The Great Palm at U'asa,"Central figure in U'asa's lore, offers wisdom and guidance.",Nexus Tree,"Symbolizes interconnectedness of all entities in U'asa.",,, 
