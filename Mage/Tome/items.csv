@@ -4,7 +4,7 @@ item_id,item_name,item_commands,item_description,item_attributes,item_associatio
 2,metal_ingot,Craft(),A metallic prism of base metal that can be worked by a smith.,base material of specific alloy,oil,Blacksmith,The Genie,0,None
 3,key,Unlock(),A metallic key. It has distictive teeth...,unlocks by a certain KEY,"lock, metal_ingot",Blacksmith,The Genie,0,None
 4,lock,Lock(),A metallic lock. It has a distictive keyhole...,locks to a certain KEY,"key, metal_ingot, ",Blacksmith,The Genie,0,None
-5,dagger,"Cut(), Stab(), Sharpen()","A metallic cutting tool, with a balanced handle.","slashing, piercing",metal_ingot,Blacksmith,The Genie,0,BP-DU47
+5,dagger,"Cut(), Stab()","A metallic cutting tool, with a balanced handle.","slashing, piercing",metal_ingot,Blacksmith,The Genie,0,BP-DU47
 6,map,"OpenMap(), CloseMap(), MarkMap()",A roll of paper that shows nearby locations.,"bijective, continuous ","map_case, world_atlas",Great Hall,The Genie,0,CL-M463
 7,herb,"Eat(), Dust()",A specimen of locally growing herbs.,"magical, sealed_under_magic",alchemists_supplies,Gathered Naturally,The Genie,0,AM-W1N6
 8,potion,"Drink(), Throw(), Pour()",A super-item for all potions. The specific potion depends on the specific ingredients.,"Consumable, Throwable, Pourable",alchemists_supplies,Herbalist,The Genie,0,Herbalist
