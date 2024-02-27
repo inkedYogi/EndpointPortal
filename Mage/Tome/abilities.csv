@@ -1,26 +1,26 @@
-Emoji,Name,Description
-⛲,Overload,"Playing cards with Overload INCREASES the amount of mana you'll have on your next turn, effectively acting as a buffer to allow mana boosting next turn."
-👹,Menace,Must be killed by 2 creatures; Fearful Presence.
-💭,Silence,"Silencing a minion removes its card text and any enchantments, akin to Magic's removal of abilities with effects like Disenchant."
-🕊️,Flying,Creatures with flying cannot be attacked by other creatures without flying or reach.
-🌩️,Flash,Creatures with flash can be played any time you could play an instant.
-🧐,Scry,See other player's hand.
-🕯️,Vigilance,Prevent Ambushes from laying in LOS.
-⚔️,First Strike,Creatures with first strike deal combat damage before creatures without first strike in the first strike combat damage step.
-🏔️,Landspirit,Creatures with basic-land-type-walk are unblockable if the defending player controls a land-of-basic-type.
-🎋,Taunt,"Like Wall creatures in Magic, minions with Taunt must be targeted by attacks before other minions or the hero."
-💡,Inspired,"A condition that allows you to draw a new card every time you use a card, and continue for as long as there is available mana."
-🕸,Chronomancy,"When you play this card, exile it face down with a certain number of time counters onto the battlefield. During the sunrise phase of your turn, remove a time counter. When you remove the last counter, flip the card face-up."
-🏜️,Quicksand,Creatures attempting to move are dealt damage instead. This effect doesn't apply to creatures with flying or landspirit.
-🔒,Indestructible,"Creatures with indestructible cannot be destroyed by damage or effects that say ""destroy."""
-🍄,Adapt,Allows you to choose a buff for a minion from some number of options.
-💖,Divine Protection,"Similar to Divine Shield in Hearthstone or protection in Magic, Divine Protection allows a minion to ignore the first instance of damage dealt to it."
-🌾,Harvest,"When this creature dies, you may search your library for a card associated with it and put it onto the battlefield."
-🏹,Reach,Creatures with reach can block creatures with flying.
-💀,Deathtouch,Any amount of damage dealt by a creature with deathtouch is enough to destroy another creature.
-🧬,Raise,Return a creature back to living status.
-🌳,Regeneration,"Creatures with regeneration can be ""regenerated"" to prevent destruction from lethal damage or effects."
-🔔,Hexproof,Creatures with hexproof cannot be the target of spells or abilities controlled by opponents.
-🚂,Trample,Creatures with trample deal excess combat damage to the defending player or planeswalker after dealing lethal damage to blocking creatures.
-🏃,Haste,Creatures with haste can attack or use abilities with the tap symbol immediately on the turn they enter the battlefield.
-🛡️,Wall,"Creatures with wall cannot attack, only defend."
+Ability_ID,Emoji,Name,Description
+0,⛲,Overload,"Playing cards with Overload INCREASES the amount of mana you'll have on your next turn, effectively acting as a buffer to allow mana boosting next turn."
+1,👹,Menace,Must be killed by 2 creatures; Fearful Presence.
+2,💭,Silence,"Silencing a minion removes its card text and any enchantments, akin to Magic's removal of abilities with effects like Disenchant."
+3,🕊️,Flying,Creatures with flying cannot be attacked by other creatures without flying or reach.
+4,🌩️,Flash,Creatures with flash can be played any time you could play an instant.
+5,🧐,Scry,See other player's hand.
+6,🕯️,Vigilance,Prevent Ambushes from laying in LOS.
+7,⚔️,First Strike,Creatures with first strike deal combat damage before creatures without first strike in the first strike combat damage step.
+8,🏔️,Landspirit,Creatures with basic-land-type-walk are unblockable if the defending player controls a land-of-basic-type.
+9,🎋,Taunt,"Like Wall creatures in Magic, minions with Taunt must be targeted by attacks before other minions or the hero."
+10,💡,Inspired,"A condition that allows you to draw a new card every time you use a card, and continue for as long as there is available mana."
+11,🕸,Chronomancy,"When you play this card, exile it face down with a certain number of time counters onto the battlefield. During the sunrise phase of your turn, remove a time counter. When you remove the last counter, flip the card face-up."
+12,🏜️,Quicksand,Creatures attempting to move are dealt damage instead. This effect doesn't apply to creatures with flying or landspirit.
+13,🔒,Indestructible,"Creatures with indestructible cannot be destroyed by damage or effects that say ""destroy."""
+14,🍄,Adapt,Allows you to choose a buff for a minion from some number of options.
+15,💖,Divine Protection,"Similar to Divine Shield in Hearthstone or protection in Magic, Divine Protection allows a minion to ignore the first instance of damage dealt to it."
+16,🌾,Harvest,"When this creature dies, you may search your library for a card associated with it and put it onto the battlefield."
+17,🏹,Reach,Creatures with reach can block creatures with flying.
+18,💀,Deathtouch,Any amount of damage dealt by a creature with deathtouch is enough to destroy another creature.
+19,🧬,Raise,Return a creature back to living status.
+20,🌳,Regeneration,"Creatures with regeneration can be ""regenerated"" to prevent destruction from lethal damage or effects."
+21,🔔,Hexproof,Creatures with hexproof cannot be the target of spells or abilities controlled by opponents.
+22,🚂,Trample,Creatures with trample deal excess combat damage to the defending player or planeswalker after dealing lethal damage to blocking creatures.
+23,🏃,Haste,Creatures with haste can attack or use abilities with the tap symbol immediately on the turn they enter the battlefield.
+24,🛡️,Wall,"Creatures with wall cannot attack, only defend."
