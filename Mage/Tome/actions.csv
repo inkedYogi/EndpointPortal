@@ -1,4 +1,4 @@
-ActionNumber,ActionEmoji,ActionKeyword,ActionSynonyms,ActionDesc,ActionPointCost,ActionType,ActionDuration,ActionCategory,One_Handed_Commands,Two_Handed_Commands
+Action_ID,ActionEmoji,ActionKeyword,ActionSynonyms,ActionDesc,ActionPointCost,ActionType,ActionDuration,ActionCategory,One_Handed_Commands,Two_Handed_Commands
 1,📋,SEE_ACTION_SPACE,"[Help, Query, F1]",See action space in YAML format,0,Miscellaneous,0,🧠,LoadActions(),SaveActions()
 2,🆘,EXIT,"[Quit, End, Esc]",Escape from the current query/action,0,Inventory and Equipment Management,0,🧠,Disengage(),Retreat()
 3,🌾,KNOWN,"[Discovered, Found, Secrets]",Show what object types have been discovered,0,Inventory and Equipment Management,0,🧠,QuestLog(),Journal()
