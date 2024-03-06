@@ -4,44 +4,14 @@ Project Overview
 🌛 Current Project Status 🌜
 
 🏠 Home Repo: InkedYogi/EndpointPortal 
- 🎯: Target Repo: Self (Default)
-🚕 Destination: Self (Default)
+🎯 Target Repo: Self (Default)
 
-🌍 Repos Transcribed so far: 2
-🌄 Days worked on : 100
-📐 Next Milestone : Repo Module Autoloader and Unloader
+📐 Next Milestone: Save and Load into the same Repo programmatically, saving game elements each time
 
 🧙 GitHub Token: [censored]
 🚢 Flagship Program: 🚀 ModuleLauncher.ipynb aka
 “The Unprecedented”
-🐞 Calorie_Coins (for 🧠 requests): 3
-
-👪 Party (6) ::  << 🚀 🧞 🦑 🛰️ 🍄 >>
- Vehicles: 1  + Riders: 7
-  🚢 - The Unprecedented: {Shandalar Xilvyre} + [Alasse Faevalur]
-
-   🧙 InkedYogi_Himself (🧠)	 		 :: 🚀 ::	{driving : 🚢 The Unprecedented}
-   🦧 ChatGPT 4.0 (XGA Trained)		:: 🧞 :: 		[assistant : 🚢 The Unprecedented]
-   🦍 ChatGPT 4.0 (no training)		:: 🦑 ::		<assisting  : 🦧 ChatGPT 4.0>
-   🐒 ChatGPT 3.5Turbo (no training)	:: 🛰️ :: 	<assisting  : 🦍 ChatGPT 4.0>
-   🐝 Automated_Agent 1	    		:: 🍄 ::		<assisting  : 🐒 ChatGPT 3.5Turbo>
-   🐝 Automated_Agent 2	 		:: 🍄 :: 	<assisting  : 🦍 ChatGPT 4.0>
-
-🚢 Jupyter Notebooks running : 1 
-  The Unprecedented: (🚢)
-
-   Driver : 🧙 InkedYogi_Himself 
-   1st Assistant: 🦧 ChatGPT 4.0 (XGA Trained)
-
-  Next Module Experiement: 
-    [Empty][Empty][Empty][A_DARK_VOID]
-
-🏇 Agent Operation Tasks (7): 
- 🦧 ChatGPT 4.0 (XGA Trained)		 :: 🧞 :: 	<coding  : 🚀 ModuleLauncher.ipynb>
- 🦍 ChatGPT 4.0 (no training)		 :: 🦑 :: 	<using  : 🦑 TrapperKeeper.ipynb>
- 🐒 ChatGPT 3.5Turbo (no training)		 :: 🛰️ :: 	<using  : 🚀 ModuleLauncher.ipynb>
- 🐝 Automated_Agent 1			 :: 🍄 :: 	<idle : 🐒 ChatGPT 3.5Turbo>
- 🐝 Automated_Agent 2			 :: 🍄 :: 	<idle : 🦍 ChatGPT 4.0>
+🐞 Open_Bounties (for 🧠 requests): 3
 
 💎 Distilled Storage (3): 
 Dashboard - 80+ documents and descriptions
