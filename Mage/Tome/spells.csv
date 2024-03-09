@@ -1,4 +1,4 @@
-type,Spell Name,MagicSchool,Level,Spellbook Pages,RequiredComponents,CastingTIme,SpellRange,AreaOfEffect,NumTargets,EffectDuration,DamageDelt,ArcaneFocus,Traditional Material Component
+type,Spell_ID,MagicSchool,Level,Spellbook Pages,RequiredComponents,CastingTIme,SpellRange,AreaOfEffect,NumTargets,EffectDuration,DamageDelt,ArcaneFocus,Traditional Material Component
 Spell,True Name,Divination,-9,81,vsfmx,1 hr,self,,self,Instantaneous,,a figurine of the target,"a clear crystal, a pinch of gold dust"
 Spell,Tasha's Demonic Dimensia,Enchantment,-8,64,vsf,10 min,touch,,1 creature,Instantaneous,,the outsider to control,"magically prepared ink worth 1,000gp / HD"
 Spell,Protection against Mana Burn,Abjuration,-8,64,vsmx,10 min,self,,self,Instantaneous,,,a dragon heart
