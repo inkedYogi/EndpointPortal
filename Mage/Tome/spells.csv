@@ -1,0 +1,177 @@
+type,Spell Name,MagicSchool,Level,Spellbook Pages,RequiredComponents,CastingTIme,SpellRange,AreaOfEffect,NumTargets,EffectDuration,DamageDelt,ArcaneFocus,Traditional Material Component
+Spell,True Name,Divination,-9,81,vsfmx,1 hr,self,,self,Instantaneous,,a figurine of the target,"a clear crystal, a pinch of gold dust"
+Spell,Tasha's Demonic Dimensia,Enchantment,-8,64,vsf,10 min,touch,,1 creature,Instantaneous,,the outsider to control,"magically prepared ink worth 1,000gp / HD"
+Spell,Protection against Mana Burn,Abjuration,-8,64,vsmx,10 min,self,,self,Instantaneous,,,a dragon heart
+Spell,Create Demiplane,Conjuration,-7,49,vsfmx,6 hr,touch,1 mile rad / lvl,all within,Instantaneous,,"a mage's orb, a mage's staff","a small stone or crystal, a drop of water, a candle (lit), and the flight feather of a bird"
+Spell,Immunity to Acid,Abjuration,-6,36,vsfm,1 r,self,,self,10 min / lvl,,a vial of acid,a pinch of alkaline dust
+Spell,Immunity to Cold,Abjuration,-6,36,vsfm,1 r,self,,self,10 min / lvl,,a vial of alcohol,any feather from any bird
+Spell,Immunity to Fire,Abjuration,-6,36,vsfm,1 r,self,,self,10 min / lvl,,a vial of water,a pinch of sand
+Spell,Summon Outsider,Conjuration,-6,36,vsfx,10 min,close,,varies,Instantaneous,,any divine focus,a silk bag and a white candle
+Spell,Create Portal,Conjuration,-6,36,vsmx,10 min,close,5ft rad / lvl,all within,1 hr / lvl,,,"a pinch of gold, a pinch of sand"
+Spell,Spellboost,Divination,-6,36,vsfm,1 hr,touch,,touched,Instantaneous,,,"a gem worth 1,000gp / lvl to boost"
+Spell,Manaboost,Evocation,-6,36,vsm,10 min,touch,,touched,24hr / lvl,,,"a pinch of gold dust, a pinch of silver dust"
+Spell,Protection against Fey,Abjuration,-5,25,vsmf,1 r,touch,,touched,1 min / lvl,,a druid's divine focus,a pinch of copper dust
+Spell,Protection against Demons,Abjuration,-5,25,vsmf,1 r,touch,,touched,1 min / lvl,,a holy symbol,a pinch of silver dust
+Spell,Summon Demon,Conjuration,-5,25,vsfmx,1 hr,close,,varies,Instantaneous,,a holy symbol,a spellbook with the spell: summon demon and a black candle
+Spell,True Cast,Divination,-5,25,vsm,1 r,self,,self,1 round / lvl,,,a figurine worth 100gp / spell lvl
+Spell,Pillar of Flame,Evocation,-4,16,vsf,1 r,medium,30ft rad,all within,1 round / lvl,1d6 / lvl FIRE,an iron rod,
+Spell,Concentration,Enchantment,-4,16,vsx,1 r,self,,self,10 min / lvl,,,
+Spell,Resist Enchantment,Abjuration,-4,16,vsfm,10 min,self,,self,24 hr / lvl,,,
+Spell,Circle of Protection,Abjuration,-3,9,vsmf,10 min,touch,5ft rad / lvl,all within,2 hrs / lvl,,a holy symbol,silver dust worth 100gp
+Spell,Counterspell,Abjuration,-3,9,vsf,1 r,medium,,1 spell,Instantaneous,,a mage's orb,
+Spell,Iron Mind,Enchantment,-3,9,vsf,1 r,self,,self,1 min / lvl,,a mage's orb,
+Spell,Dancing Weapon,Transmution,-3,9,vsf,1 r,touch,,touched weapon,1 round / lvl,varies by weapon,the weapon,
+Spell,Resist Acid,Abjuration,-3,9,vsf,1 r,touch,,touched,1 round / lvl,,,
+Spell,Resist Cold,Abjuration,-3,9,vsf,1 r,touch,,touched,1 round / lvl,,,
+Spell,Resist Fire,Abjuration,-3,9,vsf,1 r,touch,,touched,1 round / lvl,,,
+Spell,Message in a Bottle,Transmution,-2,4,vsf,1 r,touch,,object touched,10 day / lvl,,,
+Spell,Disguise Spell,Illusion,-1,1,vsm,1 r,same as spell,same as spell,same as spell,1 round / lvl,,,a pearl worth 10gp / spell lvl
+Spell,Read Magic,Divination,0,1,vsf,1 r,self,,self,10 min / lvl,,a clear crystal,
+Spell,Know Direction,Divination,0,1,vsf,1 r,self,,self,Instantaneous,,a druid's divine focus,
+Spell,Flare,Evocation,0,1,v,1 r,close,,1 creature,Instantaneous,,,
+Spell,Dazzle,Enchantment,0,1,vsm,1 r,close,,1 creature,1 round,,,a pinch of wool
+Spell,Cantrip,Illusion,0,1,vs,1 r,close,5ft rad,all within,1 hr,,,
+Spell,Ghost Sound,Illusion,0,1,vsm,1 r,close,25ft + 5ft / 2 lvl rad,all within,1 round / lvl,,,a pinch of wool or wax
+Spell,Light,Illusion,0,1,vm,1 r,touch,,object touched,10 min / lvl,,,"a bioluminescant insect, mushroom, or plant"
+Spell,Mending,Transmution,0,1,vs,1 r,touch,,object touched,Instantaneous,,,
+Spell,Detect Magic,Divination,0,1,vs,1 r,self,60ft cone,self,1 min / lvl,,,
+Spell,Arcane Mark,Universal,0,1,vs,1 r,touch,,touched,Instantaneous,,,
+Spell,Guidance,Divination,0,1,vs,1 r,touch,,touched,1 min / lvl,,,
+Spell,Touch of Fatigue,Necromancy,0,1,vsm,1 r,touch,,touched,1 round / lvl,,,a drop of sweat
+Spell,Silent Image,Illusion,1,1,vsf,1 r,long,10ft cube / lvl,all within,Concentration,,a bit of fleece,
+Spell,Summon Raven,Conjuration,1,1,vsm,1 r,medium,,varies,1 round / lvl,,a black candle,"a beetle, maggots, or piece of dead flesh"
+Spell,Hide From Animals,Abjuration,1,1,sf,1 r,touch,,1 creature / lvl,10 min / lvl,,a druid's divine focus,
+Spell,Goodberry,Transmution,1,1,vsf,1 r,touch,,2d4 berries,1 min / lvl,(1 per berry),a druid's divine focus,
+Spell,Comprehend Languages,Divination,1,1,vsmf,1 r,self,,self,10 min / lvl,,a holy symbol,a pinch of soot and salt
+Spell,Detect Undead,Divination,1,1,vsmf,1 r,self,60ft cone,self,1 min / lvl,,a holy symbol,a pinch of grave dirt
+Spell,Sanctuary,Abjuration,1,1,vsf,1 r,touch,,touched,1 round / lvl,,a holy symbol,
+Spell,Summon Monster,Conjuration,1,1,vsf,1 r,close,,varies,1 round / lvl,,a pouch and any candle,
+Spell,Mask Aura,Illusion,1,1,vsf,1 r,touch,,1 object,24hr / lvl,,a small silk hankercheif,
+Spell,Alarm,Abjuration,1,1,vsf,1 r,close,20ft rad,1 creature,2hr / lvl,,a tiny bell with silver wire,
+Spell,True Strike,Divination,1,1,vf,1 r,self,,self,1 round,,a wooden figuringe of an archery target,
+Spell,Summon Falcon,Conjuration,1,1,vsm,1 r,long,,varies,1 round / lvl,,any container,a mouse or rat
+Spell,Hover,Transmution,1,1,vsf,1 r,touch,,touched,1 min / lvl,,any feather from any bird,
+Spell,Magic Missile,Evocation,1,1,vs,1 r,medium,,1 + 1 / 2 lvl,Instantaneous,1d4+1 / missile,,
+Spell,Command,Enchantment,1,1,v,1 r,close,,1 creature,1 round,,,
+Spell,Cause Fear,Necromancy,1,1,vs,1 r,close,,1 creature,1d4 rounds,,,
+Spell,Charm,Enchantment,1,1,vs,1 r,close,,1 creature,1 hr / lvl,,,
+Spell,Enlarge,Transmution,1,1,vsm,1 r,close,,1 creature,1 min / lvl,,,a pinch of powdered iron
+Spell,Chill Touch,Necromancy,1,1,vs,1 r,touch,,1 creature / lvl,Instantaneous,1d6 + 1 Str,,
+Spell,Tenser's Floating Disk,Transmution,1,1,vsm,1 r,close,,1 disk,1 hr / lvl,,,a drop of quicksilver
+Spell,Mount,Conjuration,1,1,vsm,1 r,close,,1 mount,2 hr / lvl,,,a pinch of the hair of the real animal
+Spell,Calm Animals,Enchantment,1,1,vs,1 r,close,,2d4 + lvl HD,1 min / lvl,,,
+Spell,Sleep,Enchantment,1,1,vsm,1 r,medium,10ft rad,all within,1 min / lvl,,,"a pinch of sand, rose petals, or live cricket"
+Spell,Leomund's Trap,Conjuration,1,1,vsf,1 r,touch,,object touched,Instantaneous,,,a crystal worth at least 50gp
+Spell,Detect Traps,Divination,1,1,vs,1 r,self,60ft cone,self,10 min / lvl,,,
+Spell,Disguise Self,Illusion,1,1,vs,1 r,self,,self,10 min / lvl,,,
+Spell,Cure Light Wounds,Conjuration,1,1,vs,1 r,touch,,touched,Instantaneous,(1d8+1/lvl),,
+Spell,Magic Armor,Abjuration,1,1,vsf,1 r,touch,,touched,1 hr / lvl,,,
+Spell,Shatter,Evocation,2,4,vsmf,1 r,close,1 object or 5ft rad,1 or all within area,Instantaneous,1d6 / lvl ,a chip of mica,
+Spell,Detect Thoughts,Divination,2,4,vsf,1 r,self,60ft cone,self,1 min / lvl,,a copper piece,
+Spell,Consecrate,Transmution,2,4,vsmf,1 r,close,20ft rad,all within,2 hrs / lvl,,a holy symbol,vial of holy water + 5lb silver dust
+Spell,Desecrate,Necromancy,2,4,vsmf,1 r,close,20ft rad,all within,2 hrs / lvl,,a holy symbol,vial of unholy water + 5lb silver dust
+Spell,Summon Animal Companion,Conjuration,2,4,vsfm,1 r,close,,companion,Instantaneous,,a spell pouch,a piece of food
+Spell,Tasha's Hideous Laughter,Enchantment,2,4,vsm,1 r,close,,1 creature,1 round / lvl,,any feather,a pinch of food
+Spell,Leomund's Hidden Bookshelf,Conjuration,2,4,vsm,10 min,touch,2'x1'x1',1 bookshelf,60 days,,,a piece of paper
+Spell,Melf's Acid Arrow,Evocation,2,4,vsmf,1 r,long,,1 creature,1 round / 3 lvl,2d4 ACID / round,,"powdered poison leaf, snake stomach"
+Spell,Magic Mouth,Illusion,2,4,vsm,1 r,close,,1 object,Instantaneous,,,
+Spell,Gust of Wind,Evocation,2,4,vs,1 r,self,60ft line,all within,1 round,varies,,
+Spell,Fog Cloud,Conjuration,2,4,vs,1 r,medium,20ft rad,all within,10 min / lvl,,,
+Spell,Silence,Illusion,2,4,vs,1 r,long,20ft rad,all within,1 min / lvl,,,
+Spell,Hold Portal,Abjuration,2,4,v,1 r,medium,,one portal,1 min / lvl,,,
+Spell,Knock,Transmution,2,4,v,1 r,medium,,one portal,Instantaneous,,,
+Spell,Ghoul Touch,Necromancy,2,4,vsm,1 r,touch,,touched,1d6+2 rounds,,,"ghoul cloth, or ghoul dirt"
+Spell,Invisibility,Transmution,2,4,vsmf,1 r,touch,,touched,1 min / lvl,,,
+Spell,Magic Circle Against Evil,Abjuration,3,9,vsmf,1 r,touch,10ft rad,all within,10 min / lvl,,a holy symbol,5lb silver dust
+Spell,Rary's Protection from Scrying,Divination,3,9,vsf,1 r,self,5ft rad / lvl,all within,10 min / lvl,,a small mirror,
+Spell,Fly,Transmution,3,9,vsf,1 r,touch,,touched,1 min / lvl,,a wing feather from non-flightless bird,
+Spell,Phantom Steed,Conjuration,3,9,vs,1 r,touch,,1 mount,1 hr / lvl,,,
+Spell,Keen Edge,Transmution,3,9,vs,1 r,close,,1 weapon or 50 ammo,10 min / lvl,,,
+Spell,Conjure Food and Drink,Conjuration,3,9,vs,10 min,close,5ft rad,3ppl / lvl,Instantaneous,,,
+Spell,Leomund's Tiny Hut,Conjuration,3,9,vsm,10 min,touch,20ft rad,all within,2 hr / lvl,,,a small crystal of any worth
+Spell,Lightning Bolt,Evocation,3,9,vsm,1 r,self,120ft line,all within,Instantaneous,1d6 / lvl,,"fur, amber, glass, or crystal"
+Spell,Fireball,Evocation,3,9,vsm,1 r,long,20ft rad,all within,Instantaneous,1d6 / lvl,,bat guano and sulfur
+Spell,Vampiric Touch,Necromancy,3,9,vs,1 r,touch,,touched,Instantaneous,,,
+Spell,Waterbreathing,Transmution,3,9,vsm,1 r,touch,,touched,2 hr / lvl,,,a reed or piece of straw
+Spell,Dispel Magic,Abjuration,3,9,vs,1 r,medium,varies,varies,Instantaneous,,,
+Spell,Scry,Divination,4,16,vsmf,1 hr,unlimited,,1 creature,1 min / lvl,,"a mirror worth 1,000gp","eye of a bird-of-prey, a pinch of salt, copper, and silver"
+Spell,Rary's Mnemonic Enhancer,Divination,4,16,vsmf,10 min,self,,self,Instantaneous,,an ivory figurine worth 50gp,a piece of string dipped in drogon's blood
+Spell,Holy Sword,Evocation,4,16,vsf,1 r,touch,,touched weapon,1 round / lvl,,the weapon to modify,
+Spell,Unoly Scythe,Evocation,4,16,vsf,1 r,touch,,touched weapon,1 round / lvl,,the weapon to modify,
+Spell,Dimensional Anchor,Abjuration,4,16,vs,1 r,medium,100ft + 10ft/lvl ray,1 creature, 1 min / lvl,,,
+Spell,Energy Drain,Necromancy,4,16,vs,1 r,close,25ft + 5ft/2 lvl ray,1 creature,Instantaneous,1d4 negative levels,,
+Spell,Otiluke's Resilient Sphere,Evocation,4,16,vsm,1 r,close,1/2ft rad / lvl,1 creature,1 min / lvl,,,"a small crystal, a pinch of natural gum"
+Spell,Discern Lies,Divination,4,16,vsf,1 r,close,,1 creature / lvl,1 round / lvl,,,
+Spell,Confusion,Enchantment,4,16,vsm,1 r,medium,15ft rad,all within,1 round / lvl,,,three nut shells
+Spell,Wall of Fire,Evocation,4,16,vsm,1 r,medium,20ft / lvl,all within,Concentration + 1 round / lvl,varies,,a pinch of sand
+Spell,Wall of Ice,Evocation,4,16,vsm,1 r,medium,10ft / lvl,all within,1 min / lvl,,,a small crystal or rock
+Spell,Hailstorm,Evocation,4,16,vsmf,1 r,long,20ft rad,all within,1 round,3d6 B + 2d6 ICE,,a pinch of dust and a drop of water
+Spell,Leomund's Secure Shelter,Conjuration,4,16,vsm,10 min,close,20 ft square,all within,2 hr / lvl,,,"a chip of stone, a pinch of sand, a drop of water, splinter of wood"
+Spell,Polymorph Self,Transmution,4,16,vsm,1 r,self,,self,1 min / lvl,,,an empty cocoon
+Spell,Bestow Curse,Necromancy,4,16,vs,1 r,touch,,touched,Instantaneous,,,
+Spell,Cure Critical Wounds,Conjuration,4,16,vs,1 r,touch,,touched,Instantaneous,(4d8+1/lvl),,
+Spell,Remove Curse,Abjuration,4,16,vs,1 r,touch,,touched,Instantaneous,,,
+Spell,Animate Dead,Necromancy,4,16,vsm,1 r,touch,,touched,Instantaneous,,,a gem worth 25gp per HD
+Spell,Magic Jar,Necromancy,5,25,vsf,1 r,medium,,1 creature,1 hr / lvl,,a crystal worth 100gp,
+Spell,Animate Tree,Transmution,5,25,vsfx,24 hr,touch,,touched,Instantaneous,,a druid's divine focus,
+Spell,Dismissal,Abjuration,5,25,vsf,1 r,close,,1 creature,Instantaneous,,a holy symbol,
+Spell,Raise Dead,Necromancy,5,25,vsmf,1 min,touch,,creature touched,Instantaneous,,a holy symbol,"diamonds worth 5,000gp"
+Spell,Bigby's Interposing Hand,Evocation,5,25,vsf,1 r,medium,5 ft rad,all within,1 round / lvl,-,a soft glove,
+Spell,Leomund's Secret Chest,Conjuration,5,25,vsf,1 r,touch,3'x2'x2',1 chest,60 days,,a tiny replica chest,
+Spell,Teleport Object,Conjuration,5,25,vsf,1 r,touch,,1 object,Instantaneous,,the object to teleport,
+Spell,Dominate,Enchantment,5,25,vs,1 r,close,,1 creature,24hr / lvl,,,
+Spell,Tasha's Discomforting Dolor,Enchantment,5,25,vs,1 r,close,10ft rad,1 creature,1 min / lvl,,,
+Spell,Polymorph Other,Transmution,5,25,vsmf,1 r,close,,1 creature,Instantaneous,,,an empty cocoon
+Spell,Mordenkainen's Faithful Hound,Conjuration,5,25,vsm,1 r,close,,1 watchdog,1 hr / lvl,,,"a silver whistle, a piece of bone, a thread"
+Spell,Fabricate Item,Transmution,5,25,vsm,1r / 10cuft,close,,10cuft / lvl,Instantaneous,,,the original raw materials
+Spell,Rary's Telepathic Bond,Divination,5,25,vsm,1 r,close,,2 + 1 / 3 lvl,10 min / lvl,,,eggshell from two different creatures
+Spell,Cloudkill,Necromancy,5,25,vs,1 r,medium,20ft rad,all within,1 min / lvl,slay or take 1d4 CON / round,,
+Spell,Persistant Image,Illusion,5,25,vsm,1 r,long,10ft cube / lvl,all within,1 min / lvl,,,a bit of fleece and a pinch of sand
+Spell,Contact Outsider,Divination,5,25,v,10 min,self,,self,Concentration,,,
+Spell,Teleport,Conjuration,5,25,v,1 r,touch,,touched,Instantaneous,,,
+Spell,Permanency,Universal,5,25,vsx,2 r,touch,,touched,Instantaneous,,,
+Spell,Repulsion,Abjuration,6,36,vsf,1 r,self,10ft rad / lvl,all within,1 round / lvl,,a black object and white object,
+Spell,Otiluke's Freezing Sphere,Evocation,6,36,vsf,1 r,long,10ft rad,all within,1 round / lvl,1d6 / lvl,a small crystal sphere,
+Spell,Chain Lightning,Evocation,6,36,vsf,1 r,long,,1 + 1 / lvl,Instantaneous,"1d6 / lvl, half to secondary targets","fur, amber, glass, or crystal",
+Spell,Legend Lore,Divination,6,36,vsmf,1d4 x 10 min,self,,self,Instantaneous,,ivory strips in a square,incense
+Spell,Create Undead,Necromancy,6,36,vsm,1 hr,close,,1 creature,Instantaneous,,,gem worth 50gp per HD + clay pot filled with grave dirt
+Spell,Animate Object,Transmution,6,36,vs,1 r,medium,,1 object / lvl,1 round / lvl,,,
+Spell,Planar Binding,Abjuration,6,36,vs,10 min,close,,1 outsider,Instantaneous,,,
+Spell,Permanent Image,Illusion,6,36,vsm,1 r,long,20ft cube / lvl,all within,Instantaneous,,,a bit of fleece and powedered crystal worth 100gp
+Spell,Tenser's Transformation,Transmution,6,36,vsm,1 r,self,,self,1 round  / lvl,,,a potion of bull's strength
+Spell,Antimagic Field,Abjuration,6,36,vsmf,1 r,self,10ft rad,self,10min / lvl,,,a pinch of powdered iron
+Spell,Recall,Conjuration,6,36,v,1 r,touch,,touched,Instantaneous,,,
+Spell,True Sight,Divination,6,36,vsm,1 r,touch,,touched,1 min / lvl,,,a mushroom ointment worth 250gp
+Spell,Find The Path,Divination,6,36,vsf,3 r,touch,,touched,10 min / lvl,,,
+Spell,Planeshift,Conjuration,7,49,vsf,1 r,touch,,touched,Instantaneous,,a forked metal rod,
+Spell,Animate Plant,Transmution,7,49,vsfm,1 r,close,,varies,1 round / lvl,,a natural fiber sack ,a sprig of mistletoe
+Spell,Mordenkainen's Magnificent Mansion,Conjuration,7,49,vsf,1 r,close,10ft cube / lvl,all within,2 hr / lvl,,an ivory figurine,
+Spell,Regenerate,Conjuration,7,49,vsf,3 r,touch,,1 creature,Instantaneous,,any divine focus,
+Spell,Powerword Blind,Necromancy,7,49,v,1 r,close,,1 creature,varies by hp,,,
+Spell,Drawmij's Instant Summons,Evocation,7,49,vsm,1 r,unlimited,,1 object,Instantaneous,,,a gem worth 1000gp
+Spell,Banish,Abjuration,7,49,vsf,1 r,close,,2 HD / lvl,Instantaneous,,,
+Spell,Control Undead,Necromancy,7,49,vsm,1 r,close,,2 HD / lvl,2 min / lvl,,,a piece of bone and raw meat
+Spell,Control Weather,Transmution,7,49,vs,10 min,self,2 mile rad,all within,4d12 hrs,,,
+Spell,Limited Wish,Universal,7,49,vsx,1 r,same as spell,same as spell,same as spell,Instantaneous,,,
+Spell,Become Ethereal,Transmution,7,49,vs,1 r,self,,self,1 round / lvl,,,
+Spell,Control Plants,Transmution,8,64,vsf,1 r,close,,2 HD / lvl,1 min / lvl,,a druid's divine focus,
+Spell,Detect Object,Divination,8,64,vsf,10 min,unlimited,,1 object,Instantaneous,,a holy symbol,
+Spell,Bigby's Clenched Fist,Evocation,8,64,vsf,1 r,medium,5 ft rad,all within,1 round / lvl,1d8+11,a leather glove,
+Spell,Clone,Necromancy,8,64,vsmf,10 min,touch,,1 creature,2d4 months,,laboratory equipment,piece of flesh from original body
+Spell,Create Greater Undead,Necromancy,8,64,vsm,1 hr,close,,1 creature,Instantaneous,,,gem worth 50gp per HD + clay pot filled with grave dirt
+Spell,Powerword Stun,Necromancy,8,64,v,1 r,close,,1 creature,varies by hp,,,
+Spell,Dimensional Lock,Abjuration,8,64,vs,1 r,medium,20ft rad,all within,24hr / lvl,,,
+Spell,Incendiary Cloud,Conjuration,8,64,vs,1 r,medium,20ft rad,all within,1 round / lvl,4d6 / round,,
+Spell,Otiluke's Telekinetic Sphere,Evocation,8,64,vsm,1 r,close,1/2ft rad / lvl,all within,1 min / lvl,,,"a small crystal, a pinch of natural gum, a pair of magnets"
+Spell,Otto's Irresitable Dance,Enchantment,8,64,v,1 r,touch,,touched,1d4+1 rounds,,,
+Spell,Soul Bind,Necromancy,9,81,vsf,1 r,close,,1 creature,Instantaneous,,"a black gem worth 1,000 gp / HD",
+Spell,Bigby's Crushing Hand,Evocation,9,81,vsmf,1 r,medium,5 ft rad,all within,1 round / lvl,2d6+12,a snakeskin glove,1 shell of an egg
+Spell,Powerword Kill,Necromancy,9,81,v,1 r,close,,1 creature,Instantaneous,,,
+Spell,Implosion,Conjuration,9,81,vs,1 r,close,,1 creature / round,1 round / 2 lvl,,,
+Spell,Teleportation Circle,Conjuration,9,81,vm,10 min,touch,5ft rad,all within,10 min / lvl,,,"amber dust worth 1,000gp"
+Spell,Gate,Conjuration,9,81,vs(x),1 r,medium,2.5-10ft rad,all within,1 round / lvl,,,
+Spell,Meteor Shower,Evocation,9,81,vs,1 r,long,4x 40ft rad,all within,Instantaneous,2d6 B + 6d6 FIRE,,
+Spell,Mordenkainen's Disjunction,Abjuration,9,81,v,1 r,close,40ft rad,all within,Instantaneous,,,
+Spell,Wish,Universal,9,81,vx,1 r,same as spell,same as spell,same as spell,Instantaneous,,,
+Spell,Astral Projection,Necromancy,9,81,vsm,30 min,touch,,self + 1 / 2 lvls,Instantaneous,,,gemstone worth 1000gp
+Spell,Foresight,Divination,9,81,vsmf,1 r,touch,,touched,10 min / lvl,,,a humming bird's feather
