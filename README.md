@@ -19,9 +19,5 @@ https://github.com/inkedYogi/EndpointPortal/tree/main - GitHub Root Page
 https://drive.google.com/drive/home - Google Drive Home Page
 
 🧰 Toolkit:
-    (" 5️⃣: Run Task 5", run_task_five),
-    ("🧹: Run Task Cleanup", run_task_completion),
-    ("🔀: Run Whole Sequence", run_whole_sequence)
-]
 
 Mage: Caravan - Unprecedented.
