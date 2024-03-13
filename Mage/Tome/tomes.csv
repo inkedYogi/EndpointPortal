@@ -1,0 +1,139 @@
+MSBN,Title,Unlocks,Field_1,Bonus_1,Int_Req,Field_2,Bonus_2,Wis_Req,Field_3,Bonus_3
+0,Know Your Animal Companion!,3,Location: Pet Store,-,4,Social(Animal),1,5,Spell: Summon Animal Companion,
+1,Mending The Broken Blade,3,Craft(Weapon),1,5,Combat(All),1,4,Spell: Mending,-
+2,Tribal Battle Tactics,2,Perception(Spot),1,3,Combat(All),1,,,
+3,Reflections of An Undefeated Warrior,3,Combat(Melee),2,3,Combat(Ranged),2,4,Combat(Unarmed),2
+4,Breaking the Mended Blade,3,Combat(Melee),2,5,Craft(Arms),2,4,Spell: Dominate,-
+5,Improving Fletchings and Bow Strings,2,Combat(Ranged),1,3,Craft(Arms),1,,,
+6,Magic Blades of the West,3,Craft(Armor),1,3,Craft(Arms),1,3,Spell: Magic Armor,-
+7,The Burnished Shield,3,Craft(Armor),1,3,Craft(Arms),1,3,Spell: Dancing Weapon,-
+8,The Juggler’s Bells,3,Social(Performance),1,3,Craft(Items),1,3,Spell: Dazzle,-
+9,Eight Love Potions,3,Craft(Potion),1,3,Craft(Potion),2,4,Craft(Potion),3
+10,Yarwin’s Voyage of Misfortune,2,Navigation(All),1,4,Location: Abandoned Caravan,-,,,
+11,The Fall of the Empire,3,Location: Ancient Ruins,-,3,Location: Ancient Ruins,-,4,Location: Ancient Ruins,
+12,Navigating The Sewers of the Capital,3,Survival(Urban),1,4,Location: Capital City,-,5,Spell: Become Ethereal,-
+13,The Legend of Dragon's Pass,2,Survival(Mountains),1,4,Location: Dragon's Lair,-,,,
+14,Fey Charms and Wards: Protection Against The Fey,2,Spell: Protection from Fey,-,4,Location: Fey Fountain,-,,,
+15,Geysers of the Upper Plateau,3,Location: Geyser,-,3,Location: Geyser,-,4,Location: Geyser,
+16,Maps of Legend,3,Location: Ancient Ruin,-,4,Location: Oasis,-,5,Location: Portal Cave,-
+17,Oases of the Desert,3,Location: Oasis,-,3,Location: Oasis,-,4,Location: Oasis,
+18,"Owlbears: Where to Find Them, and How to Train Them",3,Social(Animal),1,3,Location: Owlbear Forest,-,4,Location: Owlbear Nest,-
+19,A Wandering Minstrel: Songs for Every Age,3,Social(Performance),1,3,Location: Portal Cave,-,3,Location: Standing Stones,-
+20,Death and Beyond: A Necromancer's Guide,3,Magic(Necromancy),1,4,Location: Ruined Temple,-,5,Spell: Animate Dead,-
+21,The Fire Upon The Altar,3,Magic(Evocation),1,4,Location: Temple of Fire,,5,Spell: Wall of Fire,
+22,The Burning Lake That Is The Future,2,Magic(Divination),1,4,Location: Underground Lake,-,,,
+23,The Sunken Black Fleet,2,Navigation(Sail),1,4,Location:Ship Wreck,-,,,
+24,A Lovers’ Quarrel: Counterspelling,2,Spell: Counterspell,-,3,Magic(Abjuration),1,,,
+25,"Everything Under The Sun, and More",3,Navigation(Ensign),1,5,Magic(All),1,5,Spell: Meteor Shower,-
+26,The Creeping Vine: Summoning Food,2,Spell: Create Food,-,3,Magic(Conjuration),1,,,
+27,Prophets and Oracles: A Guide for the Mon-Magician,3,Location: Oracles,-,4,Magic(Divination),1,5,Spell: Scry,-
+28,Signs and Portents: Diviner's Guide,2,Spell: Guidance,-,3,Magic(Divination),1,,,
+29,Thief of the Heart: Charm Spells,2,Spell: Charm,-,3,Magic(Enchantment),1,,,
+30,The Frozen Volcano: An Evocker's Guide,2,Spell: Blizzard,-,3,Magic(Evocation),1,,,
+31,Casting Message in a Bottle,2,Spell: Message in a Bottle,-,3,Magic(Illusion),1,,,
+32,The Sun’s Orbital Path,3,Navigation(Sail),1,4,Navigation(Drive),1,5,Navigation(Ensign),2
+33,Stars and Constellations to Navigate By,3,Navigation(Sail),1,4,Navigation(Ride),1,5,Navigation(Ensign),2
+34,Navigating Underground Rivers,3,Survival(Water),2,4,Navigation(Underground),2,5,Spell: Light,-
+35,Surviving Dragon Lairs,3,Social(Diplomacy),2,4,Perception(Search),2,5,Spell: Silence,-
+36,Spellbook of the Mage,2,Spell: Cantrip,-,3,Random Mid Level Spell,-,,,
+37,Magic Yourself Rich,3,Social(Sense Motive),1,3,Social(Bluff),1,4,Appraise(All),2
+38,Ministers of the Red Wedding,3,Combat(Melee),3,4,Social(Intimidation),1,4,Social(Diplomacy),2
+39,Surviving Dragon Encounters,3,Perception(Spot),2,4,Social(Sense Motive),2,5,Spell: Recall,-
+40,Of Fools and Kings: How to Bluff,3,Social(Bluff),1,3,Social(Sense Motive),1,4,Social(Diplomacy),2
+41,Lady DeWinter’s Betrayal: The Lich Queen,3,Location: Graveyard,-,3,Spell: Animate Dead,-,5,Spell: Raise Dead,-
+42,Gelfling: Fact or Fiction?,2,Magic(Transmutation),1,3,Spell: Banish,,,,
+43,The Holy Word of Bigby [Evocation],3,Magic(Evocation),2,3,Spell: Bigby's Interposing Hand,-,5,Spell: Bigby's Crushing Hand,-
+44,Insect Extermination Spells,3,Spell: Fireball,-,4,Spell: Chain Lightning,-,5,Spell: Cloudkill,-
+45,Heraldry Spells to Illicit Protection,3,Magic(Abjuration),1,3,Spell: Circle of Protection,-,4,Spell: Repulsion,-
+46,Demigods of the Outer Planes,3,Magic(All),1,3,Spell: Contact Outsider,-,5,Spell: Gate,
+47,Growing Cotton as a Cash Crop,3,Survival(Plains),1,4,Spell: Dominate,-,4,Spell: Iron Mind,-
+48,The Holy Word of Drawmij [Conjuration],3,Magic(Conjuration),2,5,Spell: Drawmij's Instant Summons,-,3,Spell: Mask Aura,-
+49,Skeksees: Fact or Fiction?,2,Magic(Conjuration),1,3,Spell: Energy Drain,,,,
+50,The Holy Word of Leomund [Illusion],3,Magic(Illusion),2,5,Spell: Leomund's Secure Shelter,-,3,Spell: Leomund's Trap,-
+51,Gygaxian Legends and Lore,3,Spell: Magic Missile,-,4,Spell: Limited Wish,-,5,Spell: Wish,-
+52,The Tragedy of Prince Adam,3,Social(Diplomacy),1,4,Spell: Manaboost,-,5,Spell: Create Demiplane,-
+53,The Holy Word of Melf [Conjuration],3,Magic(Conjuration),2,3,Spell: Melf's Acid Arrow,-,5,Spell: Immunity to Acid,-
+54,The Holy Word of Mordenkainen [Conjuration],3,Magic(Conjuration),2,5,Spell: Mordenkainen's Magnificent Mansion,-,3,Spell: Mordenkainen's Faithful Hound,-
+55,The Holy Word of Nystul [Illusion],3,Magic(Illusion),2,3,Spell: Nystul's Magic Aura,-,5,Spell: True Sight,-
+56,The Holy Word of Otiluke [Evocation],3,Magic(Evocation),2,3,Spell: Otiluke's Resilient Sphere,-,5,Spell: Otiluke's Telekinetic Sphere,-
+57,The Holy Word of Otto [Enchantment],3,Magic(Enchantment),2,3,Spell: Otto's Irresitable Dance,-,5,Spell: Resist Enchantment,-
+58,Taming the Gygax: Mastery Over Language,3,Spell: Comprehend Languages,-,3,Spell: Powerword Stun,-,5,Spell: Powerword Kill,
+59,The Concubine’s Chronicle: Unholy Spellcasting,3,Spell: Summon Demon,-,3,Spell: Protection from Demons,-,5,Spell: Planar Binding,-
+60,The Holy Word of Rary [Divination],3,Magic(Divination),2,3,Spell: Rary's Mnemonic Enhancer,-,5,Spell: Rary's Telepathic Bond,-
+61,The End and the Beginning of Time,2,Magic(Divination),1,3,Spell: Scry,-,,,
+62,The Equinox and Solstice: Measuring Time,3,Survival(All),1,4,Spell: Spellboost,-,5,Spell: Create Portal,-
+63,"The Gygax, A Dungeon-Dwelling Horror!",3,Spell: Detect Traps,-,4,Spell: Summon Monster,-,5,Spell: Summon Outsider,-
+64,The Holy Word of Tasha [Enchantment],3,Magic(Enchantment),2,5,Spell: Tasha's Hideous Laughter,-,3,Spell: Sleep,-
+65,The Holy Word of Tenser [Evocation],3,Magic(Evocation),2,5,Spell: Tenser's Transformation,-,3,Spell: Tenser's Floating Disk,-
+66,Know Your Trade Routes!,3,Location: Trade Camp,-,4,Survival(Deserts),1,5,Spell: Find The Path,
+67,Hunter’s Moon,2,Survival(Plains),1,2,Survival(Forest),1,,,
+68,Know Your Carnivorous Plants!,3,Location: Carnivorous Grove,-,4,Survival(Forests),1,5,Spell:Summon Plant,
+69,Know Your Ship Captain!,3,Location: Pirate Island,-,4,Survival(Ocean),1,5,Spell: Disguise Self,
+70,Ocean Tidal Guide,2,Survival(Beach),1,4,Survival(Ocean),1,,,
+71,Fortifying Wines of the Southlands,2,Location: Ruins,-,3,Survival(Plains),1,,,
+72,A History of Falconry,3,Social(Animal),1,3,Survival(Plains),1,5,Spell: Summon Falcon,-
+73,Effective Wood Gathering in Extreme Environments,3,Survival(Forests),1,3,Survival(Plains),1,5,Survival(Mountains),2
+74,Tree Roots and Essential Fungi,3,Survival(Forests),1,3,Survival(Plains),1,4,Craft(Potion),2
+75,"Underground Lakes, and Where to Find Them",3,Location: Underground Lake,-,4,Survival(Underground),2,5,Spell: Underwater Breathing,-
+76,Know Your Town Mayor!,3,Location: Capital City,-,4,Survival(Urban),1,5,Spell: Discern Lies,
+77,My Time with Mermaids: Using Waterbreathing,3,Spell: Waterbreathing,-,3,Survival(Water),1,4,Location: Mermaid Island,-
+78,A Tale of Two Magical Brothers,3,Universal,1,4,Universal,1,5,Universal,1
+79,Fertility Rates of the Dragon,1,Appraise(All),5,,,,,,
+80,Fertility Rates of the Goblin,1,Appraise(All),2,,,,,,
+81,Fertility Rates of the Kobold,1,Appraise(All),1,,,,,,
+82,Fertility Rates of the Orc,1,Appraise(All),3,,,,,,
+83,Fertility Rates of the Trolls,1,Appraise(All),4,,,,,,
+84,Creating Fool’s Gold,1,Appraise(Metals),1,,,,,,
+85,Appraising Minerals: Ore Grades and Shapes,1,Appraise(Ores),1,,,,,,
+86,Sheildmaidens of the Eastern Sea,2,Craft(Armor),1,,,,4,Combat(Unarmed),3
+87,Axemen of the Western Sea,2,Craft(Weapon),1,,,,4,Combat(Melee),3
+88,Bowmen of the Southern Sea,2,Craft(Weapon),1,,,,4,Combat(Ranged),3
+89,Swordsmen of the Northern Sea,2,Craft(Weapon),1,,,,4,Combat(Mounted),3
+90,Finding The Alabaster Citadel,2,Location: Alabaster Citadel,-,,,,5,Spell: Teleport,-
+91,Spellcasting Your Way to Marriage,2,Location: Cathedral,-,,,,4,Magic(All),3
+92,Diamond Soul: The Search For Perfection,2,Location: Monastery,-,,,,4,Special Ability: Diamond Body,-
+93,The Shattered Oak Beneath The Desert,2,Location: Underground Tree,-,,,,5,Spell: Teleport,-
+94,Finding the Fields of Glory,2,Magic(All),1,,,,3,Spell: Sanctuary,
+95,Rain of Heaven,2,Magic(Conjuration),1,,,,5,Spell: Control Weather,-
+96,Bend the Knee: an Enchanter's Guide,1,Magic(Enchantment),1,,,,,,
+97,Domicus Rex: Domination Spells,1,Magic(Enchantment),1,,,,,,
+98,Leveraging Lunar Cycles,2,Navigation(Sail),1,,,,3,Special Ability: Wildmagic,-
+99,Spotting the White Raven,2,Perception(Spot),1,,,,3,Spell: Summon Raven,-
+100,Spellbook of the Apprentice,1,Random Low Level Spell,-,,,,,,
+101,Book of Understanding,1,Random Skill,1,,,,,,
+102,Manual of Comprehension,1,Random Skill,2,,,,,,
+103,Tome of Knowledge,1,Random Skill,3,,,,,,
+104,The Forty-First Thief,2,Social(Bluff),2,,,,3,Social(Sense Motive),2
+105,Zarg’s Guide to Goblin Culture,1,Social(Diplomacy),1,,,,,,
+106,Rage Against - A Barbarian's Guide,2,Social(Intimidation),1,,,,2,Special Ability: Rage,-
+107,The Weeping Unicorn,2,Spell: Calm Animals,-,,,,4,Spell: Mount,-
+108,Cantrips for the Lonely Mage,2,Spell: Cantrip,-,,,,1,Special Ability: Free Cantrips,-
+109,Spellbook of the Archmagi,2,Spell: Cantrip,-,,,,5,Random High Level Spell,-
+110,Wanderlust: A Travellers Guide,2,Spell: Conjure Food and Drink,-,,,,5,Special Ability: Planeswalk,-
+111,Tales of a Dwarven Mage,2,Spell: Dispel Magic,-,,,,4,Location: Dwarven Ruins,-
+112,The Defeat of Archmage Barrelstock,1,Spell: Dispel Magic,-,,,,,,
+113,Sea Monsters of the Hidden Depths,1,Survival(Deep Ocean),1,,,,,,
+114,A Ranger’s Field Guild to Desert Hunting,1,Survival(Deserts),1,,,,,,
+115,A Ranger’s Field Guild to Forest Hunting,1,Survival(Forests),1,,,,,,
+116,A Ranger’s Field Guild to Mountain Hunting,1,Survival(Mountains),1,,,,,,
+117,The Crescent Moon: Hiding at Night,2,Survival(Night),1,,,,4,Spell: Invisibility,-
+118,Brigands of the High Seas,1,Survival(Ocean),1,,,,,,
+119,How to Harvest the Sun,1,Survival(Plains),1,,,,,,
+120,Warriors of the Open Plains,1,Survival(Plains),1,,,,,,
+121,Raiders of the Trade Routes,1,Survival(Reefs),1,,,,,,
+122,Pirates of the Colonial Islands,1,Survival(Shallow Ocean),1,,,,,,
+123,"The Gypsy’s Curse, and How To Remove It",2,Survival(Urban),1,,,,3,Spell: Remove Curse,-
+124,"99 Problems, but A Lich Ain't One",3,Spell: Control Undead,-,4,Spell: Animate Dead,-,5,Spell: Create Undead,-
+125,"Good Touch, Bad Touch",3,Spell: Touch of Fatigue,-,3,Spell: Ghoul Touch,-,4,Spell: Vampiric Touch,-
+126,The Necronomicon,3,Spell: Magic Jar,-,4,Spell: Create Greater Undead,-,5,Spell: Soul Bind,-
+127,The Book of Life,3,Spell: Deathwatch,-,3,Spell: Desecrate,-,4,Spell: Slay Living,
+128,The Book of Death,3,Spell: Cure Light Wounds,-,4,Spell: Consecrate,-,5,Spell: Resurrection,
+129,The Pyromancer's Guide to the Galaxy,3,Spell: Fireball,-,4,Spell: Pillar of Flame,-,5,Spell: Wall of Fire,-
+130,How to Put Lightning in a Bottle,3,Spell: Lightning Bolt,-,3,Spell: Chain Lightning,-,5,Spell: Ball Lightning,-
+131,Messin' with the Mind,3,Spell: Sleep,-,2,Spell: Confusion,-,3,Spell: Berserk,-
+132,Dont Mess With A Druid,3,Spell: Entangled Terrain,-,3,Spell: Polymorph,-,5,Spell: Tornado,-
+133,A Guide to Practical Prayer,3,Spell: Bless,-,4,Spell: Remove Curse,- ,5,Spell: Sanctify,-
+134,Anatomy of the Body,3,Spell: Cure Light Wounds,-,4,Spell: Cure Critical Wounds,-,5,Spell: Restoration,-
+135,The Magi's Lifesavers,3,Spell: Invisibility,-,3,Spell: Fly,-,4,Spell: Teleport,-
+136,Grimoire of the Paladin,3,Spell: Protection from Evil,-,4,Spell: Magic Circle Against Evil,-,5,Spell: Banish,-
+137,The Demonomicon,3,Spell: Tasha's Discomforting Dolor,-,4,Spell: Tasha's Demonic Dimensia,-,5,Spell: True Name,-
