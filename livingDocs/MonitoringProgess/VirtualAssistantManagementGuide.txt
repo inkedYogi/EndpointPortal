@@ -1,5 +1,0 @@
-Delegate administrative tasks, such as document management and data entry, to the Virtual Assistant.
-Provide clear instructions and guidelines to the Virtual Assistant for task completion.
-Monitor the Virtual Assistant's task progress and provide feedback or support as needed.
-Ensure the Virtual Assistant has access to the necessary resources and tools for task completion.
-Review the quality of work performed by the Virtual Assistant and address any issues promptly.
