@@ -1,0 +1,8 @@
+ ~ TODO List ~ 
+
+Google Colabs Notebook with Tools:
+https://colab.research.google.com/drive/1bVFZ3-5is-2cbH_jyMug1MFTGBXn-og_#scrollTo=4aNaWHB3oknN
+
+The Horizon Scanner: automatically identifies a broad range of potential data quality issues and track their status.
+
+The Data Explorer: use the report or state file from the scanner to guide their exploration, focusing on areas known to have issues or high complexity.
