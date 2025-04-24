@@ -1,0 +1,929 @@
+{
+  "issues": {
+    "MissingRequiredColumn:{\"column\": \"Item_Value\", \"table\": \"brew\"}": {
+      "type": "MissingRequiredColumn",
+      "details": {
+        "table": "brew",
+        "column": "Item_Value"
+      },
+      "description": "Required column 'Item_Value' is missing from table 'brew'.",
+      "status": "new"
+    },
+    "MissingRequiredColumn:{\"column\": \"Item_Value\", \"table\": \"craft\"}": {
+      "type": "MissingRequiredColumn",
+      "details": {
+        "table": "craft",
+        "column": "Item_Value"
+      },
+      "description": "Required column 'Item_Value' is missing from table 'craft'.",
+      "status": "new"
+    },
+    "MissingRequiredColumn:{\"column\": \"Item_Value\", \"table\": \"smith\"}": {
+      "type": "MissingRequiredColumn",
+      "details": {
+        "table": "smith",
+        "column": "Item_Value"
+      },
+      "description": "Required column 'Item_Value' is missing from table 'smith'.",
+      "status": "new"
+    },
+    "DuplicateValue:{\"column\": \"Drop_Name\", \"row_indices\": [26, 66], \"table\": \"drops\", \"value\": \"Panacea\"}": {
+      "type": "DuplicateValue",
+      "details": {
+        "table": "drops",
+        "column": "Drop_Name",
+        "value": "Panacea",
+        "row_indices": [
+          26,
+          66
+        ]
+      },
+      "description": "Duplicate value 'Panacea' found in unique column 'Drop_Name' in table 'drops' at rows [26, 66].",
+      "status": "new"
+    },
+    "DuplicateValue:{\"column\": \"Move_Name\", \"row_indices\": [17, 35], \"table\": \"moves\", \"value\": \"Taunt\"}": {
+      "type": "DuplicateValue",
+      "details": {
+        "table": "moves",
+        "column": "Move_Name",
+        "value": "Taunt",
+        "row_indices": [
+          17,
+          35
+        ]
+      },
+      "description": "Duplicate value 'Taunt' found in unique column 'Move_Name' in table 'moves' at rows [17, 35].",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 4, \"source_column\": \"Rare_Item\", \"source_table\": \"smith\", \"target_column\": \"Drop_Name\", \"target_table\": \"drops\", \"value\": \"Any Metal\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "smith",
+        "source_column": "Rare_Item",
+        "value": "Any Metal",
+        "target_table": "drops",
+        "target_column": "Drop_Name",
+        "row_index": 4
+      },
+      "description": "Missing reference: 'smith.Rare_Item' value 'Any Metal' at row 4 not found in 'drops.Drop_Name'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 0, \"source_column\": \"Uncommon_Item\", \"source_table\": \"smith\", \"target_column\": \"Drop_Name\", \"target_table\": \"drops\", \"value\": \"Any Jewel\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "smith",
+        "source_column": "Uncommon_Item",
+        "value": "Any Jewel",
+        "target_table": "drops",
+        "target_column": "Drop_Name",
+        "row_index": 0
+      },
+      "description": "Missing reference: 'smith.Uncommon_Item' value 'Any Jewel' at row 0 not found in 'drops.Drop_Name'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 4, \"source_column\": \"Common_Item\", \"source_table\": \"smith\", \"target_column\": \"Drop_Name\", \"target_table\": \"drops\", \"value\": \"Any Tooth\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "smith",
+        "source_column": "Common_Item",
+        "value": "Any Tooth",
+        "target_table": "drops",
+        "target_column": "Drop_Name",
+        "row_index": 4
+      },
+      "description": "Missing reference: 'smith.Common_Item' value 'Any Tooth' at row 4 not found in 'drops.Drop_Name'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 0, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"SP +200\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "SP +200",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 0
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value 'SP +200' at row 0 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 1, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"-\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "-",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 1
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value '-' at row 1 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 2, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"-\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "-",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 2
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value '-' at row 2 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 3, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"-\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "-",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 3
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value '-' at row 3 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 4, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"-\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "-",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 4
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value '-' at row 4 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 5, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"-\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "-",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 5
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value '-' at row 5 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 9, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"-\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "-",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 9
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value '-' at row 9 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 10, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"-\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "-",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 10
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value '-' at row 10 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 11, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"-\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "-",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 11
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value '-' at row 11 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 13, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"-\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "-",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 13
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value '-' at row 13 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 14, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"DEATH\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "DEATH",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 14
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value 'DEATH' at row 14 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 17, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"-\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "-",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 17
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value '-' at row 17 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 18, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"HP -60\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "HP -60",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 18
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value 'HP -60' at row 18 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 20, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"SP +125\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "SP +125",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 20
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value 'SP +125' at row 20 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 21, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"-\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "-",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 21
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value '-' at row 21 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 22, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"HP +125\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "HP +125",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 22
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value 'HP +125' at row 22 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 23, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"-\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "-",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 23
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value '-' at row 23 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 24, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"-\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "-",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 24
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value '-' at row 24 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 25, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"-\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "-",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 25
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value '-' at row 25 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 27, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"HP +100\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "HP +100",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 27
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value 'HP +100' at row 27 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 29, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"-\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "-",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 29
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value '-' at row 29 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 30, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"SP +30\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "SP +30",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 30
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value 'SP +30' at row 30 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 31, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"-\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "-",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 31
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value '-' at row 31 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 32, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"SP +20\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "SP +20",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 32
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value 'SP +20' at row 32 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 33, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"SP +25\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "SP +25",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 33
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value 'SP +25' at row 33 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 34, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"HP -40\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "HP -40",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 34
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value 'HP -40' at row 34 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 35, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"SP +100\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "SP +100",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 35
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value 'SP +100' at row 35 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 36, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"HP +45\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "HP +45",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 36
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value 'HP +45' at row 36 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 37, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"-\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "-",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 37
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value '-' at row 37 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 38, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"HP +50\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "HP +50",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 38
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value 'HP +50' at row 38 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 39, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"-\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "-",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 39
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value '-' at row 39 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 41, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"HP +25\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "HP +25",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 41
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value 'HP +25' at row 41 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 42, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"SP +10\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "SP +10",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 42
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value 'SP +10' at row 42 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 43, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"SP +40\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "SP +40",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 43
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value 'SP +40' at row 43 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 44, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"0\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "0",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 44
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value '0' at row 44 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 45, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"-\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "-",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 45
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value '-' at row 45 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 46, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"-\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "-",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 46
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value '-' at row 46 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 47, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"HP +10\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "HP +10",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 47
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value 'HP +10' at row 47 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 48, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"SP +75\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "SP +75",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 48
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value 'SP +75' at row 48 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 49, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"-\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "-",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 49
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value '-' at row 49 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 50, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"-\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "-",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 50
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value '-' at row 50 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 51, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"-\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "-",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 51
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value '-' at row 51 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 52, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"HP -20\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "HP -20",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 52
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value 'HP -20' at row 52 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 53, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"HP +10\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "HP +10",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 53
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value 'HP +10' at row 53 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 54, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"SP +25\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "SP +25",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 54
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value 'SP +25' at row 54 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 55, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"-\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "-",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 55
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value '-' at row 55 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 56, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"-\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "-",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 56
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value '-' at row 56 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 57, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"-\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "-",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 57
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value '-' at row 57 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 58, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"-\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "-",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 58
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value '-' at row 58 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "MissingReference:{\"row_index\": 59, \"source_column\": \"Consume_Effect\", \"source_table\": \"drops\", \"target_column\": \"Status_Effect\", \"target_table\": \"effects\", \"value\": \"SP +50\"}": {
+      "type": "MissingReference",
+      "details": {
+        "source_table": "drops",
+        "source_column": "Consume_Effect",
+        "value": "SP +50",
+        "target_table": "effects",
+        "target_column": "Status_Effect",
+        "row_index": 59
+      },
+      "description": "Missing reference: 'drops.Consume_Effect' value 'SP +50' at row 59 not found in 'effects.Status_Effect'.",
+      "status": "new"
+    },
+    "HighVariety:{\"column\": \"Drop_Name\", \"table\": \"drops\", \"unique_count\": 70}": {
+      "type": "HighVariety",
+      "details": {
+        "table": "drops",
+        "column": "Drop_Name",
+        "unique_count": 70
+      },
+      "description": "High variety detected in 'drops.Drop_Name' (70 unique values). May require complex logic.",
+      "status": "new"
+    },
+    "HighVariety:{\"column\": \"Item_Value\", \"table\": \"drops\", \"unique_count\": 22}": {
+      "type": "HighVariety",
+      "details": {
+        "table": "drops",
+        "column": "Item_Value",
+        "unique_count": 22
+      },
+      "description": "High variety detected in 'drops.Item_Value' (22 unique values). May require complex logic.",
+      "status": "new"
+    },
+    "HighVariety:{\"column\": \"Consume_Effect\", \"table\": \"drops\", \"unique_count\": 40}": {
+      "type": "HighVariety",
+      "details": {
+        "table": "drops",
+        "column": "Consume_Effect",
+        "unique_count": 40
+      },
+      "description": "High variety detected in 'drops.Consume_Effect' (40 unique values). May require complex logic.",
+      "status": "new"
+    },
+    "HighVariety:{\"column\": \"Status_Effect\", \"table\": \"effects\", \"unique_count\": 32}": {
+      "type": "HighVariety",
+      "details": {
+        "table": "effects",
+        "column": "Status_Effect",
+        "unique_count": 32
+      },
+      "description": "High variety detected in 'effects.Status_Effect' (32 unique values). May require complex logic.",
+      "status": "new"
+    },
+    "HighVariety:{\"column\": \"Move_Name\", \"table\": \"moves\", \"unique_count\": 36}": {
+      "type": "HighVariety",
+      "details": {
+        "table": "moves",
+        "column": "Move_Name",
+        "unique_count": 36
+      },
+      "description": "High variety detected in 'moves.Move_Name' (36 unique values). May require complex logic.",
+      "status": "new"
+    },
+    "KnownDeviation:{\"column\": \"Consume_Effect\", \"deviant_values\": [\"HP +125\", \"SP +75\", \"DEATH\", \"SP +10\", \"SP +100\", \"HP +50\", \"HP +25\", \"SP +125\", \"SP +200\", \"SP +50\", \"SP +30\", \"HP -20\", \"HP +100\", \"SP +25\", \"HP -60\", \"-\", \"SP +40\", \"0\", \"SP +20\", \"HP +45\", \"HP +10\", \"HP -40\"], \"table\": \"drops\"}": {
+      "type": "KnownDeviation",
+      "details": {
+        "table": "drops",
+        "column": "Consume_Effect",
+        "deviant_values": [
+          "HP +125",
+          "SP +75",
+          "DEATH",
+          "SP +10",
+          "SP +100",
+          "HP +50",
+          "HP +25",
+          "SP +125",
+          "SP +200",
+          "SP +50",
+          "SP +30",
+          "HP -20",
+          "HP +100",
+          "SP +25",
+          "HP -60",
+          "-",
+          "SP +40",
+          "0",
+          "SP +20",
+          "HP +45",
+          "HP +10",
+          "HP -40"
+        ]
+      },
+      "description": "Known deviation patterns found in 'drops.Consume_Effect': ['HP +125', 'SP +75', 'DEATH', 'SP +10', 'SP +100']... Logic needs specific handling.",
+      "status": "new"
+    },
+    "KnownDeviation:{\"columns\": [\"Rare_Item\", \"Uncommon_Item\", \"Common_Item\"], \"deviant_values\": [\"Any Metal\", \"Any Tooth\", \"Any Jewel\"], \"table\": \"smith\"}": {
+      "type": "KnownDeviation",
+      "details": {
+        "table": "smith",
+        "columns": [
+          "Rare_Item",
+          "Uncommon_Item",
+          "Common_Item"
+        ],
+        "deviant_values": [
+          "Any Metal",
+          "Any Tooth",
+          "Any Jewel"
+        ]
+      },
+      "description": "Known deviation patterns found in smithing ingredients: ['Any Metal', 'Any Tooth', 'Any Jewel']... Logic needs category handling.",
+      "status": "new"
+    },
+    "FrontierGap:{\"column\": \"Drop_1\", \"empty_count\": 1, \"table\": \"enemy\"}": {
+      "type": "FrontierGap",
+      "details": {
+        "table": "enemy",
+        "column": "Drop_1",
+        "empty_count": 1
+      },
+      "description": "1 empty values found in linking column 'enemy.Drop_1'. Incomplete relationships.",
+      "status": "new"
+    },
+    "FrontierGap:{\"column\": \"Drop_2\", \"empty_count\": 1, \"table\": \"enemy\"}": {
+      "type": "FrontierGap",
+      "details": {
+        "table": "enemy",
+        "column": "Drop_2",
+        "empty_count": 1
+      },
+      "description": "1 empty values found in linking column 'enemy.Drop_2'. Incomplete relationships.",
+      "status": "new"
+    },
+    "FrontierGap:{\"column\": \"Drop_3\", \"empty_count\": 1, \"table\": \"enemy\"}": {
+      "type": "FrontierGap",
+      "details": {
+        "table": "enemy",
+        "column": "Drop_3",
+        "empty_count": 1
+      },
+      "description": "1 empty values found in linking column 'enemy.Drop_3'. Incomplete relationships.",
+      "status": "new"
+    },
+    "FrontierGap:{\"column\": \"Drop_4\", \"empty_count\": 1, \"table\": \"enemy\"}": {
+      "type": "FrontierGap",
+      "details": {
+        "table": "enemy",
+        "column": "Drop_4",
+        "empty_count": 1
+      },
+      "description": "1 empty values found in linking column 'enemy.Drop_4'. Incomplete relationships.",
+      "status": "new"
+    },
+    "FrontierGap:{\"column\": \"Move_1\", \"empty_count\": 1, \"table\": \"enemy\"}": {
+      "type": "FrontierGap",
+      "details": {
+        "table": "enemy",
+        "column": "Move_1",
+        "empty_count": 1
+      },
+      "description": "1 empty values found in linking column 'enemy.Move_1'. Incomplete relationships.",
+      "status": "new"
+    },
+    "FrontierGap:{\"column\": \"Move_2\", \"empty_count\": 1, \"table\": \"enemy\"}": {
+      "type": "FrontierGap",
+      "details": {
+        "table": "enemy",
+        "column": "Move_2",
+        "empty_count": 1
+      },
+      "description": "1 empty values found in linking column 'enemy.Move_2'. Incomplete relationships.",
+      "status": "new"
+    },
+    "FrontierGap:{\"column\": \"Move_3\", \"empty_count\": 1, \"table\": \"enemy\"}": {
+      "type": "FrontierGap",
+      "details": {
+        "table": "enemy",
+        "column": "Move_3",
+        "empty_count": 1
+      },
+      "description": "1 empty values found in linking column 'enemy.Move_3'. Incomplete relationships.",
+      "status": "new"
+    },
+    "FrontierGap:{\"column\": \"Move_4\", \"empty_count\": 1, \"table\": \"enemy\"}": {
+      "type": "FrontierGap",
+      "details": {
+        "table": "enemy",
+        "column": "Move_4",
+        "empty_count": 1
+      },
+      "description": "1 empty values found in linking column 'enemy.Move_4'. Incomplete relationships.",
+      "status": "new"
+    }
+  }
+}
