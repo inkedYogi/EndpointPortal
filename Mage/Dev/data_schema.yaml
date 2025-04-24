@@ -1,0 +1,143 @@
+# data_schema.yaml
+
+# List of game data CSV files relative to the data directory
+data_files:
+  - brew_data.csv
+  - craft_data.csv
+  - smith_data.csv
+  - drops_data.csv
+  - enemy_data.csv
+  - effects_data.csv
+  - moves_data.csv
+
+# Define expected Data Contracts (Foreign Key-like relationships)
+# Each contract specifies:
+# - source_table: the table containing the foreign key(s)
+# - source_columns: list of columns in the source table
+# - target_table: the table containing the primary key
+# - target_column: the primary key column in the target table
+data_contracts:
+  - source_table: brew
+    source_columns:
+      - Rare_Item
+      - Uncommon_Item
+      - Common_Item
+    target_table: drops
+    target_column: Drop_Name
+  - source_table: craft
+    source_columns:
+      - Rare_Item
+      - Uncommon_Item
+      - Common_Item
+    target_table: drops
+    target_column: Drop_Name
+  - source_table: smith
+    source_columns:
+      - Rare_Item
+      - Uncommon_Item
+      - Common_Item
+    target_table: drops
+    target_column: Drop_Name
+  - source_table: brew
+    source_columns:
+      - Item_Effect
+    target_table: effects
+    target_column: Status_Effect
+  - source_table: drops
+    source_columns:
+      - Consume_Effect
+    target_table: effects
+    target_column: Status_Effect
+  - source_table: enemy
+    source_columns:
+      - Drop_1
+      - Drop_2
+      - Drop_3
+      - Drop_4
+    target_table: drops
+    target_column: Drop_Name
+  - source_table: enemy
+    source_columns:
+      - Move_1
+      - Move_2
+      - Move_3
+      - Move_4
+    target_table: moves
+    target_column: Move_Name
+  - source_table: moves
+    source_columns:
+      - Status_Effect
+    target_table: effects
+    target_column: Status_Effect
+  # Add other known or required relationships here
+
+# Define columns expected to be unique (Primary Keys)
+# Format: table_name: unique_column_name
+unique_columns:
+  drops: Drop_Name
+  effects: Status_Effect
+  moves: Move_Name
+  enemy: Name # Assuming enemy names are unique
+  # Add primary keys for other tables if applicable
+
+# Define columns expected to exist in each table (Basic Schema Check)
+# Format: table_name: [list of required column names]
+required_columns:
+  brew:
+    - Crafted_Item
+    - Rare_Item
+    - Uncommon_Item
+    - Common_Item
+    - AP_Required
+    - Item_Effect
+    - Item_Rarity
+    - Item_Value
+  craft:
+    - Crafted_Item
+    - Rare_Item
+    - Uncommon_Item
+    - Common_Item
+    - AP_Required
+    - Item_Rarity
+    - Item_Value
+  smith:
+    - Crafted_Item
+    - Rare_Item
+    - Uncommon_Item
+    - Common_Item
+    - AP_Required
+    - Item_Rarity
+    - Item_Value
+  drops:
+    - Drop_Name
+    - Item_Weight
+    - Item_Value
+    - Item_Rarity
+    - Wild_Gatherable
+    - Consume_Effect
+  enemy:
+    - Name
+    - HP
+    - ATK
+    - Move_1
+    - Move_2
+    - Move_3
+    - Move_4
+    - Drop_1
+    - Drop_2
+    - Drop_3
+    - Drop_4
+  effects:
+    - Status_Effect
+    - Effect_Type
+    - Value
+    - End_%
+  moves:
+    - Move_Name
+    - ATK_multiplier
+    - SP_Required
+    - Status_Effect
+    - Status_%
+    - End_%
+    - Move_Kind
+    - Move_Range
