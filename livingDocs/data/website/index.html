@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal File Viewer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .file-drop-area {
+            border: 2px dashed #cbd5e0;
+            transition: all 0.3s ease;
+        }
+        .file-drop-area.active {
+            border-color: #4f46e5;
+            background-color: #eef2ff;
+        }
+        .preview-container {
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        .json-viewer {
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        table.csv-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        table.csv-table th, table.csv-table td {
+            border: 1px solid #e2e8f0;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        table.csv-table th {
+            background-color: #f8fafc;
+            font-weight: 600;
+        }
+        table.csv-table tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-10">
+                <h1 class="text-4xl font-bold text-indigo-700 mb-2">Universal File Viewer</h1>
+                <p class="text-gray-600">Upload and view images, text, JSON, YAML, or CSV files instantly</p>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8">
+                <div class="p-6">
+                    <div 
+                        id="dropArea" 
+                        class="file-drop-area rounded-lg p-8 text-center cursor-pointer transition-all duration-300 hover:bg-indigo-50"
+                    >
+                        <div class="flex flex-col items-center justify-center space-y-4">
+                            <div class="bg-indigo-100 p-4 rounded-full">
+                                <i class="fas fa-cloud-upload-alt text-indigo-600 text-3xl"></i>
+                            </div>
+                            <h3 class="text-lg font-medium text-gray-700">Drag & drop files here</h3>
+                            <p class="text-gray-500 text-sm">or click to browse</p>
+                            <input 
+                                type="file" 
+                                id="fileInput" 
+                                class="hidden" 
+                                accept="image/*,.txt,.json,.yaml,.yml,.csv"
+                                multiple
+                            >
+                            <button 
+                                id="browseBtn"
+                                class="mt-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
+                            >
+                                Select Files
+                            </button>
+                        </div>
+                    </div>
+                    <div id="fileList" class="mt-4 space-y-2 hidden"></div>
+                </div>
+            </div>
+
+            <div id="previewSection" class="hidden bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="border-b border-gray-200 px-6 py-4 flex justify-between items-center">
+                    <h2 class="text-xl font-semibold text-gray-800">File Preview</h2>
+                    <button 
+                        id="clearBtn"
+                        class="text-red-500 hover:text-red-700 transition-colors"
+                    >
+                        <i class="fas fa-times mr-1"></i> Clear
+                    </button>
+                </div>
+                <div class="p-6">
+                    <div id="fileInfo" class="mb-4 flex items-center space-x-4">
+                        <div id="fileIcon" class="text-3xl text-indigo-500"></div>
+                        <div>
+                            <h3 id="fileName" class="font-medium text-gray-800"></h3>
+                            <p id="fileSize" class="text-sm text-gray-500"></p>
+                        </div>
+                    </div>
+                    <div id="previewContainer" class="preview-container mt-4 p-4 border border-gray-200 rounded-lg">
+                        <!-- Preview content will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropArea = document.getElementById('dropArea');
+            const fileInput = document.getElementById('fileInput');
+            const browseBtn = document.getElementById('browseBtn');
+            const fileList = document.getElementById('fileList');
+            const previewSection = document.getElementById('previewSection');
+            const previewContainer = document.getElementById('previewContainer');
+            const fileIcon = document.getElementById('fileIcon');
+            const fileName = document.getElementById('fileName');
+            const fileSize = document.getElementById('fileSize');
+            const clearBtn = document.getElementById('clearBtn');
+
+            // Prevent default drag behaviors
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+                document.body.addEventListener(eventName, preventDefaults, false);
+            });
+
+            // Highlight drop area when item is dragged over it
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+
+            // Handle dropped files
+            dropArea.addEventListener('drop', handleDrop, false);
+
+            // Handle file selection via button
+            browseBtn.addEventListener('click', () => fileInput.click());
+
+            // Handle file selection via input
+            fileInput.addEventListener('change', handleFiles);
+
+            // Clear button
+            clearBtn.addEventListener('click', clearPreview);
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            function highlight() {
+                dropArea.classList.add('active');
+            }
+
+            function unhighlight() {
+                dropArea.classList.remove('active');
+            }
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles({ target: { files } });
+            }
+
+            function handleFiles(e) {
+                const files = e.target.files;
+                if (files.length === 0) return;
+
+                // For simplicity, we'll just process the first file
+                const file = files[0];
+                displayFileInfo(file);
+                previewFile(file);
+            }
+
+            function displayFileInfo(file) {
+                previewSection.classList.remove('hidden');
+                
+                // Set file icon based on type
+                let iconClass = 'fa-file';
+                if (file.type.startsWith('image/')) {
+                    iconClass = 'fa-file-image';
+                } else if (file.type === 'application/json') {
+                    iconClass = 'fa-file-code';
+                } else if (file.type === 'text/csv' || file.name.endsWith('.csv')) {
+                    iconClass = 'fa-file-csv';
+                } else if (file.name.endsWith('.yaml') || file.name.endsWith('.yml')) {
+                    iconClass = 'fa-file-alt';
+                } else if (file.type === 'text/plain' || file.name.endsWith('.txt')) {
+                    iconClass = 'fa-file-text';
+                }
+                
+                fileIcon.innerHTML = `<i class="fas ${iconClass}"></i>`;
+                fileName.textContent = file.name;
+                fileSize.textContent = formatFileSize(file.size);
+            }
+
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            function previewFile(file) {
+                const reader = new FileReader();
+                
+                if (file.type.startsWith('image/')) {
+                    previewImage(file, reader);
+                } else if (file.type === 'application/json' || file.name.endsWith('.json')) {
+                    previewJson(file, reader);
+                } else if (file.name.endsWith('.yaml') || file.name.endsWith('.yml')) {
+                    previewYaml(file, reader);
+                } else if (file.type === 'text/csv' || file.name.endsWith('.csv')) {
+                    previewCsv(file, reader);
+                } else {
+                    // Default to text preview
+                    previewText(file, reader);
+                }
+            }
+
+            function previewImage(file, reader) {
+                reader.onload = function(e) {
+                    previewContainer.innerHTML = `
+                        <div class="flex justify-center">
+                            <img src="${e.target.result}" alt="${file.name}" class="max-w-full h-auto rounded-lg shadow-sm">
+                        </div>
+                    `;
+                };
+                reader.readAsDataURL(file);
+            }
+
+            function previewJson(file, reader) {
+                reader.onload = function(e) {
+                    try {
+                        const json = JSON.parse(e.target.result);
+                        const formattedJson = JSON.stringify(json, null, 2);
+                        previewContainer.innerHTML = `
+                            <div class="json-viewer bg-gray-50 p-4 rounded-md overflow-x-auto">
+                                <pre>${syntaxHighlight(formattedJson)}</pre>
+                            </div>
+                        `;
+                    } catch (error) {
+                        previewContainer.innerHTML = `
+                            <div class="bg-red-50 text-red-700 p-4 rounded-md">
+                                <p class="font-medium">Error parsing JSON:</p>
+                                <p>${error.message}</p>
+                            </div>
+                        `;
+                    }
+                };
+                reader.readAsText(file);
+            }
+
+            function previewYaml(file, reader) {
+                reader.onload = function(e) {
+                    try {
+                        const yaml = jsyaml.load(e.target.result);
+                        const formattedYaml = jsyaml.dump(yaml);
+                        previewContainer.innerHTML = `
+                            <div class="bg-gray-50 p-4 rounded-md overflow-x-auto">
+                                <pre class="whitespace-pre-wrap">${formattedYaml}</pre>
+                            </div>
+                        `;
+                    } catch (error) {
+                        previewContainer.innerHTML = `
+                            <div class="bg-red-50 text-red-700 p-4 rounded-md">
+                                <p class="font-medium">Error parsing YAML:</p>
+                                <p>${error.message}</p>
+                            </div>
+                        `;
+                    }
+                };
+                reader.readAsText(file);
+            }
+
+            function previewCsv(file, reader) {
+                reader.onload = function(e) {
+                    Papa.parse(e.target.result, {
+                        header: true,
+                        skipEmptyLines: true,
+                        complete: function(results) {
+                            if (results.errors.length > 0) {
+                                previewContainer.innerHTML = `
+                                    <div class="bg-red-50 text-red-700 p-4 rounded-md">
+                                        <p class="font-medium">Error parsing CSV:</p>
+                                        <p>${results.errors[0].message}</p>
+                                    </div>
+                                `;
+                                return;
+                            }
+                            
+                            if (results.data.length === 0) {
+                                previewContainer.innerHTML = `
+                                    <div class="bg-yellow-50 text-yellow-700 p-4 rounded-md">
+                                        <p>CSV file is empty or couldn't be parsed.</p>
+                                    </div>
+                                `;
+                                return;
+                            }
+                            
+                            // Create table header
+                            let tableHtml = '<table class="csv-table"><thead><tr>';
+                            const headers = Object.keys(results.data[0]);
+                            
+                            headers.forEach(header => {
+                                tableHtml += `<th>${header}</th>`;
+                            });
+                            
+                            tableHtml += '</tr></thead><tbody>';
+                            
+                            // Create table rows
+                            results.data.forEach(row => {
+                                tableHtml += '<tr>';
+                                headers.forEach(header => {
+                                    tableHtml += `<td>${row[header] || ''}</td>`;
+                                });
+                                tableHtml += '</tr>';
+                            });
+                            
+                            tableHtml += '</tbody></table>';
+                            previewContainer.innerHTML = tableHtml;
+                        }
+                    });
+                };
+                reader.readAsText(file);
+            }
+
+            function previewText(file, reader) {
+                reader.onload = function(e) {
+                    previewContainer.innerHTML = `
+                        <div class="bg-gray-50 p-4 rounded-md overflow-x-auto">
+                            <pre class="whitespace-pre-wrap">${escapeHtml(e.target.result)}</pre>
+                        </div>
+                    `;
+                };
+                reader.readAsText(file);
+            }
+
+            function syntaxHighlight(json) {
+                json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                    let cls = 'text-gray-800';
+                    if (/^"/.test(match)) {
+                        if (/:$/.test(match)) {
+                            cls = 'text-indigo-600';
+                        } else {
+                            cls = 'text-green-600';
+                        }
+                    } else if (/true|false|null/.test(match)) {
+                        cls = 'text-purple-600';
+                    } else if (/^-?\d+$/.test(match)) {
+                        cls = 'text-blue-600';
+                    }
+                    return `<span class="${cls}">${match}</span>`;
+                });
+            }
+
+            function escapeHtml(unsafe) {
+                return unsafe
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }
+
+            function clearPreview() {
+                previewSection.classList.add('hidden');
+                previewContainer.innerHTML = '';
+                fileInput.value = '';
+            }
+        });
+    </script>
+</body>
+</html>
