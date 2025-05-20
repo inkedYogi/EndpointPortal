@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="lessonTitle">Loading...</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@4.7.7/dist/handlebars.min.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .content-section {
+            padding-top: 4rem; /* Adjust based on nav height */
+            min-height: calc(100vh - 4rem);
+        }
+        .nav-link {
+            transition: color 0.3s ease, border-bottom-color 0.3s ease;
+        }
+        .nav-link.active {
+            color: #f59e0b; /* amber-500 */
+            border-bottom-color: #f59e0b; /* amber-500 */
+        }
+        .math {
+            font-family: 'Times New Roman', Times, serif;
+            font-style: italic;
+        }
+        .math-symbol {
+            font-family: 'Times New Roman', Times, serif;
+            font-style: normal;
+        }
+        /* Tooltip styles */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            border-bottom: 1px dotted #6b7280; /* gray-500 */
+            cursor: help;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 220px;
+            background-color: #1f2937; /* gray-800 */
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -110px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-family: 'Inter', sans-serif;
+            font-style: normal;
+            font-size: 0.875rem;
+        }
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #1f2937 transparent transparent transparent;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        /* Chart container (demo output, LLM output) */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* max-w-2xl */
+            margin-left: auto;
+            margin-right: auto;
+            min-height: 150px;
+            max-height: 400px;
+            padding: 1rem; /* p-4 */
+            background-color: #f9fafb; /* bg-gray-50 */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+        }
+        /* Specific styles for new elements */
+        .formula-box-content { /* For content inside the box */
+            max-width: fit-content; /* Adjust based on preference */
+            margin: 0 auto; /* Center the content within its container */
+        }
+        .formula-box-wrapper { /* For the box itself */
+            max-width: 800px; /* Example: Control max width of the formula box */
+            margin-left: auto;
+            margin-right: auto;
+            background-color: #e5e7eb; /* stone-200 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+        .demo-input-grid {
+            max-width: 700px; /* Control width of inputs */
+            margin-left: auto;
+            margin-right: auto;
+            justify-content: center; /* Center the grid items if space allows */
+        }
+        .section-hidden {
+            display: none;
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #f59e0b; /* Amber */
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-stone-100 text-stone-800 antialiased">
+
+    <nav class="bg-stone-800 text-stone-100 p-4 fixed w-full top-0 z-10 shadow-md">
+        <div class="container mx-auto flex flex-wrap justify-between items-center">
+            <div class="text-xl font-bold" id="navLessonTitle">TGA Spin Foam Explorer</div>
+            <button id="nav-toggle" class="md:hidden text-stone-100 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+            <div id="nav-content" class="w-full md:w-auto md:flex hidden md:items-center mt-4 md:mt-0 space-y-2 md:space-y-0 md:space-x-6">
+                </div>
+        </div>
+    </nav>
+
+    <main id="contentContainer" class="container mx-auto px-4 pt-20">
+        <div id="loading" class="text-center py-20">
+            <div class="loading-spinner"></div>
+            <p class="mt-4 text-lg text-stone-700">Loading lesson content...</p>
+        </div>
+    </main>
+
+    <footer class="bg-stone-800 text-stone-300 text-center p-6 mt-12">
+        <p>&copy; 2025 Dynamic Educational Platform. A conceptual application.</p>
+    </footer>
+
+    <script id="overview_block-template" type="text/x-handlebars-template">
+        <section id="{{id}}" class="content-section py-12 bg-white rounded-lg shadow-lg mb-12 p-8">
+            <h2 class="text-3xl font-bold mb-6 text-amber-600 border-b-2 border-amber-500 pb-2">{{heading}}</h2>
+            <p class="text-lg leading-relaxed mb-4">{{content}}</p>
+            {{> quizTemplate quizData=quiz id=id}}
+        </section>
+    </script>
+
+    <script id="formula_text_block-template" type="text/x-handlebars-template">
+        <section id="{{id}}" class="content-section py-12 bg-stone-50 rounded-lg shadow-lg mb-12 p-8">
+            <h2 class="text-3xl font-bold mb-6 text-amber-600 border-b-2 border-amber-500 pb-2">{{heading}}</h2>
+            <p class="text-lg leading-relaxed mb-4">{{introText}}</p>
+            <div class="formula-box-wrapper">
+                <p class="text-xl math formula-box-content">\[{{formula.latex}}\]</p> </div>
+            <p class="text-lg leading-relaxed">{{formula.explanation}}</p>
+            {{#if tooltips}}
+                <div class="mt-6">
+                    <p class="text-lg font-semibold mb-2">Key Terms:</p>
+                    <ul class="list-disc list-inside ml-4 space-y-2 text-lg">
+                        {{#each tooltips}}
+                            <li><span class="tooltip">{{term}}<span class="tooltiptext">{{definition}}</span></span></li>
+                        {{/each}}
+                    </ul>
+                </div>
+            {{/if}}
+            {{> quizTemplate quizData=quiz id=id}}
+        </section>
+    </script>
+
+    <script id="interactive_demo_block-template" type="text/x-handlebars-template">
+        <section id="{{id}}" class="content-section py-12 bg-white rounded-lg shadow-lg mb-12 p-8">
+            <h2 class="text-3xl font-bold mb-6 text-amber-600 border-b-2 border-amber-500 pb-2">{{heading}}</h2>
+            <p class="text-lg leading-relaxed mb-4">{{introText}}</p>
+            <div class="grid md:grid-cols-3 gap-6 mb-6 demo-input-grid">
+                {{#each demoConfig.inputs}}
+                    <div>
+                        <label for="{{id}}-{{../id}}" class="block text-sm font-medium text-stone-700">{{label}}</label>
+                        <input type="number" id="{{id}}-{{../id}}" value="{{defaultValue}}" class="mt-1 block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-amber-500 focus:border-amber-500">
+                    </div>
+                {{/each}}
+            </div>
+            <button class="calculate-demo-btn bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-4 rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-opacity-75" data-section-id="{{id}}">
+                Calculate Conceptual Values
+            </button>
+            <div class="chart-container mt-8">
+                <h3 class="text-xl font-semibold mb-2 text-stone-700">Results:</h3>
+                {{#each demoConfig.outputs}}
+                    <p class="text-lg">{{label}} <span id="{{id}}-{{../id}}" class="font-bold text-amber-700">N/A</span></p>
+                {{/each}}
+                {{#if demoConfig.notes}}
+                    <p class="text-sm mt-4 text-stone-600">{{demoConfig.notes}}</p>
+                {{/if}}
+            </div>
+            {{#if demoConfig.challenge}}
+                <div id="challenge-feedback-{{id}}" class="feedback-message mt-4 p-3 rounded-md hidden"></div>
+                <button class="check-challenge-btn bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 mt-2" data-section-id="{{id}}">
+                    Check Challenge
+                </button>
+            {{/if}}
+        </section>
+    </script>
+
+    <script id="future_work_list-template" type="text/x-handlebars-template">
+        <section id="{{id}}" class="content-section py-12 bg-stone-50 rounded-lg shadow-lg mb-12 p-8">
+            <h2 class="text-3xl font-bold mb-6 text-amber-600 border-b-2 border-amber-500 pb-2">{{heading}}</h2>
+            <p class="text-lg leading-relaxed mb-4">{{introText}}</p>
+            <ol class="list-decimal list-inside ml-4 space-y-3 text-lg">
+                {{#each listItems}}
+                    <li>{{{this}}}</li>
+                {{/each}}
+            </ol>
+            {{> quizTemplate quizData=quiz id=id}}
+        </section>
+    </script>
+
+    <script id="llm_qa_block-template" type="text/x-handlebars-template">
+        <section id="{{id}}" class="content-section py-12 bg-white rounded-lg shadow-lg mb-12 p-8">
+            <h2 class="text-3xl font-bold mb-6 text-amber-600 border-b-2 border-amber-500 pb-2">{{heading}}</h2>
+            <p class="text-lg leading-relaxed mb-4">
+                {{introText}}
+            </p>
+            {{#if llmPrompt}}
+                <button class="llm-prompt-btn bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-opacity-75" data-section-id="{{id}}">
+                    Ask LLM: {{llmPrompt}}
+                </button>
+            {{/if}}
+            {{#if openEndedLLM}}
+                <div class="mt-6">
+                    <label for="llm-open-question-{{id}}" class="block text-sm font-medium text-stone-700">Your question:</label>
+                    <textarea id="llm-open-question-{{id}}" rows="4" class="mt-1 block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-amber-500 focus:border-amber-500" placeholder="Type your question here..."></textarea>
+                    <button class="llm-open-ask-btn bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-opacity-75 mt-2" data-section-id="{{id}}">
+                        Ask My Question
+                    </button>
+                </div>
+            {{/if}}
+            <div class="chart-container mt-8" id="llm-output-{{id}}">
+                <h3 class="text-xl font-semibold mb-2 text-stone-700">LLM Response:</h3>
+                <div id="llm-response-content-{{id}}" class="text-lg">No response yet.</div>
+                <div id="llm-loading-{{id}}" class="loading-spinner hidden mt-4"></div>
+            </div>
+            {{> quizTemplate quizData=quiz id=id}}
+        </section>
+    </script>
+
+    <script id="quizTemplate" type="text/x-handlebars-template">
+        {{#if quizData}}
+            <div class="quiz-container bg-stone-100 p-6 rounded-lg my-6" data-quiz-section-id="{{id}}">
+                <h4 class="text-xl font-semibold mb-4 text-stone-700">Quick Check:</h4>
+                <p class="mb-3">{{quizData.question}}</p>
+                {{#ifEquals quizData.type "multiple_choice"}}
+                    {{#each quizData.options}}
+                        <label class="block mb-2">
+                            <input type="radio" name="quiz-option-{{../id}}" value="{{@index}}" class="mr-2"> {{text}}
+                        </label>
+                    {{/each}}
+                {{/ifEquals}}
+                {{#ifEquals quizData.type "short_answer"}}
+                    <textarea id="shortAnswer-{{id}}" rows="3" class="w-full p-2 border border-stone-300 rounded-md focus:ring-amber-500 focus:border-amber-500" placeholder="Type your answer here..."></textarea>
+                {{/ifEquals}}
+                <button class="check-answer-btn bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow mt-4" data-quiz-id="{{id}}">Check Answer</button>
+                <div class="feedback-message mt-3 p-3 rounded-md hidden"></div>
+            </div>
+        {{/if}}
+    </script>
+
+    <script>
+        // Handlebars Helpers
+        Handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
+            return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+        });
+
+        // Main Application Logic
+        const contentContainer = document.getElementById('contentContainer');
+        const navContent = document.getElementById('nav-content');
+        const navToggle = document.getElementById('nav-toggle');
+        const lessonTitleElem = document.getElementById('lessonTitle');
+        const navLessonTitleElem = document.getElementById('navLessonTitle');
+        const loadingSpinner = document.getElementById('loading');
+
+        let currentLessonData = null;
+        let completedSections = new Set(); // Stores IDs of completed sections
+
+        // Cache compiled templates
+        const templates = {};
+        document.querySelectorAll('script[type="text/x-handlebars-template"]').forEach(templateScript => {
+            const templateName = templateScript.id.replace('-template', '');
+            templates[templateName] = Handlebars.compile(templateScript.innerHTML);
+        });
+
+        // Register quiz partial
+        Handlebars.registerPartial('quizTemplate', templates['quizTemplate']);
+
+        async function fetchAndRenderLesson() {
+            try {
+                const response = await fetch('./tga_lesson_content.json'); // Adjust path as needed
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                currentLessonData = await response.json();
+                
+                lessonTitleElem.textContent = currentLessonData.lessonTitle;
+                navLessonTitleElem.textContent = currentLessonData.lessonTitle;
+
+                // Load completed sections from localStorage
+                const storedCompleted = localStorage.getItem('completedSections_' + currentLessonData.lessonId);
+                if (storedCompleted) {
+                    completedSections = new Set(JSON.parse(storedCompleted));
+                }
+
+                renderLessonSections();
+                setupEventListeners();
+                loadingSpinner.classList.add('hidden'); // Hide loading spinner
+            } catch (error) {
+                console.error("Error loading lesson data:", error);
+                contentContainer.innerHTML = '<p class="text-red-600 text-center py-20">Failed to load lesson content. Please try again later.</p>';
+                loadingSpinner.classList.add('hidden');
+            }
+        }
+
+        function renderLessonSections() {
+            contentContainer.innerHTML = ''; // Clear existing content
+            navContent.innerHTML = ''; // Clear existing nav links
+
+            let firstUncompletedRendered = false;
+
+            currentLessonData.sections.forEach(section => {
+                const isCompleted = completedSections.has(section.id);
+                const isPrerequisiteMet = checkPrerequisites(section.prerequisites);
+                const shouldRender = isCompleted || (!firstUncompletedRendered && isPrerequisiteMet);
+
+                if (shouldRender) {
+                    const template = templates[section.type];
+                    if (template) {
+                        const sectionHtml = template(section);
+                        contentContainer.insertAdjacentHTML('beforeend', sectionHtml);
+
+                        // Add to navigation
+                        const navLink = document.createElement('a');
+                        navLink.href = `#${section.id}`;
+                        navLink.classList.add('nav-link', 'block', 'md:inline-block', 'hover:text-amber-400', 'border-b-2', 'border-transparent', 'pb-1');
+                        navLink.textContent = section.heading;
+                        navContent.appendChild(navLink);
+
+                        if (!isCompleted) {
+                             // If this is the first uncompleted section, mark it for highlighting
+                            const renderedSectionElem = document.getElementById(section.id);
+                            if (renderedSectionElem) {
+                                renderedSectionElem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                // Mark the nav link active (handled by scroll listener later)
+                            }
+                            firstUncompletedRendered = true; // Ensure only one uncompleted section is visible at a time
+                        }
+                    } else {
+                        console.warn(`No template found for section type: ${section.type}`);
+                    }
+                } else {
+                    // Placeholder for hidden sections in nav (optional, could just not render nav link)
+                    const navLink = document.createElement('a');
+                    navLink.href = `#${section.id}`;
+                    navLink.classList.add('nav-link', 'block', 'md:inline-block', 'text-stone-400', 'cursor-not-allowed', 'pb-1');
+                    navLink.textContent = `🔒 ${section.heading}`;
+                    navContent.appendChild(navLink);
+                }
+            });
+
+            // Re-render MathJax after content is in DOM
+            if (typeof MathJax !== 'undefined') {
+                MathJax.typesetPromise().then(() => {
+                    console.log('MathJax typeset complete');
+                }).catch(err => console.error('MathJax typesetting failed:', err));
+            }
+
+            // Re-bind event listeners for newly rendered elements
+            setupEventListeners();
+            changeActiveLink(); // Initial highlight
+        }
+
+        function checkPrerequisites(prerequisites) {
+            if (!prerequisites || prerequisites.length === 0) return true;
+            return prerequisites.every(prereqId => completedSections.has(prereqId));
+        }
+
+        function markSectionCompleted(sectionId) {
+            completedSections.add(sectionId);
+            localStorage.setItem('completedSections_' + currentLessonData.lessonId, JSON.stringify(Array.from(completedSections)));
+            renderLessonSections(); // Re-render to show next section
+        }
+
+        function setupEventListeners() {
+            // Remove old listeners to prevent duplicates
+            document.querySelectorAll('.check-answer-btn').forEach(btn => btn.removeEventListener('click', handleQuizSubmit));
+            document.querySelectorAll('.calculate-demo-btn').forEach(btn => btn.removeEventListener('click', handleDemoCalculation));
+            document.querySelectorAll('.check-challenge-btn').forEach(btn => btn.removeEventListener('click', handleDemoChallenge));
+            document.querySelectorAll('.llm-prompt-btn').forEach(btn => btn.removeEventListener('click', handleLLMPrompt));
+            document.querySelectorAll('.llm-open-ask-btn').forEach(btn => btn.removeEventListener('click', handleLLMOpenAsk));
+
+
+            // Add new listeners
+            document.querySelectorAll('.check-answer-btn').forEach(btn => {
+                btn.addEventListener('click', handleQuizSubmit);
+            });
+            document.querySelectorAll('.calculate-demo-btn').forEach(btn => {
+                btn.addEventListener('click', handleDemoCalculation);
+            });
+            document.querySelectorAll('.check-challenge-btn').forEach(btn => {
+                btn.addEventListener('click', handleDemoChallenge);
+            });
+            document.querySelectorAll('.llm-prompt-btn').forEach(btn => {
+                btn.addEventListener('click', handleLLMPrompt);
+            });
+            document.querySelectorAll('.llm-open-ask-btn').forEach(btn => {
+                btn.addEventListener('click', handleLLMOpenAsk);
+            });
+
+            // Smooth scroll and active link highlighting (re-attaching ensures they work on dynamic links)
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.removeEventListener('click', handleNavLinkClick); // Prevent duplicates
+                link.addEventListener('click', handleNavLinkClick);
+            });
+            window.removeEventListener('scroll', changeActiveLink); // Prevent duplicates
+            window.addEventListener('scroll', changeActiveLink);
+        }
+
+        function handleNavLinkClick(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').substring(1);
+            const targetSection = document.getElementById(targetId);
+            if (targetSection) {
+                targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            if (navToggle && navContent && !navContent.classList.contains('hidden') && window.innerWidth < 768) {
+                navContent.classList.add('hidden');
+            }
+        }
+
+        function changeActiveLink() {
+            let index = currentLessonData.sections.length;
+            while(--index && window.scrollY + 100 < document.getElementById(currentLessonData.sections[index].id).offsetTop) {}
+            
+            document.querySelectorAll('.nav-link').forEach((link) => link.classList.remove('active'));
+            if (currentLessonData.sections[index]) {
+                const activeNavLink = navContent.querySelector(`a[href="#${currentLessonData.sections[index].id}"]`);
+                if (activeNavLink) {
+                    activeNavLink.classList.add('active');
+                }
+            }
+        }
+
+        // --- Quiz Logic ---
+        function handleQuizSubmit(event) {
+            const quizId = event.target.dataset.quizId;
+            const section = currentLessonData.sections.find(s => s.id === quizId);
+            const quizData = section.quiz;
+            const feedbackElem = event.target.nextElementSibling; // div.feedback-message
+
+            let isCorrect = false;
+
+            if (quizData.type === 'multiple_choice') {
+                const selectedOption = document.querySelector(`input[name="quiz-option-${quizId}"]:checked`);
+                if (selectedOption) {
+                    isCorrect = quizData.options[parseInt(selectedOption.value)].isCorrect;
+                }
+            } else if (quizData.type === 'short_answer') {
+                const answerText = document.getElementById(`shortAnswer-${quizId}`).value.toLowerCase();
+                if (quizData.correctKeywords && quizData.correctKeywords.some(keyword => answerText.includes(keyword.toLowerCase()))) {
+                    isCorrect = true;
+                }
+            }
+
+            feedbackElem.classList.remove('hidden');
+            if (isCorrect) {
+                feedbackElem.classList.remove('bg-red-200', 'text-red-800');
+                feedbackElem.classList.add('bg-green-200', 'text-green-800');
+                feedbackElem.textContent = quizData.correctFeedback;
+                markSectionCompleted(quizId);
+            } else {
+                feedbackElem.classList.remove('bg-green-200', 'text-green-800');
+                feedbackElem.classList.add('bg-red-200', 'text-red-800');
+                feedbackElem.textContent = quizData.incorrectFeedback + (quizData.hint ? ` Hint: ${quizData.hint}` : '');
+            }
+        }
+
+        // --- Demo Logic ---
+        function handleDemoCalculation(event) {
+            const sectionId = event.target.dataset.sectionId;
+            const section = currentLessonData.sections.find(s => s.id === sectionId);
+            const demoConfig = section.demoConfig;
+
+            // Collect input values
+            const inputValues = {};
+            demoConfig.inputs.forEach(input => {
+                const inputElem = document.getElementById(`${input.id}-${sectionId}`);
+                if (inputElem && !input.ignoredInCalculation) {
+                    inputValues[input.id] = parseFloat(inputElem.value) || 0;
+                }
+            });
+
+            // Execute the calculation script (DANGER: eval() can be risky. For production, consider a more secure sandboxed approach or pre-compiled functions.)
+            let calculationResult = {};
+            try {
+                // Create a temporary function scope to run the script
+                const calculationFunction = new Function(...Object.keys(inputValues), demoConfig.calculationScript + ' return { conceptual_R_scalar, conceptual_S };');
+                calculationResult = calculationFunction(...Object.values(inputValues));
+            } catch (e) {
+                console.error("Demo calculation error:", e);
+                // Handle error for user
+            }
+
+            // Display outputs
+            demoConfig.outputs.forEach(output => {
+                const outputElem = document.getElementById(`${output.id}-${sectionId}`);
+                if (outputElem) {
+                    let value = calculationResult[output.valueKey];
+                    if (output.format === 'toFixed(6)') {
+                        value = value.toFixed(6);
+                    }
+                    outputElem.textContent = value;
+                }
+            });
+        }
+
+        function handleDemoChallenge(event) {
+            const sectionId = event.target.dataset.sectionId;
+            const section = currentLessonData.sections.find(s => s.id === sectionId);
+            const demoConfig = section.demoConfig;
+            const challenge = demoConfig.challenge;
+            const feedbackElem = document.getElementById(`challenge-feedback-${sectionId}`);
+
+            const targetOutputElem = document.getElementById(`${challenge.targetOutputId}-${sectionId}`);
+            const currentOutputValue = parseFloat(targetOutputElem.textContent);
+
+            feedbackElem.classList.remove('hidden');
+            if (Math.abs(currentOutputValue - challenge.targetValue) < challenge.tolerance) {
+                feedbackElem.classList.remove('bg-red-200', 'text-red-800');
+                feedbackElem.classList.add('bg-green-200', 'text-green-800');
+                feedbackElem.textContent = challenge.feedbackCorrect;
+                markSectionCompleted(sectionId);
+            } else {
+                feedbackElem.classList.remove('bg-green-200', 'text-green-800');
+                feedbackElem.classList.add('bg-red-200', 'text-red-800');
+                feedbackElem.textContent = challenge.feedbackIncorrect;
+            }
+        }
+
+        // --- LLM Logic (Placeholder - requires actual API integration) ---
+        async function callLLMAPI(prompt, sectionId) {
+            const loadingElem = document.getElementById(`llm-loading-${sectionId}`);
+            const responseContentElem = document.getElementById(`llm-response-content-${sectionId}`);
+
+            loadingElem.classList.remove('hidden');
+            responseContentElem.textContent = ''; // Clear previous response
+
+            // Placeholder for actual LLM API call
+            // In a real application, you'd send 'prompt' to your backend which then calls the Gemini API (or other LLM).
+            // This avoids exposing your API key directly in frontend code.
+            const dummyResponse = new Promise(resolve => setTimeout(() => {
+                resolve(`(LLM Response Placeholder for: "${prompt}"). In a real scenario, this would be an AI-generated explanation based on your query.`);
+            }, 1500)); // Simulate API delay
+
+            try {
+                const response = await dummyResponse; // Replace with actual fetch to your backend
+                responseContentElem.textContent = response;
+            } catch (error) {
+                console.error("LLM API call failed:", error);
+                responseContentElem.textContent = "Error: Could not get response from LLM.";
+            } finally {
+                loadingElem.classList.add('hidden');
+            }
+        }
+
+        function handleLLMPrompt(event) {
+            const sectionId = event.target.dataset.sectionId;
+            const section = currentLessonData.sections.find(s => s.id === sectionId);
+            if (section && section.llmPrompt) {
+                callLLMAPI(section.llmPrompt, sectionId);
+            }
+        }
+
+        function handleLLMOpenAsk(event) {
+            const sectionId = event.target.dataset.sectionId;
+            const questionTextarea = document.getElementById(`llm-open-question-${sectionId}`);
+            if (questionTextarea && questionTextarea.value.trim() !== '') {
+                callLLMAPI(questionTextarea.value.trim(), sectionId);
+            }
+        }
+
+        // Navigation toggle for mobile
+        if (navToggle) {
+            navToggle.addEventListener('click', () => {
+                navContent.classList.toggle('hidden');
+            });
+        }
+
+        // Initial lesson load
+        fetchAndRenderLesson();
+    </script>
+</body>
+</html>
