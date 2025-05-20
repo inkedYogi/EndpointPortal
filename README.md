@@ -17,11 +17,15 @@ https://drive.google.com/drive/home - Google Drive Home Page
 
 🧰 Toolkit:
 
-<a href="https://inkedYogi.github.io/EndpointPortal/livingDocs/data/website/SFD_Explorer.html">
-  TGA Spin Foam Explorer
-</a>
-<a href="https://inkedYogi.github.io/EndpointPortal/livingDocs/data/website/beta_shot.html">
-  beta_shot
-</a>
+<div>
+  <a href="https://inkedYogi.github.io/EndpointPortal/livingDocs/data/website/SFD_Explorer.html">
+    TGA Spin Foam Explorer
+  </a>
+</div>
+<div>
+  <a href="https://inkedYogi.github.io/EndpointPortal/livingDocs/data/website/beta_shot.html">
+    beta_shot
+  </a>
+</div>
 
 Mage: Caravan - Unprecedented.
