@@ -35,11 +35,11 @@
       ],
       "quiz": {
         "type": "short_answer",
-        "question": "What geometric property does the 4D pseudoscalar $I_4$ primarily represent?",
+        "question": "What geometric property does the 4D pseudoscalar \[I_4] primarily represent?",
         "correctKeywords": ["volume", "orientation"],
         "hint": "Think about what the outer product of all basis vectors defines.",
         "correctFeedback": "Excellent! It represents the oriented 4D volume.",
-        "incorrectFeedback": "Not quite. Remember $I_4$ relates to the overall 'space' of the system."
+        "incorrectFeedback": "Not quite. Remember \[I_4] relates to the overall 'space' of the system."
       }
     },
     {
@@ -72,7 +72,7 @@
       "id": "link_multivectors",
       "type": "formula_text_block",
       "prerequisites": ["ei_unit"],
-      "heading": "TGA Link Multivectors ($L_f$)",
+      "heading": "TGA Link Multivectors (\[L_f])",
       "introText": "In the TGA framework for spin foams, a 4-simplex (an elementary quantum of 4D spacetime) is defined by its 10 faces. Each face link, $L_f$, is represented as a TGA multivector. This multivector structure allows each link to carry both standard geometric information and intrinsic topological information.<p class=\"text-lg leading-relaxed mb-2 font-semibold\">Structure of a Link Multivector:</p>",
       "formula": {
         "latex": "L_f = A_f B_f^{(E)} + B_f B_f^{(T)}",
