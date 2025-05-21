@@ -3,18 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="lessonTitle">Loading Lesson...</title> <script src="https://cdn.tailwindcss.com"></script>
+    <title id="lessonTitle">Loading Lesson...</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/handlebars@4.7.7/dist/handlebars.min.js"></script>
+
     <script>
         MathJax = {
             tex: {
                 inlineMath: [['$', '$'], ['\\(', '\\)']] // This enables $...$ for inline math
             },
-            // You might need other configurations here if you had them
+            // You can add other MathJax configurations here if needed,
+            // for example, to define custom commands or environments.
         };
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -147,11 +150,12 @@
 
     <nav class="bg-stone-800 text-stone-100 p-4 fixed w-full top-0 z-10 shadow-md">
         <div class="container mx-auto flex flex-wrap justify-between items-center">
-            <div class="text-xl font-bold" id="navLessonTitle">Dynamic Lesson App</div> <button id="nav-toggle" class="md:hidden text-stone-100 focus:outline-none">
+            <div class="text-xl font-bold" id="navLessonTitle">Dynamic Lesson App</div>
+            <button id="nav-toggle" class="md:hidden text-stone-100 focus:outline-none">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
             </button>
             <div id="nav-content" class="w-full md:w-auto md:flex hidden md:items-center mt-4 md:mt-0 space-y-2 md:space-y-0 md:space-x-6">
-                </div>
+            </div>
         </div>
     </nav>
 
@@ -169,7 +173,8 @@
     <script id="overview_block-template" type="text/x-handlebars-template">
         <section id="{{id}}" class="content-section py-12 bg-white rounded-lg shadow-lg mb-12 p-8">
             <h2 class="text-3xl font-bold mb-6 text-amber-600 border-b-2 border-amber-500 pb-2">{{heading}}</h2>
-            <div class="text-lg leading-relaxed mb-4">{{{content}}}</div> {{> quizTemplate quizData=quiz id=id}}
+            <div class="text-lg leading-relaxed mb-4">{{{content}}}</div>
+            {{> quizTemplate quizData=quiz id=id}}
         </section>
     </script>
 
@@ -178,7 +183,8 @@
             <h2 class="text-3xl font-bold mb-6 text-amber-600 border-b-2 border-amber-500 pb-2">{{heading}}</h2>
             <div class="text-lg leading-relaxed mb-4">{{{introText}}}</div>
             <div class="formula-box-wrapper">
-                <p class="text-xl math formula-box-content">\[{{{formula.latex}}}\]</p> </div>
+                <p class="text-xl math formula-box-content">\[{{{formula.latex}}}\]</p>
+            </div>
             <div class="text-lg leading-relaxed">{{{formula.explanation}}}</div>
             {{#if tooltips}}
                 <div class="mt-6">
