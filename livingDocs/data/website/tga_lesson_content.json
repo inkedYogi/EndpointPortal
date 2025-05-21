@@ -35,7 +35,7 @@
       ],
       "quiz": {
         "type": "short_answer",
-        "question": "What geometric property does the 4D pseudoscalar $I_4] primarily represent?",
+        "question": "What geometric property does the 4D pseudoscalar $I_4$ primarily represent?",
         "correctKeywords": ["volume", "orientation"],
         "hint": "Think about what the outer product of all basis vectors defines.",
         "correctFeedback": "Excellent! It represents the oriented 4D volume.",
@@ -126,15 +126,15 @@
       },
       "quiz": {
         "type": "multiple_choice",
-        "question": "What is the relationship between the TGA Action ($S_{TGA}$) and the Curvature Multivector (R)?",
+        "question": "What is the relationship between the TGA Action ($S_{TGA}$) and the Curvature Multivector (\mathcal{R})?",
         "options": [
-          { "text": "$S_{TGA}$ is inversely proportional to the magnitude of R.", "isCorrect": false },
-          { "text": "$S_{TGA}$ is directly proportional to the squared magnitude of R.", "isCorrect": true },
-          { "text": "$S_{TGA}$ is only dependent on Euclidean bivectors, not R.", "isCorrect": false },
+          { "text": "$S_{TGA}$ is inversely proportional to the magnitude of \mathcal{R}.", "isCorrect": false },
+          { "text": "$S_{TGA}$ is directly proportional to the squared magnitude of \mathcal{R}.", "isCorrect": true },
+          { "text": "$S_{TGA}$ is only dependent on Euclidean bivectors, not \mathcal{R}.", "isCorrect": false },
           { "text": "$S_{TGA}$ is a constant value in all simplices.", "isCorrect": false }
         ],
-        "correctFeedback": "Exactly right! $S_{TGA}$ scales with the squared magnitude of R.",
-        "incorrectFeedback": "Review the formula for $S_{TGA}$ and how it relates to R."
+        "correctFeedback": "Exactly right! $S_{TGA}$ scales with the squared magnitude of \mathcal{R}.",
+        "incorrectFeedback": "Review the formula for $S_{TGA}$ and how it relates to \mathcal{R}."
       }
     },
     {
