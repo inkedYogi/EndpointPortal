@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conic Sections Explorer</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #4a5568;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .equation {
+            text-align: center;
+            font-size: 1.3em;
+            margin-bottom: 30px;
+            color: #2d3748;
+            font-family: 'Courier New', monospace;
+            background: rgba(102, 126, 234, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            align-items: start;
+        }
+        
+        .controls {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .slider-group {
+            margin-bottom: 25px;
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+        
+        .slider-value {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            min-width: 50px;
+            text-align: center;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: linear-gradient(to right, #e2e8f0, #cbd5e0);
+            outline: none;
+            -webkit-appearance: none;
+            transition: all 0.3s ease;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .canvas-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        #canvas {
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            background: #fafafa;
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .save-section {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 2px solid #e2e8f0;
+        }
+        
+        .save-button {
+            background: linear-gradient(45deg, #48bb78, #38a169);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        
+        .save-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
+        }
+        
+        .saved-presets {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .preset-button {
+            background: linear-gradient(45deg, #ed8936, #dd6b20);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(237, 137, 54, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .preset-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(237, 137, 54, 0.4);
+        }
+        
+        .delete-preset {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .delete-preset:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .conic-type {
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 10px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Conic Sections Explorer</h1>
+        <div class="equation">
+            Ax² + Bxy + Cy² + Dx + Ey + F = 0
+        </div>
+        
+        <div class="main-content">
+            <div class="controls">
+                <div class="slider-group">
+                    <div class="slider-label">
+                        <span>A (x² coefficient)</span>
+                        <span class="slider-value" id="valueA">1.0</span>
+                    </div>
+                    <input type="range" id="sliderA" min="-5" max="5" step="0.1" value="1">
+                </div>
+                
+                <div class="slider-group">
+                    <div class="slider-label">
+                        <span>B (xy coefficient)</span>
+                        <span class="slider-value" id="valueB">0.0</span>
+                    </div>
+                    <input type="range" id="sliderB" min="-5" max="5" step="0.1" value="0">
+                </div>
+                
+                <div class="slider-group">
+                    <div class="slider-label">
+                        <span>C (y² coefficient)</span>
+                        <span class="slider-value" id="valueC">1.0</span>
+                    </div>
+                    <input type="range" id="sliderC" min="-5" max="5" step="0.1" value="1">
+                </div>
+                
+                <div class="slider-group">
+                    <div class="slider-label">
+                        <span>D (x coefficient)</span>
+                        <span class="slider-value" id="valueD">0.0</span>
+                    </div>
+                    <input type="range" id="sliderD" min="-10" max="10" step="0.1" value="0">
+                </div>
+                
+                <div class="slider-group">
+                    <div class="slider-label">
+                        <span>E (y coefficient)</span>
+                        <span class="slider-value" id="valueE">0.0</span>
+                    </div>
+                    <input type="range" id="sliderE" min="-10" max="10" step="0.1" value="0">
+                </div>
+                
+                <div class="slider-group">
+                    <div class="slider-label">
+                        <span>F (constant)</span>
+                        <span class="slider-value" id="valueF">-1.0</span>
+                    </div>
+                    <input type="range" id="sliderF" min="-10" max="10" step="0.1" value="-1">
+                </div>
+                
+                <div class="conic-type" id="conicType">Circle</div>
+                
+                <div class="save-section">
+                    <button class="save-button" id="saveButton">Save Current Settings</button>
+                    <div class="saved-presets" id="savedPresets"></div>
+                </div>
+            </div>
+            
+            <div class="canvas-container">
+                <canvas id="canvas" width="500" height="500"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class ConicExplorer {
+            constructor() {
+                this.canvas = document.getElementById('canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.savedPresets = [];
+                this.presetCounter = 1;
+                
+                this.setupSliders();
+                this.setupSaveButton();
+                this.drawConic();
+            }
+            
+            setupSliders() {
+                const sliders = ['A', 'B', 'C', 'D', 'E', 'F'];
+                
+                sliders.forEach(param => {
+                    const slider = document.getElementById(`slider${param}`);
+                    const valueDisplay = document.getElementById(`value${param}`);
+                    
+                    slider.addEventListener('input', () => {
+                        valueDisplay.textContent = parseFloat(slider.value).toFixed(1);
+                        this.drawConic();
+                        this.updateConicType();
+                    });
+                });
+            }
+            
+            setupSaveButton() {
+                document.getElementById('saveButton').addEventListener('click', () => {
+                    this.saveCurrentSettings();
+                });
+            }
+            
+            getCurrentValues() {
+                return {
+                    A: parseFloat(document.getElementById('sliderA').value),
+                    B: parseFloat(document.getElementById('sliderB').value),
+                    C: parseFloat(document.getElementById('sliderC').value),
+                    D: parseFloat(document.getElementById('sliderD').value),
+                    E: parseFloat(document.getElementById('sliderE').value),
+                    F: parseFloat(document.getElementById('sliderF').value)
+                };
+            }
+            
+            setValues(values) {
+                Object.keys(values).forEach(param => {
+                    const slider = document.getElementById(`slider${param}`);
+                    const valueDisplay = document.getElementById(`value${param}`);
+                    
+                    slider.value = values[param];
+                    valueDisplay.textContent = values[param].toFixed(1);
+                });
+                
+                this.drawConic();
+                this.updateConicType();
+            }
+            
+            saveCurrentSettings() {
+                const values = this.getCurrentValues();
+                const preset = {
+                    id: this.presetCounter++,
+                    name: `Preset ${this.savedPresets.length + 1}`,
+                    values: values
+                };
+                
+                this.savedPresets.push(preset);
+                this.updatePresetsDisplay();
+            }
+            
+            loadPreset(presetId) {
+                const preset = this.savedPresets.find(p => p.id === presetId);
+                if (preset) {
+                    this.setValues(preset.values);
+                }
+            }
+            
+            deletePreset(presetId) {
+                this.savedPresets = this.savedPresets.filter(p => p.id !== presetId);
+                this.updatePresetsDisplay();
+            }
+            
+            updatePresetsDisplay() {
+                const container = document.getElementById('savedPresets');
+                container.innerHTML = '';
+                
+                this.savedPresets.forEach(preset => {
+                    const button = document.createElement('button');
+                    button.className = 'preset-button';
+                    button.innerHTML = `
+                        <span>${preset.name}</span>
+                        <button class="delete-preset" onclick="explorer.deletePreset(${preset.id}); event.stopPropagation();">×</button>
+                    `;
+                    
+                    button.addEventListener('click', () => {
+                        this.loadPreset(preset.id);
+                    });
+                    
+                    container.appendChild(button);
+                });
+            }
+            
+            getConicType() {
+                const values = this.getCurrentValues();
+                const discriminant = values.B * values.B - 4 * values.A * values.C;
+                
+                if (values.A === 0 && values.B === 0 && values.C === 0) {
+                    return "Line";
+                }
+                
+                if (Math.abs(discriminant) < 0.001) {
+                    return "Parabola";
+                } else if (discriminant < 0) {
+                    if (Math.abs(values.A - values.C) < 0.001 && Math.abs(values.B) < 0.001) {
+                        return "Circle";
+                    } else {
+                        return "Ellipse";
+                    }
+                } else {
+                    return "Hyperbola";
+                }
+            }
+            
+            updateConicType() {
+                document.getElementById('conicType').textContent = this.getConicType();
+            }
+            
+            drawConic() {
+                const ctx = this.ctx;
+                const width = this.canvas.width;
+                const height = this.canvas.height;
+                
+                // Clear canvas
+                ctx.clearRect(0, 0, width, height);
+                
+                // Draw grid
+                this.drawGrid();
+                
+                // Get current values
+                const values = this.getCurrentValues();
+                const { A, B, C, D, E, F } = values;
+                
+                // Draw conic section
+                ctx.strokeStyle = '#667eea';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                
+                const scale = 50; // pixels per unit
+                const centerX = width / 2;
+                const centerY = height / 2;
+                
+                let hasPoints = false;
+                
+                // Sample points and draw the conic
+                for (let px = 0; px < width; px += 1) {
+                    for (let py = 0; py < height; py += 1) {
+                        // Convert pixel coordinates to mathematical coordinates
+                        const x = (px - centerX) / scale;
+                        const y = (centerY - py) / scale;
+                        
+                        // Evaluate the conic equation
+                        const value = A * x * x + B * x * y + C * y * y + D * x + E * y + F;
+                        
+                        // If we're close to zero, this point is on the curve
+                        if (Math.abs(value) < 0.1) {
+                            if (!hasPoints) {
+                                ctx.moveTo(px, py);
+                                hasPoints = true;
+                            }
+                            ctx.fillStyle = '#667eea';
+                            ctx.fillRect(px - 1, py - 1, 2, 2);
+                        }
+                    }
+                }
+                
+                // For better visualization, also use implicit plotting approach
+                this.drawImplicitCurve(A, B, C, D, E, F);
+            }
+            
+            drawImplicitCurve(A, B, C, D, E, F) {
+                const ctx = this.ctx;
+                const width = this.canvas.width;
+                const height = this.canvas.height;
+                const scale = 50;
+                const centerX = width / 2;
+                const centerY = height / 2;
+                
+                ctx.strokeStyle = '#764ba2';
+                ctx.lineWidth = 2;
+                
+                // Use marching squares-like algorithm for smoother curves
+                const step = 0.05;
+                const range = 10;
+                
+                for (let x = -range; x < range; x += step) {
+                    for (let y = -range; y < range; y += step) {
+                        const val = A * x * x + B * x * y + C * y * y + D * x + E * y + F;
+                        
+                        if (Math.abs(val) < 0.05) {
+                            const px = centerX + x * scale;
+                            const py = centerY - y * scale;
+                            
+                            if (px >= 0 && px < width && py >= 0 && py < height) {
+                                ctx.fillStyle = '#764ba2';
+                                ctx.fillRect(px - 1, py - 1, 2, 2);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            drawGrid() {
+                const ctx = this.ctx;
+                const width = this.canvas.width;
+                const height = this.canvas.height;
+                const scale = 50;
+                
+                ctx.strokeStyle = '#e2e8f0';
+                ctx.lineWidth = 1;
+                
+                // Draw vertical lines
+                for (let x = 0; x < width; x += scale) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, height);
+                    ctx.stroke();
+                }
+                
+                // Draw horizontal lines
+                for (let y = 0; y < height; y += scale) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(width, y);
+                    ctx.stroke();
+                }
+                
+                // Draw axes
+                ctx.strokeStyle = '#4a5568';
+                ctx.lineWidth = 2;
+                
+                // X-axis
+                ctx.beginPath();
+                ctx.moveTo(0, height / 2);
+                ctx.lineTo(width, height / 2);
+                ctx.stroke();
+                
+                // Y-axis
+                ctx.beginPath();
+                ctx.moveTo(width / 2, 0);
+                ctx.lineTo(width / 2, height);
+                ctx.stroke();
+                
+                // Add axis labels
+                ctx.fillStyle = '#4a5568';
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'center';
+                
+                // X-axis numbers
+                for (let i = -5; i <= 5; i++) {
+                    if (i !== 0) {
+                        const x = width / 2 + i * scale;
+                        ctx.fillText(i.toString(), x, height / 2 + 15);
+                    }
+                }
+                
+                // Y-axis numbers
+                ctx.textAlign = 'right';
+                for (let i = -5; i <= 5; i++) {
+                    if (i !== 0) {
+                        const y = height / 2 - i * scale;
+                        ctx.fillText(i.toString(), width / 2 - 5, y + 4);
+                    }
+                }
+            }
+        }
+        
+        // Initialize the explorer
+        const explorer = new ConicExplorer();
+    </script>
+</body>
+</html>
