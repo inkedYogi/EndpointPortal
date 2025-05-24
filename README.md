@@ -29,7 +29,7 @@ https://drive.google.com/drive/home - Google Drive Home Page
 </div>
 <div>
   <a href="https://inkedYogi.github.io/EndpointPortal/livingDocs/data/website/conic_section_explorer.html">
-    beta_shot
+    conic_section_explorer
   </a>
 </div>
 
