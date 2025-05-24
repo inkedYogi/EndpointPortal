@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Spiral Explorer</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #4a5568;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .equation {
+            text-align: center;
+            font-size: 1.3em;
+            margin-bottom: 30px;
+            color: #2d3748;
+            font-family: 'Courier New', monospace;
+            background: rgba(102, 126, 234, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            align-items: start;
+        }
+        
+        .controls {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .control-group {
+            margin-bottom: 25px;
+        }
+        
+        .slider-group {
+            margin-bottom: 25px;
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+        
+        .slider-value {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            min-width: 50px;
+            text-align: center;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: linear-gradient(to right, #e2e8f0, #cbd5e0);
+            outline: none;
+            -webkit-appearance: none;
+            transition: all 0.3s ease;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .canvas-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        #canvas {
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            background: #fafafa;
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .info-panel {
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 10px;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 0.95em;
+        }
+        .info-panel p {
+            margin: 5px 0;
+        }
+
+        .radio-group {
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: #4a5568;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        .radio-group input[type="radio"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border: 2px solid #667eea;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            outline: none;
+            transition: background 0.2s;
+            position: relative;
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+        .radio-group input[type="radio"]:checked {
+            background-color: #667eea;
+            border-color: #667eea;
+        }
+        .radio-group input[type="radio"]:checked::before {
+            content: '';
+            display: block;
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Disable styling for sliders when not active */
+        .slider-group.disabled input[type="range"] {
+            background: #e0e0e0;
+            cursor: not-allowed;
+        }
+        .slider-group.disabled input[type="range"]::-webkit-slider-thumb {
+            background: #b0b0b0;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+        .slider-group.disabled input[type="range"]::-moz-range-thumb {
+            background: #b0b0b0;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+        .slider-group.disabled .slider-value,
+        .slider-group.disabled .slider-label {
+            color: #888;
+        }
+        .slider-group.disabled .slider-value {
+             background: #c0c0c0;
+        }
+
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Golden Spiral Explorer</h1>
+        <div class="equation" id="spiralEquation">
+            Logarithmic Spiral: $r(\theta) = a e^{b\theta}$
+        </div>
+        
+        <div class="main-content">
+            <div class="controls">
+                <div class="control-group radio-group">
+                    <span>Spiral Type:</span>
+                    <label>
+                        <input type="radio" name="spiralType" value="golden" checked> Golden Spiral
+                    </label>
+                    <label>
+                        <input type="radio" name="spiralType" value="logarithmic"> Custom Logarithmic Spiral
+                    </label>
+                    <label>
+                        <input type="radio" name="spiralType" value="fibonacci"> Fibonacci Approximation
+                    </label>
+                </div>
+
+                <div class="slider-group">
+                    <div class="slider-label">
+                        <span>a (Initial Radius)</span>
+                        <span class="slider-value" id="valueA">1.0</span>
+                    </div>
+                    <input type="range" id="sliderA" min="0.1" max="5" step="0.1" value="1">
+                </div>
+                
+                <div class="slider-group" id="groupB">
+                    <div class="slider-label">
+                        <span>b (Growth Factor)</span>
+                        <span class="slider-value" id="valueB">0.306</span>
+                    </div>
+                    <input type="range" id="sliderB" min="0.01" max="1.0" step="0.001" value="0.306">
+                </div>
+
+                <div class="slider-group">
+                    <div class="slider-label">
+                        <span>Theta Max (Turns)</span>
+                        <span class="slider-value" id="valueThetaMax">8.0π</span>
+                    </div>
+                    <input type="range" id="sliderThetaMax" min="0.5" max="20" step="0.5" value="8">
+                </div>
+
+                <div class="slider-group" id="groupFibonacciCount">
+                    <div class="slider-label">
+                        <span>Number of Fibonacci Squares</span>
+                        <span class="slider-value" id="valueFibonacciCount">8</span>
+                    </div>
+                    <input type="range" id="sliderFibonacciCount" min="2" max="15" step="1" value="8">
+                </div>
+                
+                <div class="info-panel">
+                    <p>Golden Ratio ($\phi$): <span id="goldenRatioValue">1.618</span></p>
+                    <p>Fibonacci Sequence: <span id="fibonacciSequence">1, 1, 2, 3, 5, 8, 13, 21</span></p>
+                    <p>Current Spiral Type: <span id="currentSpiralType">Golden Spiral</span></p>
+                </div>
+            </div>
+            
+            <div class="canvas-container">
+                <canvas id="canvas" width="500" height="500"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class SpiralExplorer {
+            constructor() {
+                this.canvas = document.getElementById('canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.phi = (1 + Math.sqrt(5)) / 2; // Golden Ratio
+                this.goldenSpiralB = Math.log(this.phi) / (Math.PI / 2); // b for golden spiral
+                
+                this.fibonacciSequence = [1, 1];
+                this.generateFibonacci(15); // Pre-generate up to F(15)
+
+                this.spiralTypeRadios = document.querySelectorAll('input[name="spiralType"]');
+                this.sliderA = document.getElementById('sliderA');
+                this.valueA = document.getElementById('valueA');
+                this.sliderB = document.getElementById('sliderB');
+                this.valueB = document.getElementById('valueB');
+                this.groupB = document.getElementById('groupB');
+                this.sliderThetaMax = document.getElementById('sliderThetaMax');
+                this.valueThetaMax = document.getElementById('valueThetaMax');
+                this.sliderFibonacciCount = document.getElementById('sliderFibonacciCount');
+                this.valueFibonacciCount = document.getElementById('valueFibonacciCount');
+                this.groupFibonacciCount = document.getElementById('groupFibonacciCount');
+                
+                this.spiralEquationDisplay = document.getElementById('spiralEquation');
+                this.goldenRatioValueDisplay = document.getElementById('goldenRatioValue');
+                this.fibonacciSequenceDisplay = document.getElementById('fibonacciSequence');
+                this.currentSpiralTypeDisplay = document.getElementById('currentSpiralType');
+
+                this.setupControls();
+                this.updateUIForSpiralType(); // Set initial UI state
+                this.drawSpiral(); // Initial draw
+                this.updateInfoPanel();
+            }
+
+            generateFibonacci(n) {
+                while (this.fibonacciSequence.length < n) {
+                    const nextFib = this.fibonacciSequence[this.fibonacciSequence.length - 1] + this.fibonacciSequence[this.fibonacciSequence.length - 2];
+                    this.fibonacciSequence.push(nextFib);
+                }
+            }
+            
+            setupControls() {
+                this.spiralTypeRadios.forEach(radio => {
+                    radio.addEventListener('change', () => {
+                        this.updateUIForSpiralType();
+                        this.drawSpiral();
+                        this.updateInfoPanel();
+                    });
+                });
+
+                this.sliderA.addEventListener('input', () => {
+                    this.valueA.textContent = parseFloat(this.sliderA.value).toFixed(1);
+                    this.drawSpiral();
+                });
+
+                this.sliderB.addEventListener('input', () => {
+                    this.valueB.textContent = parseFloat(this.sliderB.value).toFixed(3);
+                    this.drawSpiral();
+                });
+
+                this.sliderThetaMax.addEventListener('input', () => {
+                    const turns = parseFloat(this.sliderThetaMax.value);
+                    this.valueThetaMax.textContent = turns % 1 === 0 ? `${turns}.0π` : `${turns}π`;
+                    this.drawSpiral();
+                });
+
+                this.sliderFibonacciCount.addEventListener('input', () => {
+                    this.valueFibonacciCount.textContent = parseInt(this.sliderFibonacciCount.value);
+                    this.drawSpiral();
+                    this.updateInfoPanel(); // Update Fibonacci sequence display
+                });
+            }
+
+            updateUIForSpiralType() {
+                const selectedType = document.querySelector('input[name="spiralType"]:checked').value;
+
+                // Toggle visibility/disabled state of slider groups
+                this.groupB.classList.toggle('disabled', selectedType !== 'logarithmic');
+                this.sliderB.disabled = (selectedType !== 'logarithmic');
+
+                this.groupFibonacciCount.classList.toggle('disabled', selectedType !== 'fibonacci');
+                this.sliderFibonacciCount.disabled = (selectedType !== 'fibonacci');
+
+                // Adjust A slider max for Fibonacci for better scaling
+                if (selectedType === 'fibonacci') {
+                    this.sliderA.max = 50; // Allow larger initial scale for Fibonacci
+                    this.sliderA.step = 1;
+                    if (parseFloat(this.sliderA.value) < 1) { // Reset A if it's too small for fibonacci
+                        this.sliderA.value = 10;
+                        this.valueA.textContent = '10.0';
+                    }
+                } else {
+                    this.sliderA.max = 5;
+                    this.sliderA.step = 0.1;
+                }
+
+                // Update equation display
+                if (selectedType === 'logarithmic') {
+                    this.spiralEquationDisplay.innerHTML = 'Logarithmic Spiral: $r(\theta) = a e^{b\theta}$';
+                } else if (selectedType === 'golden') {
+                    this.spiralEquationDisplay.innerHTML = `Golden Spiral: $r(\theta) = a e^{${this.goldenSpiralB.toFixed(3)}\\theta}$`;
+                } else { // fibonacci
+                    this.spiralEquationDisplay.innerHTML = 'Fibonacci Spiral Approximation';
+                }
+            }
+
+            updateInfoPanel() {
+                const selectedType = document.querySelector('input[name="spiralType"]:checked').value;
+                this.goldenRatioValueDisplay.textContent = this.phi.toFixed(3);
+                this.currentSpiralTypeDisplay.textContent = {
+                    'golden': 'Golden Spiral',
+                    'logarithmic': 'Custom Logarithmic Spiral',
+                    'fibonacci': 'Fibonacci Approximation'
+                }[selectedType];
+
+                const fibCount = parseInt(this.sliderFibonacciCount.value);
+                const currentFibSequence = this.fibonacciSequence.slice(0, fibCount).join(', ');
+                this.fibonacciSequenceDisplay.textContent = currentFibSequence;
+            }
+            
+            drawSpiral() {
+                const ctx = this.ctx;
+                const width = this.canvas.width;
+                const height = this.canvas.height;
+                
+                ctx.clearRect(0, 0, width, height); // Clear canvas
+                this.drawGrid(); // Draw grid and axes
+
+                const selectedType = document.querySelector('input[name="spiralType"]:checked').value;
+                const a = parseFloat(this.sliderA.value);
+                const thetaMax = parseFloat(this.sliderThetaMax.value) * Math.PI; // Convert turns to radians
+
+                if (selectedType === 'fibonacci') {
+                    this.drawFibonacciSpiral(a, parseInt(this.sliderFibonacciCount.value));
+                } else {
+                    const b = (selectedType === 'golden') ? this.goldenSpiralB : parseFloat(this.sliderB.value);
+                    this.drawLogarithmicSpiral(a, b, thetaMax);
+                }
+            }
+
+            drawLogarithmicSpiral(a, b, thetaMax) {
+                const ctx = this.ctx;
+                const width = this.canvas.width;
+                const height = this.canvas.height;
+                const centerX = width / 2;
+                const centerY = height / 2;
+                const scale = 50; // pixels per unit
+
+                ctx.strokeStyle = '#764ba2';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+
+                let firstPoint = true;
+                const numSteps = 1000; // Number of points to plot
+                const dTheta = thetaMax / numSteps;
+
+                for (let i = 0; i <= numSteps; i++) {
+                    const theta = i * dTheta;
+                    const r = a * Math.exp(b * theta);
+
+                    // Convert polar to Cartesian coordinates
+                    const x = r * Math.cos(theta);
+                    const y = r * Math.sin(theta);
+
+                    // Convert mathematical coordinates to pixel coordinates
+                    const px = centerX + x * scale;
+                    const py = centerY - y * scale; // Y-axis is inverted in canvas
+
+                    if (firstPoint) {
+                        ctx.moveTo(px, py);
+                        firstPoint = false;
+                    } else {
+                        ctx.lineTo(px, py);
+                    }
+                }
+                ctx.stroke();
+            }
+
+            drawFibonacciSpiral(initialSideLength, count) {
+                const ctx = this.ctx;
+                const width = this.canvas.width;
+                const height = this.canvas.height;
+                
+                let currentX = width / 2;
+                let currentY = height / 2;
+                let currentSide = initialSideLength; // This will be scaled
+                let direction = 0; // 0: Right, 1: Up, 2: Left, 3: Down
+                let centerOffsetX = 0;
+                let centerOffsetY = 0;
+                let fibIndex = 0;
+
+                ctx.strokeStyle = '#ed8936';
+                ctx.lineWidth = 3;
+
+                // Adjust center based on initial side length to keep spiral somewhat centered
+                // A very rough guess for a starting point for better centering
+                currentX -= (initialSideLength / 2);
+                currentY += (initialSideLength / 2);
+
+
+                for (let i = 0; i < count; i++) {
+                    if (fibIndex >= this.fibonacciSequence.length) break;
+
+                    const sideLength = this.fibonacciSequence[fibIndex] * initialSideLength;
+                    const nextSideLength = this.fibonacciSequence[fibIndex + 1] * initialSideLength; // For next iteration
+
+                    let arcCenterX, arcCenterY;
+                    let startAngle, endAngle;
+
+                    ctx.beginPath();
+
+                    switch (direction) {
+                        case 0: // Right-moving arc (from bottom-left of current square)
+                            arcCenterX = currentX + sideLength;
+                            arcCenterY = currentY;
+                            startAngle = Math.PI; // From 180 deg
+                            endAngle = Math.PI / 2; // To 90 deg
+                            
+                            if (i === 0) ctx.moveTo(currentX, currentY); // Start path
+
+                            // Move to the start of the arc
+                            ctx.lineTo(currentX + sideLength, currentY); 
+                            
+                            // Adjust for next square's position
+                            currentY -= nextSideLength;
+                            break;
+                        case 1: // Up-moving arc (from bottom-right of current square)
+                            arcCenterX = currentX;
+                            arcCenterY = currentY;
+                            startAngle = Math.PI / 2; // From 90 deg
+                            endAngle = 0; // To 0 deg
+                            
+                            // Move to the start of the arc
+                            ctx.lineTo(currentX, currentY);
+
+                            // Adjust for next square's position
+                            currentX -= nextSideLength;
+                            break;
+                        case 2: // Left-moving arc (from top-right of current square)
+                            arcCenterX = currentX;
+                            arcCenterY = currentY + sideLength;
+                            startAngle = 0; // From 0 deg
+                            endAngle = -Math.PI / 2; // To -90 deg (or 270 deg)
+
+                            // Move to the start of the arc
+                            ctx.lineTo(currentX, currentY + sideLength);
+
+                            // Adjust for next square's position
+                            currentY += nextSideLength;
+                            break;
+                        case 3: // Down-moving arc (from top-left of current square)
+                            arcCenterX = currentX + sideLength;
+                            arcCenterY = currentY + sideLength;
+                            startAngle = -Math.PI / 2; // From -90 deg
+                            endAngle = Math.PI; // To 180 deg
+
+                            // Move to the start of the arc
+                            ctx.lineTo(currentX + sideLength, currentY + sideLength);
+
+                            // Adjust for next square's position
+                            currentX += nextSideLength;
+                            break;
+                    }
+
+                    ctx.arc(arcCenterX, arcCenterY, sideLength, startAngle, endAngle, true);
+                    ctx.stroke();
+
+                    // Draw the square outline (optional, but helpful for understanding)
+                    ctx.strokeStyle = 'rgba(237, 137, 54, 0.4)';
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(arcCenterX - (direction === 0 || direction === 3 ? sideLength : 0),
+                                   arcCenterY - (direction === 1 || direction === 0 ? sideLength : 0),
+                                   sideLength, sideLength);
+                    ctx.strokeStyle = '#ed8936'; // Reset for next arc
+
+
+                    direction = (direction + 1) % 4; // Rotate direction
+                    fibIndex++;
+                }
+            }
+            
+            drawGrid() {
+                const ctx = this.ctx;
+                const width = this.canvas.width;
+                const height = this.canvas.height;
+                const scale = 50; // pixels per unit
+                
+                ctx.strokeStyle = '#e2e8f0';
+                ctx.lineWidth = 1;
+                
+                // Draw vertical lines
+                for (let x = 0; x < width; x += scale) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, height);
+                    ctx.stroke();
+                }
+                
+                // Draw horizontal lines
+                for (let y = 0; y < height; y += scale) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(width, y);
+                    ctx.stroke();
+                }
+                
+                // Draw axes
+                ctx.strokeStyle = '#4a5568';
+                ctx.lineWidth = 2;
+                
+                // X-axis
+                ctx.beginPath();
+                ctx.moveTo(0, height / 2);
+                ctx.lineTo(width, height / 2);
+                ctx.stroke();
+                
+                // Y-axis
+                ctx.beginPath();
+                ctx.moveTo(width / 2, 0);
+                ctx.lineTo(width / 2, height);
+                ctx.stroke();
+                
+                // Add axis labels
+                ctx.fillStyle = '#4a5568';
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'center';
+                
+                // X-axis numbers
+                for (let i = -5; i <= 5; i++) {
+                    if (i !== 0) {
+                        const x = width / 2 + i * scale;
+                        ctx.fillText(i.toString(), x, height / 2 + 15);
+                    }
+                }
+                
+                // Y-axis numbers
+                ctx.textAlign = 'right';
+                for (let i = -5; i <= 5; i++) {
+                    if (i !== 0) {
+                        const y = height / 2 - i * scale;
+                        ctx.fillText(i.toString(), width / 2 - 5, y + 4);
+                    }
+                }
+            }
+        }
+        
+        // Initialize the explorer
+        const explorer = new SpiralExplorer();
+    </script>
+</body>
+</html>
