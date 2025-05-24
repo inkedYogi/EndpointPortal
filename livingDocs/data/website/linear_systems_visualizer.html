@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linear Systems Visualizer</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #4a5568;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .introduction {
+            text-align: center;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            color: #2d3748;
+            background: rgba(102, 126, 234, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            align-items: start;
+        }
+        
+        .controls {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .radio-group {
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: #4a5568;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: background 0.2s ease;
+        }
+        .radio-group label:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+        .radio-group input[type="radio"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border: 2px solid #667eea;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            outline: none;
+            transition: background 0.2s;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .radio-group input[type="radio"]:checked {
+            background-color: #667eea;
+            border-color: #667eea;
+        }
+        .radio-group input[type="radio"]:checked::before {
+            content: '';
+            display: block;
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .system-equations {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            color: #2d3748;
+            white-space: pre-wrap; /* Preserve line breaks */
+        }
+
+        .solution-display {
+            margin-top: 15px;
+            padding: 10px;
+            background: linear-gradient(45deg, #48bb78, #38a169);
+            color: white;
+            border-radius: 10px;
+            font-weight: 600;
+            text-align: center;
+            font-size: 1.1em;
+        }
+        
+        .canvas-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        #canvas {
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            background: #fafafa;
+            max-width: 100%;
+            height: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Linear Systems Visualizer</h1>
+        <div class="introduction">
+            Explore how different algebraic representations of a linear system result in the same geometric solution.
+            Each option below represents the *same* solution space, though the equations look different!
+        </div>
+        
+        <div class="main-content">
+            <div class="controls">
+                <div class="radio-group">
+                    <span>Select System Representation:</span>
+                    <label>
+                        <input type="radio" name="system" value="A" checked> System A
+                        <div class="system-equations" id="equationsA">x + y = 10<br>x - y = 4</div>
+                    </label>
+                    <label>
+                        <input type="radio" name="system" value="B"> System B
+                        <div class="system-equations" id="equationsB">2x = 14<br>2y = 6</div>
+                    </label>
+                    <label>
+                        <input type="radio" name="system" value="C"> System C
+                        <div class="system-equations" id="equationsC">x = 7<br>y = 3</div>
+                    </label>
+                    <label>
+                        <input type="radio" name="system" value="D"> System D
+                        <div class="system-equations" id="equationsD">y = 10 - x<br>y = x - 4</div>
+                    </label>
+                </div>
+
+                <div class="solution-display">
+                    Solution: x = <span id="solutionX">7</span>, y = <span id="solutionY">3</span>
+                </div>
+            </div>
+            
+            <div class="canvas-container">
+                <canvas id="canvas" width="500" height="500"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class LinearSystemExplorer {
+            constructor() {
+                this.canvas = document.getElementById('canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.radioButtons = document.querySelectorAll('input[name="system"]');
+                this.solutionXDisplay = document.getElementById('solutionX');
+                this.solutionYDisplay = document.getElementById('solutionY');
+
+                // Define the equations for each system. We'll parse these strings.
+                // For simplicity, we'll implement a basic parser for these specific forms.
+                this.systems = {
+                    "A": ["x + y = 10", "x - y = 4"],
+                    "B": ["2x = 14", "2y = 6"],
+                    "C": ["x = 7", "y = 3"],
+                    "D": ["y = 10 - x", "y = x - 4"]
+                };
+
+                this.setupControls();
+                this.drawSystem(); // Initial draw
+            }
+
+            setupControls() {
+                this.radioButtons.forEach(radio => {
+                    radio.addEventListener('change', () => {
+                        this.drawSystem();
+                    });
+                });
+            }
+
+            drawSystem() {
+                const ctx = this.ctx;
+                const width = this.canvas.width;
+                const height = this.canvas.height;
+                
+                ctx.clearRect(0, 0, width, height); // Clear canvas
+                this.drawGrid(); // Draw grid and axes
+
+                const selectedSystemKey = document.querySelector('input[name="system"]:checked').value;
+                const equations = this.systems[selectedSystemKey];
+
+                this.plotLine(equations[0], '#764ba2'); // Plot first line in purple
+                this.plotLine(equations[1], '#ed8936'); // Plot second line in orange
+
+                this.drawSolutionPoint(7, 3); // Always highlight the intersection at (7,3)
+            }
+
+            // A simplified parser for linear equations to get points to draw.
+            // This is NOT a robust general parser, but sufficient for our specific examples.
+            // It tries to convert equations into y = mx + c or x = k form.
+            parseEquation(equationString) {
+                equationString = equationString.replace(/\s/g, ''); // Remove all whitespace
+
+                let parts = equationString.split('=');
+                let left = parts[0];
+                let right = parts[1];
+
+                let func = null; // y = f(x)
+                let isVertical = false; // x = k
+                let value = null; // the k for vertical line
+
+                // Try to isolate y or find x=k
+                if (left === 'y') {
+                    func = (x) => eval(right.replace(/x/g, `(${x})`));
+                } else if (right === 'y') {
+                    func = (x) => eval(left.replace(/x/g, `(${x})`));
+                } else if (left.endsWith('x') || right.endsWith('x')) { // equations like 2x=14 or x=7
+                    if (left.includes('x') && !left.includes('y')) { // like 2x or x
+                        let xVal = parseFloat(eval(right + '/' + (left.replace('x', '') || '1')));
+                        isVertical = true;
+                        value = xVal;
+                    } else if (right.includes('x') && !right.includes('y')) { // like 2x or x
+                        let xVal = parseFloat(eval(left + '/' + (right.replace('x', '') || '1')));
+                        isVertical = true;
+                        value = xVal;
+                    }
+                } else if (left.endsWith('y') || right.endsWith('y')) { // equations like 2y=6 or y=3
+                     if (left.includes('y') && !left.includes('x')) { // like 2y or y
+                        let yVal = parseFloat(eval(right + '/' + (left.replace('y', '') || '1')));
+                        func = (x) => yVal; // Horizontal line
+                    } else if (right.includes('y') && !right.includes('x')) { // like 2y or y
+                        let yVal = parseFloat(eval(left + '/' + (right.replace('y', '') || '1')));
+                        func = (x) => yVal; // Horizontal line
+                    }
+                } else { // Handle x+y=10 or x-y=4 explicitly
+                    if (equationString.includes('x+y=')) {
+                        let c = parseFloat(right);
+                        func = (x) => c - x;
+                    } else if (equationString.includes('x-y=')) {
+                        let c = parseFloat(right);
+                        func = (x) => x - c;
+                    } else if (equationString.includes('y-x=')) {
+                        let c = parseFloat(right);
+                        func = (x) => x + c;
+                    }
+                     // Add more as needed for other combinations if they were to appear
+                }
+
+                // If not directly y=f(x) or x=k, try to convert it (e.g., Ax + By = C)
+                // This is a very simple and specific handler for the given cases.
+                // For a robust system, a math expression parser library would be needed.
+                if (!func && !isVertical) {
+                    // This is a fallback for `(x+y)/2=5` -> `x+y=10`
+                    // and `(x-y)/2=2` -> `x-y=4`
+                    // We'll rely on the specific `systems` object defining equations that result in these
+                    // and the `plotLine` function to handle it by testing points,
+                    // or simplify them before passing if needed.
+                    // For the given examples, they can be re-written to y=f(x) or x=k.
+                    // For `(x+y)/2=5`, we can simply treat it as `x+y=10`
+                    // For `(x-y)/2=2`, we can simply treat it as `x-y=4`
+                    if (equationString === '(x+y)/2=5') {
+                         func = (x) => 10 - x;
+                    } else if (equationString === '(x-y)/2=2') {
+                         func = (x) => x - 4;
+                    }
+                }
+
+                return { func, isVertical, value };
+            }
+
+
+            plotLine(equationString, color) {
+                const ctx = this.ctx;
+                const width = this.canvas.width;
+                const height = this.canvas.height;
+                const scale = 50; // pixels per unit
+                const centerX = width / 2;
+                const centerY = height / 2;
+                const range = 10; // -10 to 10 in math units
+
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+
+                const { func, isVertical, value } = this.parseEquation(equationString);
+
+                if (isVertical) {
+                    const px = centerX + value * scale;
+                    if (px >= 0 && px <= width) {
+                        ctx.moveTo(px, 0);
+                        ctx.lineTo(px, height);
+                    }
+                } else if (func) {
+                    let firstPoint = true;
+                    // Sample across the x-range
+                    for (let x = -range; x <= range; x += 0.1) {
+                        try {
+                            const y = func(x);
+                            const px = centerX + x * scale;
+                            const py = centerY - y * scale; // Y-axis inverted
+
+                            // Only draw if within canvas bounds
+                            if (px >= -width * 0.5 && px <= width * 1.5 && py >= -height * 0.5 && py <= height * 1.5) {
+                                if (firstPoint) {
+                                    ctx.moveTo(px, py);
+                                    firstPoint = false;
+                                } else {
+                                    ctx.lineTo(px, py);
+                                }
+                            } else {
+                                // If line goes out of bounds, break the path to avoid connecting distant points
+                                firstPoint = true;
+                            }
+                        } catch (e) {
+                            // Handle cases where the function might be undefined (e.g., division by zero)
+                            firstPoint = true; // Break the path
+                        }
+                    }
+                }
+                ctx.stroke();
+            }
+
+            drawSolutionPoint(x, y) {
+                const ctx = this.ctx;
+                const width = this.canvas.width;
+                const height = this.canvas.height;
+                const scale = 50; // pixels per unit
+                const centerX = width / 2;
+                const centerY = height / 2;
+
+                const px = centerX + x * scale;
+                const py = centerY - y * scale; // Y-axis inverted
+
+                ctx.fillStyle = '#ff0000'; // Red color for the solution point
+                ctx.beginPath();
+                ctx.arc(px, py, 6, 0, Math.PI * 2); // Draw a circle
+                ctx.fill();
+
+                this.solutionXDisplay.textContent = x.toFixed(0); // Display as integer
+                this.solutionYDisplay.textContent = y.toFixed(0); // Display as integer
+            }
+            
+            drawGrid() {
+                const ctx = this.ctx;
+                const width = this.canvas.width;
+                const height = this.canvas.height;
+                const scale = 50;
+                
+                ctx.strokeStyle = '#e2e8f0';
+                ctx.lineWidth = 1;
+                
+                // Draw vertical lines
+                for (let x = 0; x <= width; x += scale) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, height);
+                    ctx.stroke();
+                }
+                
+                // Draw horizontal lines
+                for (let y = 0; y <= height; y += scale) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(width, y);
+                    ctx.stroke();
+                }
+                
+                // Draw axes
+                ctx.strokeStyle = '#4a5568';
+                ctx.lineWidth = 2;
+                
+                // X-axis
+                ctx.beginPath();
+                ctx.moveTo(0, height / 2);
+                ctx.lineTo(width, height / 2);
+                ctx.stroke();
+                
+                // Y-axis
+                ctx.beginPath();
+                ctx.moveTo(width / 2, 0);
+                ctx.lineTo(width / 2, height);
+                ctx.stroke();
+                
+                // Add axis labels
+                ctx.fillStyle = '#4a5568';
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'center';
+                
+                // X-axis numbers
+                for (let i = -5; i <= 5; i++) {
+                    if (i !== 0) {
+                        const x = width / 2 + i * scale;
+                        ctx.fillText(i.toString(), x, height / 2 + 15);
+                    }
+                }
+                
+                // Y-axis numbers
+                ctx.textAlign = 'right';
+                for (let i = -5; i <= 5; i++) {
+                    if (i !== 0) {
+                        const y = height / 2 - i * scale;
+                        ctx.fillText(i.toString(), width / 2 - 5, y + 4);
+                    }
+                }
+            }
+        }
+        
+        // Initialize the explorer
+        const explorer = new LinearSystemExplorer();
+    </script>
+</body>
+</html>
