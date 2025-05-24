@@ -27,5 +27,10 @@ https://drive.google.com/drive/home - Google Drive Home Page
     beta_shot
   </a>
 </div>
+<div>
+  <a href="https://inkedYogi.github.io/EndpointPortal/livingDocs/data/website/conic_section_explorer.html">
+    beta_shot
+  </a>
+</div>
 
 Mage: Caravan - Unprecedented.
