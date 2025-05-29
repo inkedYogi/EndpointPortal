@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Market Volatility Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bullish: '#10b981',
+                        bearish: '#ef4444',
+                        neutral: '#3b82f6'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .scroll-container {
+            scrollbar-width: thin;
+            scrollbar-color: #6b7280 #1f2937;
+        }
+        
+        .scroll-container::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+        
+        .scroll-container::-webkit-scrollbar-track {
+            background: #1f2937;
+            border-radius: 4px;
+        }
+        
+        .scroll-container::-webkit-scrollbar-thumb {
+            background-color: #6b7280;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-white">Market Pulse Tracker</h1>
+                <p class="text-gray-400">Real-time volatility and price swing analysis</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2">
+                    <span class="relative flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                    </span>
+                    <span id="last-updated" class="text-sm text-gray-300">Loading...</span>
+                </div>
+                <button id="sync-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>Sync Now</span>
+                </button>
+                <button id="export-btn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                    <i class="fas fa-file-export"></i>
+                    <span>Export YAML</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Most Volatile Section -->
+            <div class="bg-gray-800 rounded-xl p-6 shadow-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-white">
+                        <i class="fas fa-bolt mr-2 text-yellow-400"></i>
+                        Most Volatile (7 Days)
+                    </h2>
+                    <div class="text-sm text-gray-400">Sorted by beta</div>
+                </div>
+                
+                <div class="scroll-container overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-700">
+                        <thead>
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Symbol</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Name</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Beta</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Change</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Volume</th>
+                            </tr>
+                        </thead>
+                        <tbody id="volatile-stocks" class="divide-y divide-gray-700">
+                            <!-- Data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Largest Swings Section -->
+            <div class="bg-gray-800 rounded-xl p-6 shadow-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-white">
+                        <i class="fas fa-chart-line mr-2 text-purple-400"></i>
+                        Largest Swings (7 Days)
+                    </h2>
+                    <div class="text-sm text-gray-400">Sorted by % change</div>
+                </div>
+                
+                <div class="scroll-container overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-700">
+                        <thead>
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Symbol</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Name</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Price</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Change</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Range</th>
+                            </tr>
+                        </thead>
+                        <tbody id="swing-stocks" class="divide-y divide-gray-700">
+                            <!-- Data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Market Summary -->
+        <div class="mt-6 bg-gray-800 rounded-xl p-6 shadow-lg">
+            <h2 class="text-xl font-semibold text-white mb-4">
+                <i class="fas fa-chart-pie mr-2 text-blue-400"></i>
+                Market Summary
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-gray-700 p-4 rounded-lg">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-400 text-sm">S&P 500</p>
+                            <p id="sp500" class="text-2xl font-bold mt-1">-</p>
+                        </div>
+                        <span id="sp500-change" class="px-2 py-1 rounded text-sm font-medium">-</span>
+                    </div>
+                    <div class="mt-2 h-1 w-full bg-gray-600 rounded-full overflow-hidden">
+                        <div id="sp500-bar" class="h-full bg-blue-500"></div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-700 p-4 rounded-lg">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-400 text-sm">NASDAQ</p>
+                            <p id="nasdaq" class="text-2xl font-bold mt-1">-</p>
+                        </div>
+                        <span id="nasdaq-change" class="px-2 py-1 rounded text-sm font-medium">-</span>
+                    </div>
+                    <div class="mt-2 h-1 w-full bg-gray-600 rounded-full overflow-hidden">
+                        <div id="nasdaq-bar" class="h-full bg-purple-500"></div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-700 p-4 rounded-lg">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-400 text-sm">DOW 30</p>
+                            <p id="dow" class="text-2xl font-bold mt-1">-</p>
+                        </div>
+                        <span id="dow-change" class="px-2 py-1 rounded text-sm font-medium">-</span>
+                    </div>
+                    <div class="mt-2 h-1 w-full bg-gray-600 rounded-full overflow-hidden">
+                        <div id="dow-bar" class="h-full bg-green-500"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data - in a real app, this would come from an API
+        const sampleVolatileStocks = [
+            { symbol: "TSLA", name: "Tesla Inc", beta: 2.5, price: 245.32, change: -12.45, changePercent: -4.83, volume: "85.2M", range: "242.10 - 268.54" },
+            { symbol: "NVDA", name: "NVIDIA Corp", beta: 2.3, price: 467.65, change: +32.21, changePercent: +7.41, volume: "62.8M", range: "435.20 - 481.75" },
+            { symbol: "MRNA", name: "Moderna Inc", beta: 2.1, price: 112.78, change: -8.34, changePercent: -6.89, volume: "28.5M", range: "110.45 - 125.67" },
+            { symbol: "AMD", name: "Advanced Micro Devices", beta: 1.9, price: 108.45, change: +5.67, changePercent: +5.52, volume: "75.3M", range: "102.30 - 112.80" },
+            { symbol: "RIVN", name: "Rivian Automotive", beta: 1.8, price: 18.23, change: -1.45, changePercent: -7.37, volume: "45.6M", range: "17.85 - 20.12" },
+            { symbol: "PLTR", name: "Palantir Technologies", beta: 1.7, price: 16.78, change: +1.23, changePercent: +7.91, volume: "88.9M", range: "15.20 - 17.45" },
+            { symbol: "SOFI", name: "SoFi Technologies", beta: 1.6, price: 7.89, change: -0.56, changePercent: -6.63, volume: "52.1M", range: "7.65 - 8.78" },
+            { symbol: "HOOD", name: "Robinhood Markets", beta: 1.5, price: 12.45, change: +0.89, changePercent: +7.69, volume: "34.7M", range: "11.20 - 13.10" }
+        ];
+
+        const sampleSwingStocks = [
+            { symbol: "GME", name: "GameStop Corp", price: 22.45, change: +8.23, changePercent: +57.83, range: "14.20 - 25.78", volume: "120.5M" },
+            { symbol: "AMC", name: "AMC Entertainment", price: 6.78, change: +2.45, changePercent: +56.62, range: "4.20 - 7.45", volume: "185.3M" },
+            { symbol: "BBBY", name: "Bed Bath & Beyond", price: 1.23, change: -0.78, changePercent: -38.81, range: "1.10 - 2.45", volume: "95.7M" },
+            { symbol: "MULN", name: "Mullen Automotive", price: 0.45, change: +0.12, changePercent: +36.36, range: "0.33 - 0.52", volume: "78.2M" },
+            { symbol: "CVNA", name: "Carvana Co", price: 56.78, change: +14.23, changePercent: +33.45, range: "42.10 - 62.45", volume: "45.6M" },
+            { symbol: "UPST", name: "Upstart Holdings", price: 28.45, change: -12.34, changePercent: -30.25, range: "27.80 - 42.10", volume: "32.8M" },
+            { symbol: "SNAP", name: "Snap Inc", price: 9.87, change: -3.45, changePercent: -25.89, range: "9.20 - 14.56", volume: "65.3M" },
+            { symbol: "META", name: "Meta Platforms", price: 298.45, change: +52.34, changePercent: +21.27, range: "245.20 - 312.78", volume: "42.5M" }
+        ];
+
+        const marketIndices = {
+            sp500: { price: 4378.23, change: +45.67, changePercent: +1.05 },
+            nasdaq: { price: 13688.45, change: +178.34, changePercent: +1.32 },
+            dow: { price: 33876.23, change: -56.78, changePercent: -0.17 }
+        };
+
+        // Format numbers
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // Format change with color
+        function formatChange(change, isPercent = false) {
+            const value = parseFloat(change);
+            const isPositive = value >= 0;
+            const sign = isPositive ? '+' : '';
+            const absValue = Math.abs(value);
+            
+            const formattedValue = isPercent ? 
+                `${sign}${absValue.toFixed(2)}%` : 
+                `${sign}${absValue.toFixed(2)}`;
+            
+            const colorClass = isPositive ? 'bg-bullish text-white' : 'bg-bearish text-white';
+            
+            return `<span class="${colorClass} px-2 py-1 rounded text-sm font-medium">${formattedValue}</span>`;
+        }
+
+        // Format price with color
+        function formatPriceChange(price, change) {
+            const isPositive = change >= 0;
+            const colorClass = isPositive ? 'text-bullish' : 'text-bearish';
+            
+            return `<span class="${colorClass}">${price.toFixed(2)}</span>`;
+        }
+
+        // Render volatile stocks table
+        function renderVolatileStocks() {
+            const tableBody = document.getElementById('volatile-stocks');
+            tableBody.innerHTML = '';
+            
+            sampleVolatileStocks.forEach(stock => {
+                const row = document.createElement('tr');
+                row.className = 'fade-in';
+                row.innerHTML = `
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <div class="font-bold text-white">${stock.symbol}</div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <div class="text-sm text-gray-300">${stock.name}</div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <div class="text-sm font-medium">${stock.beta.toFixed(1)}</div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        ${formatChange(stock.changePercent, true)}
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <div class="text-sm">${stock.volume}</div>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Render swing stocks table
+        function renderSwingStocks() {
+            const tableBody = document.getElementById('swing-stocks');
+            tableBody.innerHTML = '';
+            
+            sampleSwingStocks.forEach(stock => {
+                const row = document.createElement('tr');
+                row.className = 'fade-in';
+                row.innerHTML = `
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <div class="font-bold text-white">${stock.symbol}</div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <div class="text-sm text-gray-300">${stock.name}</div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        ${formatPriceChange(stock.price, stock.change)}
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        ${formatChange(stock.changePercent, true)}
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <div class="text-sm">${stock.range}</div>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Render market indices
+        function renderMarketIndices() {
+            document.getElementById('sp500').textContent = marketIndices.sp500.price.toFixed(2);
+            document.getElementById('nasdaq').textContent = marketIndices.nasdaq.price.toFixed(2);
+            document.getElementById('dow').textContent = marketIndices.dow.price.toFixed(2);
+            
+            document.getElementById('sp500-change').innerHTML = formatChange(marketIndices.sp500.changePercent, true);
+            document.getElementById('nasdaq-change').innerHTML = formatChange(marketIndices.nasdaq.changePercent, true);
+            document.getElementById('dow-change').innerHTML = formatChange(marketIndices.dow.changePercent, true);
+            
+            // Animate the progress bars based on change percentage
+            const sp500Bar = document.getElementById('sp500-bar');
+            const nasdaqBar = document.getElementById('nasdaq-bar');
+            const dowBar = document.getElementById('dow-bar');
+            
+            sp500Bar.style.width = `${Math.min(100, Math.abs(marketIndices.sp500.changePercent) * 10)}%`;
+            nasdaqBar.style.width = `${Math.min(100, Math.abs(marketIndices.nasdaq.changePercent) * 10)}%`;
+            dowBar.style.width = `${Math.min(100, Math.abs(marketIndices.dow.changePercent) * 10)}%`;
+            
+            sp500Bar.className = marketIndices.sp500.changePercent >= 0 ? 
+                'h-full bg-bullish transition-all duration-1000' : 
+                'h-full bg-bearish transition-all duration-1000';
+                
+            nasdaqBar.className = marketIndices.nasdaq.changePercent >= 0 ? 
+                'h-full bg-bullish transition-all duration-1000' : 
+                'h-full bg-bearish transition-all duration-1000';
+                
+            dowBar.className = marketIndices.dow.changePercent >= 0 ? 
+                'h-full bg-bullish transition-all duration-1000' : 
+                'h-full bg-bearish transition-all duration-1000';
+        }
+
+        // Update last updated time
+        function updateLastUpdated() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                timeZoneName: 'short'
+            };
+            document.getElementById('last-updated').textContent = `Last updated: ${now.toLocaleDateString('en-US', options)}`;
+        }
+
+        // Export to YAML
+        function exportToYAML() {
+            const data = {
+                timestamp: new Date().toISOString(),
+                market_indices: marketIndices,
+                most_volatile: sampleVolatileStocks,
+                largest_swings: sampleSwingStocks
+            };
+            
+            // Convert to YAML (simplified for this demo)
+            let yaml = `# Market Volatility Report\n`;
+            yaml += `timestamp: ${data.timestamp}\n\n`;
+            
+            yaml += `market_indices:\n`;
+            for (const [key, value] of Object.entries(data.market_indices)) {
+                yaml += `  ${key}:\n`;
+                yaml += `    price: ${value.price}\n`;
+                yaml += `    change: ${value.change}\n`;
+                yaml += `    change_percent: ${value.changePercent}\n`;
+            }
+            
+            yaml += `\nmost_volatile:\n`;
+            data.most_volatile.forEach(stock => {
+                yaml += `  - symbol: ${stock.symbol}\n`;
+                yaml += `    name: "${stock.name}"\n`;
+                yaml += `    beta: ${stock.beta}\n`;
+                yaml += `    price: ${stock.price}\n`;
+                yaml += `    change: ${stock.change}\n`;
+                yaml += `    change_percent: ${stock.changePercent}\n`;
+                yaml += `    volume: "${stock.volume}"\n`;
+                yaml += `    range: "${stock.range}"\n`;
+            });
+            
+            yaml += `\nlargest_swings:\n`;
+            data.largest_swings.forEach(stock => {
+                yaml += `  - symbol: ${stock.symbol}\n`;
+                yaml += `    name: "${stock.name}"\n`;
+                yaml += `    price: ${stock.price}\n`;
+                yaml += `    change: ${stock.change}\n`;
+                yaml += `    change_percent: ${stock.changePercent}\n`;
+                yaml += `    range: "${stock.range}"\n`;
+                yaml += `    volume: "${stock.volume}"\n`;
+            });
+            
+            // Create download link
+            const blob = new Blob([yaml], { type: 'text/yaml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `market_volatility_report_${new Date().toISOString().slice(0, 10)}.yaml`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Simulate data refresh
+        function refreshData() {
+            const syncBtn = document.getElementById('sync-btn');
+            syncBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Syncing...';
+            syncBtn.disabled = true;
+            
+            // Simulate API delay
+            setTimeout(() => {
+                // In a real app, we would fetch new data here
+                updateLastUpdated();
+                renderVolatileStocks();
+                renderSwingStocks();
+                renderMarketIndices();
+                
+                syncBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Sync Now';
+                syncBtn.disabled = false;
+                
+                // Show notification
+                const notification = document.createElement('div');
+                notification.className = 'fixed bottom-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 animate-fade-in';
+                notification.innerHTML = `
+                    <i class="fas fa-check-circle"></i>
+                    <span>Data updated successfully</span>
+                `;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+                    setTimeout(() => notification.remove(), 300);
+                }, 3000);
+            }, 1500);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderVolatileStocks();
+            renderSwingStocks();
+            renderMarketIndices();
+            updateLastUpdated();
+            
+            // Set up event listeners
+            document.getElementById('sync-btn').addEventListener('click', refreshData);
+            document.getElementById('export-btn').addEventListener('click', exportToYAML);
+            
+            // Simulate periodic updates (every 5 minutes)
+            setInterval(refreshData, 5 * 60 * 1000);
+        });
+    </script>
+</body>
+</html>
