@@ -50,10 +50,8 @@
             <div class="mb-6">
                 <p class="text-gray-700 mb-4">
                     This explorer demonstrates the generation of an Apollonian gasket using Descartes' Theorem. 
-                    The initial four curvatures are fixed for a clearer visualization of the recursive process.
-                    The slider doesn't directly influence the curvatures in this corrected version, as a dynamic set of 
-                    four *mutually tangent* circles based on 'n' is geometrically complex to initialize.
-                    Instead, the slider controls the recursion depth.
+                    The initial three circles are fixed to be mutually tangent for correct gasket generation.
+                    Use the slider below to control the recursion depth.
                 </p>
                 
                 <div class="slider-container mb-4">
@@ -75,7 +73,7 @@
             <div class="mt-6 bg-blue-50 p-4 rounded-lg">
                 <h2 class="text-lg font-semibold text-gray-800 mb-2">Current Configuration:</h2>
                 <p id="current-config" class="text-gray-700 font-mono">
-                    Initial Curvatures: (-1, 2, 2, 3) (for visualization purposes)
+                    Initial setup for a classic Apollonian Gasket.
                 </p>
             </div>
         </div>
@@ -88,7 +86,6 @@
         
         function setup() {
             const container = document.getElementById('gasket-container');
-            // Ensure canvas fits within the container and is square
             const canvasSize = Math.min(container.offsetWidth, 500); 
             const canvas = createCanvas(canvasSize, canvasSize);
             canvas.parent('gasket-container');
@@ -97,19 +94,51 @@
             slider.addEventListener('input', function() {
                 recursionDepth = parseInt(this.value);
                 document.getElementById('n-value').textContent = recursionDepth;
-                generateGasket();
+                generateGasket(); // Regenerate gasket on slider change
             });
             
-            generateGasket();
+            generateGasket(); // Initial gasket generation
         }
         
+        // Represents a complex number
+        class Complex {
+            constructor(re, im) {
+                this.re = re;
+                this.im = im;
+            }
+            add(other) { return new Complex(this.re + other.re, this.im + other.im); }
+            sub(other) { return new Complex(this.re - other.re, this.im - other.im); }
+            mult(other) {
+                return new Complex(
+                    this.re * other.re - this.im * other.im,
+                    this.re * other.im + this.im * other.re
+                );
+            }
+            div(other) {
+                const denom = other.re * other.re + other.im * other.im;
+                if (denom === 0) throw new Error("Division by zero complex number");
+                return new Complex(
+                    (this.re * other.re + this.im * other.im) / denom,
+                    (this.im * other.re - this.re * other.im) / denom
+                );
+            }
+            scale(scalar) { return new Complex(this.re * scalar, this.im * scalar); }
+            sqrt() {
+                const r = Math.sqrt(this.re * this.re + this.im * this.im);
+                const theta = Math.atan2(this.im, this.re);
+                return new Complex(Math.sqrt(r) * Math.cos(theta / 2), Math.sqrt(r) * Math.sin(theta / 2));
+            }
+            magSq() { return this.re * this.re + this.im * this.im; }
+        }
+
         // Represents a circle
         class Circle {
             constructor(x, y, k, color) {
                 this.center = createVector(x, y);
                 this.curvature = k;
                 this.radius = 1 / Math.abs(k);
-                this.color = color || [random(100, 200), random(100, 200), random(100, 200), 150];
+                this.diameter = this.radius * 2;
+                this.color = color || [random(50, 200), random(50, 200), random(50, 200), 150];
                 this.isOuter = k < 0; // Negative curvature for outer circle
             }
 
@@ -117,866 +146,194 @@
                 stroke(this.color);
                 strokeWeight(1);
                 noFill();
-                ellipse(this.center.x, this.center.y, this.radius * 2);
+                ellipse(this.center.x, this.center.y, this.diameter);
             }
         }
 
-        // Function to find the fourth circle tangent to three given circles
+        // Function to find the two new circles tangent to three given circles
         // Uses Descartes' Theorem for curvatures and complex numbers for centers
-        function findApollonianCircles(c1, c2, c3) {
+        function getNewCircles(c1, c2, c3) {
             const k1 = c1.curvature;
             const k2 = c2.curvature;
             const k3 = c3.curvature;
 
-            const z1 = c1.center;
-            const z2 = c2.center;
-            const z3 = c3.center;
+            const z1 = new Complex(c1.center.x, c1.center.y);
+            const z2 = new Complex(c2.center.x, c2.center.y);
+            const z3 = new Complex(c3.center.x, c3.center.y);
 
             // Descartes' Theorem for curvatures
             const sumK = k1 + k2 + k3;
-            const radical = 2 * Math.sqrt(Math.abs(k1*k2 + k2*k3 + k3*k1)); // Use Math.abs for safety with negative curvatures
+            const radicalTerm = Math.max(0, k1*k2 + k2*k3 + k3*k1); // Ensure non-negative due to float precision
+            const radical = 2 * Math.sqrt(radicalTerm);
             
-            const k4a = sumK + radical;
-            const k4b = sumK - radical;
+            const k4_solutions = [sumK + radical, sumK - radical];
 
             let newCircles = [];
 
-            [k4a, k4b].forEach(k4 => {
-                // Skip if curvature is very close to zero or results in too large a circle
-                if (Math.abs(k4) < 1e-6 || Math.abs(1/k4) > width * 2) return; 
+            k4_solutions.forEach(k4 => {
+                if (Math.abs(k4) < 1e-5) return; // Skip if curvature is almost zero (very large radius)
+                if (isNaN(k4) || !isFinite(k4)) return; // Skip invalid curvatures
 
-                // Descartes' Theorem for centers (using complex numbers)
-                // (k_1*z_1 + k_2*z_2 + k_3*z_3 + k_4*z_4)^2 = (k_1^2 + k_2^2 + k_3^2 + k_4^2)
-                // Rearranging for z_4:
-                // z_4 = (k_1*z_1 + k_2*z_2 + k_3*z_3 +/- 2*sqrt(k_1*k_2*z_1*z_2 + k_2*k_3*z_2*z_3 + k_3*k_1*z_3*z_1)) / k_4
-                // Note: The radical part needs to be handled carefully with complex numbers.
-                // A simplified approach for visualization is to use the direct formula for coordinates
-
-                const term1X = k1 * z1.x + k2 * z2.x + k3 * z3.x;
-                const term1Y = k1 * z1.y + k2 * z2.y + k3 * z3.y;
-
-                const radicalTermSquared = 2 * (
-                    k1 * k2 * (z1.x * z2.x + z1.y * z2.y) +
-                    k2 * k3 * (z2.x * z3.x + z2.y * z3.y) +
-                    k3 * k1 * (z3.x * z1.x + z3.y * z1.y)
-                ) - (k1*k1 + k2*k2 + k3*k3 + k4*k4); // This needs to be precisely derived from the complex number equation
-
-                // This is the more accurate way to calculate the radical for centers:
-                // sqrt( (k1*z1 + k2*z2 + k3*z3)^2 - (k1^2 + k2^2 + k3^2 - k4^2) )
-                // However, the P5.Vector doesn't directly support complex multiplication.
-                // We will use the common simplified form for the coordinates.
-
-                // For the purpose of visualization, we'll implement a simpler approach
-                // for the centers which works if the circles are roughly aligned or
-                // if we are filling a specific gap. For a general solution, the complex
-                // number formula for centers is required.
-
-                // A common way to get the two centers (z4a, z4b) from three tangent circles:
-                // If the circles are defined by (x,y,r), finding the new center for Descartes' theorem
-                // is non-trivial without complex numbers.
-                // Let's assume a simplified scenario for starting circles.
-
-                // We need to use the full Descartes theorem for complex centers.
-                // It's usually given as (k_i * z_i) sum squared = (k_i^2) sum.
-                // For a more robust implementation, we would need to manually handle complex numbers
-                // or use a library that supports them.
-
-                // Let's use the standard numerical approach for finding the center of the fourth circle.
-                // Given k1, k2, k3, k4 and z1, z2, z3:
-                // k4 * z4 = k1 * z1 + k2 * z2 + k3 * z3 +/- sqrt(2 * (k1*k2*z1*z2 + k2*k3*z2*z3 + k3*k1*z3*z1) - (k1^2 + k2^2 + k3^2 + k4^2))
-
-                // For a real-valued solution, we often need to transform coordinates or use geometry.
-                // The provided "averaging" was wrong.
-
-                // A more practical approach for finding the center without complex numbers:
-                // Assume the circles are initially placed in a way that allows us to infer the center.
-                // For a general Apollonian gasket, this is what's required:
-                // Center_x = (k1*x1 + k2*x2 + k3*x3 +/- Re(sqrt_term)) / k4
-                // Center_y = (k1*y1 + k2*y2 + k3*y3 +/- Im(sqrt_term)) / k4
-                // where sqrt_term involves the product of complex numbers z_i * z_j.
-
-                // Let's use a simpler but effective way to find the center for the fourth circle
-                // given three known tangent circles, specifically designed for filling the "holes".
-                // This requires a bit of geometric intuition or a more advanced algorithm.
-
-                // A common implementation iterates through the existing circles and tries to fit new ones.
-                // For demonstration, let's simplify the initial four.
-
-                // Since directly calculating the complex center using p5.Vector is not straightforward,
-                // and the current `generateSoddyCircles` simplified the center,
-                // I will adjust the initial setup to ensure mutual tangency and then
-                // apply Descartes' theorem (curvature) and a simplified center calculation that
-                // works for the "holes" formed by the initial setup.
-
-                // To correctly compute the center of the 4th circle, given the centers and curvatures of 3,
-                // we need to solve the system of equations that define tangency.
-                // (x - x_i)^2 + (y - y_i)^2 = (1/k - 1/k_i)^2 
-                // This is complex. For a P5.js example, we'll try to set up the initial circles
-                // such that the subsequent calculations are simpler.
-
-                // Let's use a standard Apollonian Gasket starting point:
-                // Three circles tangent to a line (infinite curvature, so treated as a very large circle)
-                // or three circles tangent to each other, and then fill the gaps.
-
-                // Instead of the simplified `x = (c1.x + c2.x + c3.x) / 3;`, we need to use a more
-                // accurate geometric method.
-                // For now, let's use a fixed initial set that guarantees tangency and then
-                // use the Descartes' theorem for curvature, and a robust center calculation.
-                // This will be a standard Apollonian Gasket.
-
-                // The following complex number approach for centers is the most robust:
-                // Z_4 = (k_1*Z_1 + k_2*Z_2 + k_3*Z_3 +/- 2 * sqrt(k_1*k_2*Z_1*Z_2 + k_2*k_3*Z_2*Z_3 + k_3*k_1*Z_3*Z_1)) / k_4
-                // Where Z is a complex number (x + iy).
-                // Since p5.js doesn't have complex numbers, we need to implement them or
-                // use a known geometric construction for tangent circles.
-
-                // A common way to find the two centers for a triplet is to solve for them.
-                // This is computationally intensive for every recursive step.
-
-                // For a more direct way:
-                let x4_real = (k1 * z1.x + k2 * z2.x + k3 * z3.x) / k4;
-                let y4_real = (k1 * z1.y + k2 * z2.y + k3 * z3.y) / k4;
+                // Complex number part of Descartes' Theorem for centers
+                // Numerator base: k1*z1 + k2*z2 + k3*z3
+                let S_sum = z1.scale(k1).add(z2.scale(k2)).add(z3.scale(k3));
                 
-                // The imaginary part of the radical gives the second solution.
-                // This requires careful handling of the sign and square root of a complex number.
-                // Given the limitations of p5.js directly, we'll simplify.
+                // Term inside the square root for the complex center:
+                // 2 * (k1*k2*z1*z2 + k2*k3*z2*z3 + k3*k1*z3*z1) - (k1^2 + k2^2 + k3^2 + k4^2)
+                let T_term_complex = z1.mult(z2).scale(k1*k2)
+                    .add(z2.mult(z3).scale(k2*k3))
+                    .add(z3.mult(z1).scale(k3*k1))
+                    .scale(2);
 
-                // Instead, let's use an algorithm that generates the sequence correctly:
-                // This will be a simpler, more common Apollonian gasket where we start
-                // with three tangent circles and recursively fill the gaps.
+                let sum_k_sq_real = k1*k1 + k2*k2 + k3*k3 + k4*k4;
+                let sqrt_content_complex = T_term_complex.sub(new Complex(sum_k_sq_real, 0));
 
-                // This part of the code needs to be completely rethought to correctly
-                // place the 4th circle. The 'n' values for specific gaskets are about
-                // their initial curvatures, not general generation.
+                // Handle potential tiny negative real part due to floating point error
+                if (sqrt_content_complex.re < 0 && Math.abs(sqrt_content_complex.re) < 1e-9) {
+                    sqrt_content_complex.re = 0;
+                }
+                
+                // Get the two square roots
+                let s_sqrt_primary = sqrt_content_complex.sqrt();
+                let s_sqrt_secondary = s_sqrt_primary.scale(-1);
 
-                // To make this work, I will fix the initial three circles to be mutually tangent.
-                // Then, recursively find the next circles.
+                [s_sqrt_primary, s_sqrt_secondary].forEach(s => {
+                    let z4_complex;
+                    try {
+                        z4_complex = S_sum.add(s).div(new Complex(k4, 0));
+                    } catch (e) {
+                        console.error("Division by zero in complex division:", e);
+                        return;
+                    }
+                    
+                    if (isNaN(z4_complex.re) || isNaN(z4_complex.im) || !isFinite(z4_complex.re) || !isFinite(z4_complex.im)) {
+                        return; // Skip invalid center coordinates
+                    }
 
-                // Create a mock complex number for the centers
-                const C1 = {r: c1.center.x, i: c1.center.y};
-                const C2 = {r: c2.center.x, i: c2.center.y};
-                const C3 = {r: c3.center.x, i: c3.center.y};
-
-                // Complex multiplication helper
-                const cmult = (a, b) => ({r: a.r * b.r - a.i * b.i, i: a.r * b.i + a.i * b.r});
-
-                // Complex conjugate
-                const cconj = (a) => ({r: a.r, i: -a.i});
-
-                // Complex division by a real number
-                const cdiv_real = (c, r) => ({r: c.r / r, i: c.i / r});
-
-                // Complex square root (only positive branch for real part, for simplicity)
-                const csqrt = (c) => {
-                    const mag = Math.sqrt(c.r * c.r + c.i * c.i);
-                    const angle = Math.atan2(c.i, c.r);
-                    return {
-                        r: Math.sqrt(mag) * Math.cos(angle / 2),
-                        i: Math.sqrt(mag) * Math.sin(angle / 2)
-                    };
-                };
-
-                // Term inside the square root for the center calculation:
-                // 2 * (k1*k2*Z1*Z2 + k2*k3*Z2*Z3 + k3*k1*Z3*Z1)
-                const termInSqrt = {r: 0, i: 0};
-                let p12 = cmult(C1, C2);
-                let p23 = cmult(C2, C3);
-                let p31 = cmult(C3, C1);
-
-                termInSqrt.r += k1 * k2 * p12.r;
-                termInSqrt.i += k1 * k2 * p12.i;
-                termInSqrt.r += k2 * k3 * p23.r;
-                termInSqrt.i += k2 * k3 * p23.i;
-                termInSqrt.r += k3 * k1 * p31.r;
-                termInSqrt.i += k3 * k1 * p31.i;
-
-                termInSqrt.r *= 2;
-                termInSqrt.i *= 2;
-
-                const sqrtTerm = csqrt(termInSqrt); // This will give one of the roots
-
-                // Calculate the numerator for the complex center
-                const numerator_base_r = k1 * C1.r + k2 * C2.r + k3 * C3.r;
-                const numerator_base_i = k1 * C1.i + k2 * C2.i + k3 * C3.i;
-
-                // Two solutions for the center
-                const z4a_r = (numerator_base_r + sqrtTerm.r) / k4;
-                const z4a_i = (numerator_base_i + sqrtTerm.i) / k4;
-
-                const z4b_r = (numerator_base_r - sqrtTerm.r) / k4;
-                const z4b_i = (numerator_base_i - sqrtTerm.i) / k4;
-
-                newCircles.push(new Circle(z4a_r, z4a_i, k4, [random(0,255), random(0,255), random(0,255), 150]));
-                newCircles.push(new Circle(z4b_r, z4b_i, k4, [random(0,255), random(0,255), random(0,255), 150]));
-
-                return newCircles;
+                    let newC = new Circle(z4_complex.re, z4_complex.im, k4);
+                    
+                    // Filter out circles that are too small, too large, or outside the canvas
+                    const minRadius = 0.5; // Minimum reasonable radius
+                    const maxRadius = width * 2; // Maximum reasonable radius (e.g., twice canvas size)
+                    
+                    if (newC.radius > minRadius && newC.radius < maxRadius) {
+                        newCircles.push(newC);
+                    }
+                });
             });
             return newCircles;
         }
         
         function generateGasket() {
-            circles = [];
-            
-            // Standard Apollonian Gasket initialization
-            // Three mutually tangent circles. Let's make them relatively simple.
-            // Example: Three circles with radius 1, tangent to each other.
-            // And an enclosing circle (negative curvature)
-            // For a visual setup in a 500x500 canvas:
+            circles = []; // Clear previous circles
+            let tripletQueue = []; // Queue to store triplets of circles to process
+            let generatedCircleKeys = new Set(); // To prevent duplicate circles
 
-            const center = createVector(width / 2, height / 2);
-            const scale = 200; // Adjust for visualization size
-
-            // Initial circles - curvatures based on a common setup
-            // This setup creates a classic Apollonian Gasket.
-            // c1: Outer circle, tangent to c2, c3, c4. Curvature -k_outer
-            // c2, c3, c4: Three inner circles mutually tangent and tangent to c1.
-
-            // Let's create an initial set of three mutually tangent circles and the outer circle.
-            // A common way is to consider three circles touching the x-axis, and then one large circle
-            // enclosing them. For simplicity, let's use arbitrary but reasonable values.
-
-            // Circle 1 (outer, negative curvature)
-            // Its radius should be large enough to contain other circles.
-            const k_outer = -1 / (width / 2 - 20); // A large circle, roughly fits canvas
-            let c1 = new Circle(center.x, center.y, k_outer, [255, 0, 0, 80]); // Red, outer
-
-            // Circle 2 (inner, top)
-            const k_inner = 1 / (width / 6); // Smaller, positive curvature
-            let c2 = new Circle(center.x, center.y - c1.radius + k_inner, k_inner, [0, 255, 0, 100]); // Green
-
-            // Circle 3 (inner, bottom-left)
-            let c3 = new Circle(center.x - Math.sqrt(3) * k_inner, center.y + k_inner, k_inner, [0, 0, 255, 100]); // Blue
-
-            // Circle 4 (inner, bottom-right)
-            let c4 = new Circle(center.x + Math.sqrt(3) * k_inner, center.y + k_inner, k_inner, [255, 255, 0, 100]); // Yellow
-
-            // This direct placement isn't guaranteed to be perfectly tangent for arbitrary k_inner.
-            // A more robust way to get initial tangent circles:
-            // k_A = 1/r_A, k_B = 1/r_B, k_C = 1/r_C.
-            // We can place three circles of same radius (k_A = k_B = k_C = k).
-            // Then their centers form an equilateral triangle.
-            // The radius of the enclosing circle is k_outer = -k.
-            // The radius of the inner circle is 3k.
-
-            const r = width / 4; // Arbitrary radius for the initial three inner circles
-            const k_val = 1 / r;
-            const k_outer_val = -k_val; // Outer circle
-
-            // Initial three mutually tangent inner circles
-            let initialC1 = new Circle(center.x - r, center.y, k_val, [0, 150, 0, 150]);
-            let initialC2 = new Circle(center.x + r, center.y, k_val, [0, 0, 150, 150]);
-            let initialC3 = new Circle(center.x, center.y + r * Math.sqrt(3), k_val, [150, 0, 0, 150]);
-
-            // Now, find the outer circle that encloses them
-            // And the inner circle that fits in the middle
-            let initialSet = [initialC1, initialC2, initialC3];
-            let firstFour = findApollonianCircles(initialC1, initialC2, initialC3);
-            
-            // From the two solutions for the 4th circle, one will be the central one
-            // and the other will be the outer one (if the initial three are enclosed by it).
-            // We need to identify which one is the "outer" circle.
-            // The one with negative curvature (or the smallest positive curvature) is the outer.
-
-            let outerCircle;
-            let innerMostCircle;
-
-            // Sort by curvature to find the outer (most negative) and innermost (most positive)
-            firstFour.sort((a, b) => a.curvature - b.curvature);
-            
-            // The outer circle has negative curvature.
-            // If the initial three are all positive, then one of the solutions will have negative curvature.
-            // The other will have a large positive curvature (small circle in the middle).
-
-            // Let's re-initialize with a known set for the Apollonian Gasket.
-            // This is a common setup: two small circles inside a medium circle, all tangent to a large outer circle.
-            // The initial prompt had (-n, n+1, n(n+1), n(n+1)+1). This requires a specific geometric setup.
-            // For a general Apollonian Gasket:
-
-            // A simpler starting point for a visual Apollonian gasket:
-            // One large outer circle, two smaller circles tangent to it and to each other.
-            // Then the third circle tangent to these three.
-            // This allows recursive generation.
-
-            const unit = width / 2; // Roughly half the canvas size
-            const k0 = -1 / unit; // Curvature of the outer circle
-            const r_small = unit / 3; // Radius of two small circles
-            const k_small = 1 / r_small; // Curvature of small circles
-            const r_medium = unit / 2; // Radius of a medium circle
-            const k_medium = 1 / r_medium;
-
-            // Set up initial circles for a standard gasket.
-            // Circle 1: The largest outer circle (negative curvature)
-            let cA = new Circle(width / 2, height / 2, k0, [255, 0, 0, 80]); // Outer circle
-            
-            // Circle 2: A circle tangent to cA, positioned inside
-            let rB = unit / 2.5;
-            let kB = 1/rB;
-            let cB = new Circle(width/2, height/2 - (cA.radius - rB), kB, [0, 255, 0, 150]);
-
-            // Circle 3: Another circle tangent to cA and cB
-            let rC = unit / 3.5;
-            let kC = 1/rC;
-            let cC = new Circle(width/2 + (cA.radius - rC) * 0.7, height/2 + (cA.radius - rC) * 0.7, kC, [0, 0, 255, 150]);
-
-            // Circle 4: A circle tangent to cA, cB, cC (found using Descartes)
-            // This will be added by the recursive function as a first step.
-
-            // Initialize a queue for processing triplets
-            let queue = [];
-            
-            // For a true Apollonian Gasket, we typically start with 4 mutually tangent circles
-            // or 3 circles tangent to a line (which is like a circle with infinite radius/zero curvature).
-            // Let's use a robust standard starting point for generating the gasket.
-
-            // Define three circles that are mutually tangent
-            // Circle A (outer, negative curvature)
-            let a = new Circle(width/2, height/2, -100/width, [255,0,0,80]); // Large outer circle
-            
-            // Circle B
-            let b = new Circle(width/2, height/2 + 100/a.curvature, 100/width, [0,255,0,150]);
-            
-            // Circle C
-            let c = new Circle(width/2, height/2 - 100/a.curvature, 100/width, [0,0,255,150]);
-
-            // This setup (a,b,c) will not be mutually tangent without careful calculation.
-            // Let's use a well-known initial set.
-
-            // Simplest way to get a starting Apollonian Gasket
-            // Start with two large tangent circles and an outer encompassing circle.
-            let cur_scale = width / 2;
-            let k_a = -1 / cur_scale; // Outer circle
-            let k_b = 1 / (cur_scale / 2); // First inner circle, half radius
-            let k_c = 1 / (cur_scale / 2); // Second inner circle, half radius
-
-            // Centers
-            let c_a = new Circle(width/2, height/2, k_a, [255, 0, 0, 80]); // Outer
-            let c_b = new Circle(width/2 - cur_scale/2, height/2, k_b, [0, 255, 0, 150]); // Left
-            let c_c = new Circle(width/2 + cur_scale/2, height/2, k_c, [0, 0, 255, 150]); // Right
-
-            circles.push(c_a, c_b, c_c);
-
-            // Now, find the two circles tangent to (c_a, c_b, c_c)
-            // This assumes c_a, c_b, c_c are mutually tangent.
-            // If they are not (which they aren't directly with this setup), then Descartes'
-            // theorem will not yield valid tangent circles.
-            // The initial definition of the "Apollonian Gasket defined by the curvatures (-n, n+1, n(n+1), n(n(n+1)+1))"
-            // is a specific instance. To draw it, we need to find their exact centers and radii.
-
-            // The original problem is about a *specific type* of Apollonian Gasket.
-            // The math issue was in `generateSoddyCircles` center calculation and the initial setup.
-
-            // Let's provide a corrected `generateSoddyCircles` function that uses the correct complex number
-            // math for centers, and initialize with three circles that are truly tangent to each other.
-
-            // Initial circles for a standard Apollonian gasket (mutually tangent)
-            // One outer circle and three inner circles that are mutually tangent to each other and the outer.
-            // Curvatures: k1, k2, k3, k4. Let k1 be negative.
-            // A common starting point is k1=-1, k2=2, k3=2, k4=3
-            // (These are the curvatures from the original problem for n=1).
-
-            const initialK = [-n_val, n_val + 1, n_val * (n_val + 1), n_val * (n_val + 1) + 1];
-            // n_val will be fixed for this example, let's pick n=1.
-            const n_val = 1;
-            const k_values = [-n_val, n_val + 1, n_val * (n_val + 1), n_val * (n_val + 1) + 1]; // -1, 2, 2, 3
-            
-            // To properly draw the gasket defined by these curvatures, we need their precise positions.
-            // The "n" values from the problem statement are not directly for the recursion depth.
-            // They define the initial four circles.
-
-            // Let's use the actual complex number method for centers, and start with
-            // the curvatures from the prompt.
-
-            // For the first four circles defined by `n`, their positions are related to their curvatures.
-            // This part is the trickiest without a robust solver.
-
-            // Let's set up a standard starting triplet (c_outer, c_left, c_right) for simplicity
-            // and then recursively fill.
-
-            const center_x = width / 2;
-            const center_y = height / 2;
-            const radius_unit = 200; // Determines the overall size of the gasket
-
-            // The setup below will produce a classic Apollonian Gasket based on a line (infinite radius)
-            // and two circles tangent to it, and then an encompassing circle.
-            // This is easier to implement without complex math for the initial circles.
-
-            // Initial two circles tangent to the y-axis (represented as a very large circle with small curvature)
-            // k_line = 0 (infinite radius)
-            // k_A = 1/r_A, k_B = 1/r_B
-            // The initial set of circles for the general Apollonian gasket is usually 3 circles mutually tangent to each other.
-
-            // Let's use the provided `n` to define the *initial* four circles, and then ensure they are mutually tangent.
-            // This means we need to calculate their positions correctly.
-
-            // For a set of four mutually tangent circles (k1, k2, k3, k4) where k1 is negative (outer circle):
-            // Center_1 = (0, 0)
-            // Radius_1 = 1/abs(k1)
-            // Center_2 = (0, Radius_1 - Radius_2)
-            // Radius_2 = 1/k2
-            // Center_3 and Center_4 are then calculated using geometry/Descartes Theorem.
-
-            // Let's stick to the simplest, most common Apollonian Gasket generation using three initial tangent circles.
-            // This way, the `generateSoddyCircles` function will be robust.
-
-            // Initial three mutually tangent circles
-            // Circle 1: Large outer circle (negative curvature)
-            // To fit within 500x500 canvas, set overall scale.
-            const scaleFactor = 200; // Adjusts the overall size of the gasket
-            
-            // Circle 1 (outer circle)
-            let cA_k = -1; // Standardized curvature
-            let cA = new Circle(center_x, center_y, cA_k / scaleFactor, [255, 0, 0, 80]); // Large outer circle
-
-            // Circle 2 (tangent to cA)
-            let cB_k = 2; // Standardized curvature
-            let cB = new Circle(center_x, center_y + (1/cB_k - 1/Math.abs(cA_k))/ (1/cB_k + 1/Math.abs(cA_k)) * cA.radius, cB_k / scaleFactor, [0, 255, 0, 150]);
-            // This positioning is still tricky without full geometric solution.
-
-            // Instead of calculating initial positions from arbitrary curvatures for a general gasket,
-            // I'll provide a fixed set of initial mutually tangent circles.
-            // These will be the circles that are known to form the base of an Apollonian gasket.
-
-            // A standard starting point for an Apollonian Gasket:
-            // k_A = -1 (outer circle)
-            // k_B = 2
-            // k_C = 3
-            // k_D = 6
-            // Or the provided one: (-n, n+1, n(n+1), n(n+1)+1)
-            // Let's use n=1: (-1, 2, 2, 3)
-
-            // Setup for n=1: curvatures are -1, 2, 2, 3
-            // We need to place these four circles such that they are mutually tangent.
-            // This is the hardest part. The code will simply generate them.
-            // The positions for these specific curvatures are:
-            // C(-1): centered at (0,0) with radius 1
-            // C(2): centered at (0, 1/2) with radius 1/2
-            // C(2): centered at (sqrt(3)/2, -1/2) with radius 1/2
-            // C(3): centered at (-sqrt(3)/2, -1/2) with radius 1/3 (This is wrong, should be 3rd circle)
-            // This configuration needs geometric calculation.
-
-            // Let's generate a *standard* Apollonian gasket by starting with three circles
-            // where two are tangent to each other and the third is tangent to both.
-            // Then recursively find the inner circle and the outer circle.
-
-            // Scale to fit canvas
-            const baseRadius = width / 6; // Base radius for the initial circles
-            const kBase = 1 / baseRadius;
-
-            // Initial three mutually tangent circles (forming a triangle)
-            // c1 at left, c2 at right, c3 at top
-            let circ1 = new Circle(center_x - baseRadius, center_y, kBase, [100, 100, 200, 180]);
-            let circ2 = new Circle(center_x + baseRadius, center_y, kBase, [100, 200, 100, 180]);
-            let circ3 = new Circle(center_x, center_y - baseRadius * Math.sqrt(3), kBase, [200, 100, 100, 180]);
-            
-            // Push these initial three circles
-            circles.push(circ1, circ2, circ3);
-
-            // Stack to manage triplets to process for new circles
-            let tripletStack = [];
-            tripletStack.push([circ1, circ2, circ3]);
-
-            // Track generated circles to avoid duplicates
-            let generatedKeys = new Set();
-            const getCircleKey = (c) => `${c.center.x.toFixed(2)},${c.center.y.toFixed(2)},${c.curvature.toFixed(2)}`;
-
-            // Add the initial circles to the set
-            circles.forEach(c => generatedKeys.add(getCircleKey(c)));
-
-            let currentDepth = 0;
-            while (tripletStack.length > 0 && currentDepth < recursionDepth) {
-                let currentTriplet = tripletStack.shift();
-                currentDepth++;
-
-                if (currentTriplet.length !== 3) continue;
-
-                let c1 = currentTriplet[0];
-                let c2 = currentTriplet[1];
-                let c3 = currentTriplet[2];
-
-                // Calculate the two solutions for the fourth circle
-                const k1 = c1.curvature;
-                const k2 = c2.curvature;
-                const k3 = c3.curvature;
-
-                const z1 = c1.center;
-                const z2 = c2.center;
-                const z3 = c3.center;
-
-                // Descartes' Theorem for curvatures
-                const sumK = k1 + k2 + k3;
-                // Important: for real gaskets, the term under sqrt must be non-negative.
-                // It can sometimes be very slightly negative due to floating point inaccuracies.
-                let radicalTerm = Math.max(0, k1*k2 + k2*k3 + k3*k1);
-                const radical = 2 * Math.sqrt(radicalTerm);
-                
-                const k4_solutions = [sumK + radical, sumK - radical];
-
-                k4_solutions.forEach(k4 => {
-                    if (Math.abs(k4) < 1e-5) return; // Skip if curvature is almost zero (very large radius)
-
-                    // Complex centers formula re-evaluation. P5.Vector only has real parts.
-                    // To handle the complex number arithmetic for the square root, we have to
-                    // implement complex numbers or use a numerical solver for the centers.
-
-                    // A simpler, common approach that works for generating valid gaskets
-                    // uses the known properties of Apollonian gaskets: the centers of the
-                    // four tangent circles lie on specific lines or form specific triangles.
-
-                    // For Descartes' Theorem (centers), assuming real values, we use:
-                    // x4 = (k1*x1 + k2*x2 + k3*x3 +/- 2*sqrt(k1*k2*x1*x2 + ... )) / k4
-                    // This is still problematic as the sqrt term is complex.
-
-                    // Correct Descartes' Theorem for centers (using complex numbers)
-                    // If z is the complex coordinate of the center, and k is curvature:
-                    // (sum k_i z_i)^2 = (sum k_i)^2 - 2 * sum_{i<j} k_i k_j z_i z_j (This is not quite right)
-                    // The correct form is: (sum k_i z_i)^2 = (sum k_i^2) is wrong.
-
-                    // The correct form of Descartes' Theorem involving complex coordinates for centers is:
-                    // $k_1 z_1 + k_2 z_2 + k_3 z_3 + k_4 z_4 = \pm \sqrt{2 \left( k_1 k_2 z_1 z_2 + k_2 k_3 z_2 z_3 + k_3 k_1 z_3 z_1 \right)}$
-                    // Rearranging for $z_4$:
-                    // $z_4 = \frac{1}{k_4} \left( k_1 z_1 + k_2 z_2 + k_3 z_3 \pm \sqrt{2 \left( k_1 k_2 z_1 z_2 + k_2 k_3 z_2 z_3 + k_3 k_1 z_3 z_1 \right) - \sum_{i=1}^3 k_i^2 z_i^2} \right)$
-                    // This is still not the most practical form.
-
-                    // A more commonly used algorithm for center calculation:
-                    // Iterate through possible solutions.
-                    // Given three circles (c1, c2, c3), find a new circle c4 tangent to them.
-                    // This often involves rotating and translating the circles to a simpler coordinate system.
-
-                    // For the sake of a working P5.js example, let's use a numerical approach
-                    // that often works well for Apollonian gaskets without explicit complex numbers:
-                    // Find the average center weighted by curvature, and then try to adjust.
-                    // This is not mathematically rigorous for all cases, but often suffices for visualization.
-
-                    // Re-implementing with a simplified center finder for the new circles.
-                    // For the "holes" in an Apollonian gasket, the new circle's center is often
-                    // close to the centroid of the parent circles' centers.
-
-                    // Let's use the provided 'n' values for visualization only and focus on the recursion.
-                    // The initial circle placement is simplified.
-
-                    // The critical part is that for a true Apollonian Gasket, the centers are not
-                    // simple averages. They are derived from the Descartes' Theorem involving complex numbers.
-
-                    // This is how the full solution for the center 'z4' looks:
-                    // z4 = (k1*z1 + k2*z2 + k3*z3 + (plus/minus) 2*sqrt(k1*k2*z1*z2 + k2*k3*z2*z3 + k3*k1*z3*z1)) / k4
-                    // The term under the square root is a complex number.
-
-                    // Since p5.js doesn't have native complex numbers, I'll provide a
-                    // simplified but geometrically inspired way to calculate the center for the new circle.
-                    // This approximation is what many simpler Apollonian gasket implementations use.
-
-                    // The most robust way is to use a specific Apollonian gasket generation algorithm,
-                    // not just generic `n` values that define initial curvatures.
-
-                    // Let's use a very simplified approach for the initial 4 circles:
-                    // Circle 1: The outer circle (negative curvature)
-                    // Circle 2, 3, 4: Inner circles, mutually tangent to each other and the outer circle.
-                    // This is the core of the problem.
-
-                    // I will provide code that generates a *generic* Apollonian gasket
-                    // by fixing the initial setup for three circles and then recursively filling the gaps.
-                    // The `n` slider will control the recursion depth, not the curvatures directly,
-                    // as dynamically generating mutually tangent initial circles is hard.
-
-                    // Reset initial circles for a standard gasket visual.
-                    // Circles defined by (center_x, center_y, radius).
-                    const radius = width / 6; // Fixed initial radius
-                    const k_fixed = 1 / radius; // Fixed curvature
-
-                    // Define 3 initial circles that are mutually tangent and form a triangle
-                    const c_init1 = new Circle(width/2 - radius, height/2, k_fixed, [100, 100, 200, 180]);
-                    const c_init2 = new Circle(width/2 + radius, height/2, k_fixed, [100, 200, 100, 180]);
-                    const c_init3 = new Circle(width/2, height/2 + radius * Math.sqrt(3), k_fixed, [200, 100, 100, 180]);
-
-                    // This initial setup will be used to generate the first inner circle
-                    // and then the outer circle.
-
-                    // Function to calculate the center of the fourth circle, using known geometric properties
-                    // (This avoids direct complex number arithmetic for a P5.js context, but is still specific to the geometry)
-                    // For three circles tangent to each other, the fourth circle will be in the "hole".
-                    // This is still a complex problem.
-
-                    // Let's try to make the initial three circles more generic.
-                    // Instead of fixing the initial circles as (circ1, circ2, circ3),
-                    // Let's make it more general.
-
-                    // The most robust way to implement Apollonian gaskets is to use a "stack" or "queue"
-                    // of "gaps" (triplets of mutually tangent circles) that need to be filled.
-
-                    // For the given problem description of `(-n, n+1, n(n+1), n(n+1)+1)`,
-                    // the initial placement is key. The current `generateSoddyCircles` does not
-                    // implement the center calculation correctly for arbitrary triplets.
-
-                    // I will revert to a simpler, visually appealing Apollonian gasket that
-                    // focuses on the recursion logic rather than the specific `n` values' geometry,
-                    // as that requires much more complex initial circle placement and center calculations.
-
-                    // The core math to correct is the `generateSoddyCircles` function's center calculation.
-                    // It must use the complex number form of Descartes' Theorem.
-
-                    // Let's create a helper for complex numbers
-                    class Complex {
-                        constructor(re, im) {
-                            this.re = re;
-                            this.im = im;
-                        }
-                        add(other) { return new Complex(this.re + other.re, this.im + other.im); }
-                        sub(other) { return new Complex(this.re - other.re, this.im - other.im); }
-                        mult(other) {
-                            return new Complex(
-                                this.re * other.re - this.im * other.im,
-                                this.re * other.im + this.im * other.re
-                            );
-                        }
-                        div(other) {
-                            const denom = other.re * other.re + other.im * other.im;
-                            return new Complex(
-                                (this.re * other.re + this.im * other.im) / denom,
-                                (this.im * other.re - this.re * other.im) / denom
-                            );
-                        }
-                        scale(scalar) { return new Complex(this.re * scalar, this.im * scalar); }
-                        sqrt() {
-                            const r = Math.sqrt(this.re * this.re + this.im * this.im);
-                            const theta = Math.atan2(this.im, this.re);
-                            return new Complex(Math.sqrt(r) * Math.cos(theta / 2), Math.sqrt(r) * Math.sin(theta / 2));
-                        }
-                        magSq() { return this.re * this.re + this.im * this.im; }
-                    }
-
-                    // Redo `generateSoddyCircles`
-                    function generateSoddyCircles(c1, c2, c3, depth) {
-                        if (depth <= 0) return;
-
-                        const k1 = c1.curvature;
-                        const k2 = c2.curvature;
-                        const k3 = c3.curvature;
-
-                        const z1 = new Complex(c1.center.x, c1.center.y);
-                        const z2 = new Complex(c2.center.x, c2.center.y);
-                        const z3 = new Complex(c3.center.x, c3.center.y);
-
-                        // Descartes' Theorem for curvature
-                        const sumK = k1 + k2 + k3;
-                        const radicalPart = Math.max(0, k1*k2 + k2*k3 + k3*k1); // Ensure non-negative
-                        const radical = 2 * Math.sqrt(radicalPart);
-
-                        const k4a = sumK + radical;
-                        const k4b = sumK - radical;
-
-                        // Iterate through the two possible new curvatures
-                        [k4a, k4b].forEach(k4 => {
-                            if (Math.abs(k4) < 1e-5) return; // Avoid very large radii (near zero curvature)
-
-                            // Complex number part of Descartes' Theorem for centers
-                            // Numerator without the sqrt part: k1*z1 + k2*z2 + k3*z3
-                            let numeratorBase = z1.scale(k1).add(z2.scale(k2)).add(z3.scale(k3));
-
-                            // Term inside the square root for the complex center (from the general formula)
-                            // 2 * (k1*k2*z1*z2 + k2*k3*z2*z3 + k3*k1*z3*z1)
-                            let sqrtTermComplex = z1.mult(z2).scale(k1 * k2)
-                                .add(z2.mult(z3).scale(k2 * k3))
-                                .add(z3.mult(z1).scale(k3 * k1))
-                                .scale(2);
-
-                            // The formula for z4 is:
-                            // z4 = (k1*z1 + k2*z2 + k3*z3 +/- sqrt_complex_part) / k4
-                            // sqrt_complex_part = sqrt( 2 * (k1k2z1z2 + k2k3z2z3 + k3k1z3z1) )
-                            // This formula simplifies to:
-                            // z4 = (k1*z1 + k2*z2 + k3*z3 + sqrt(2 * (k1k2z1z2 + k2k3z2z3 + k3k1z3z1) - (k1^2+k2^2+k3^2+k4^2)) ) / k4
-
-                            // Let's use the most common form for deriving centers for Descartes' Theorem:
-                            // sum(ki zi)^2 = sum(ki^2) is incorrect.
-                            // The true form is: (k1z1+k2z2+k3z3+k4z4)^2 = k1^2 + k2^2 + k3^2 + k4^2 (only if using (x^2+y^2)*k^2)
-
-                            // The correct formula for the complex center `z4` given `z1, z2, z3` and curvatures `k1, k2, k3, k4` is:
-                            // $z_4 = \frac{1}{k_4} \left( k_1 z_1 + k_2 z_2 + k_3 z_3 \pm \sqrt{2(k_1 k_2 z_1 z_2 + k_2 k_3 z_2 z_3 + k_3 k_1 z_3 z_1) - (k_1^2 + k_2^2 + k_3^2 + k_4^2)} \right)$
-                            // The real and imaginary parts of the radical must be computed carefully.
-                            // The term `(k1^2 + k2^2 + k3^2 + k4^2)` is a real scalar.
-                            // This means `sqrt_complex_part` has to be: `sqrt(term_under_radical_complex)`
-                            // `term_under_radical_complex = 2 * (k1k2z1z2 + k2k3z2z3 + k3k1z3z1) - (k1^2+k2^2+k3^2+k4^2)` (this term should be a complex number if the circles are not on the same axis)
-
-                            // For a general case, where circles are not aligned, `term_under_radical_complex` can be negative.
-                            // Let's assume it's guaranteed to be real for simplicity of this example.
-                            // If `k_i` are real, and `z_i` are complex, `z_i*z_j` can be complex.
-                            // The sum `k1k2z1z2 + k2k3z2z3 + k3k1z3z1` must be real or have its imaginary part cancel.
-
-                            // The issue is that the geometric setup must be exactly right for the direct application of Descartes.
-                            // For simplicity, let's use a very common algorithm for generating Apollonian gaskets.
-                            // This algorithm starts with three known mutually tangent circles (c1, c2, c3).
-                            // It finds the two circles (c4a, c4b) that are tangent to c1, c2, c3.
-                            // One is the "inner" circle, the other is the "outer" circle.
-                            // We recurse on (c1, c2, c4), (c1, c3, c4), (c2, c3, c4).
-
-                            // This needs to be a dedicated function, not generic `generateSoddyCircles` for arbitrary `n`.
-
-                            // Let's use the correct complex number approach for finding the center.
-                            let S1 = z1.scale(k1);
-                            let S2 = z2.scale(k2);
-                            let S3 = z3.scale(k3);
-                            
-                            let S = S1.add(S2).add(S3);
-                            
-                            // Term under square root:
-                            // T = (k1*k2*z1*z2 + k2*k3*z2*z3 + k3*k1*z3*z1) * 2
-                            let T = z1.mult(z2).scale(k1*k2)
-                                .add(z2.mult(z3).scale(k2*k3))
-                                .add(z3.mult(z1).scale(k3*k1))
-                                .scale(2);
-
-                            // The final part needs to be the specific formula for centers:
-                            // z4 = ( (k1*z1 + k2*z2 + k3*z3) +/- sqrt(2 * (k1k2z1z2 + k2k3z2z3 + k3k1z3z1) - (sum_k_sq)) ) / k4
-                            // where sum_k_sq = k1^2 + k2^2 + k3^2 + k4^2
-
-                            // This term is real: k1*k1 + k2*k2 + k3*k3 + k4*k4
-                            let sumKsq = k1*k1 + k2*k2 + k3*k3 + k4*k4;
-
-                            // The part inside the square root should be a complex number
-                            let sqrtContent = T.sub(new Complex(sumKsq, 0));
-
-                            // Take the two square roots
-                            let sqrt1 = sqrtContent.sqrt();
-                            let sqrt2 = sqrt1.scale(-1); // The other root is just the negative
-
-                            [sqrt1, sqrt2].forEach(s => {
-                                let z4_complex = S.add(s).div(new Complex(k4, 0)); // Divide by real k4
-                                let newCircle = new Circle(z4_complex.re, z4_complex.im, k4, [random(0,255), random(0,255), random(0,255), 150]);
-                                
-                                // Check for duplicates or invalid circles
-                                const key = getCircleKey(newCircle);
-                                if (!generatedKeys.has(key) && newCircle.radius > 1 && newCircle.radius < width * 2) {
-                                    circles.push(newCircle);
-                                    generatedKeys.add(key);
-
-                                    // Recursively generate for the new triplets
-                                    tripletStack.push([c1, c2, newCircle]);
-                                    tripletStack.push([c1, c3, newCircle]);
-                                    tripletStack.push([c2, c3, newCircle]);
-                                }
-                            });
-                        });
-                    }
-            } // End of generateSoddyCircles loop
-
-            // Initial Gasket Generation:
-            // Define 4 initial mutually tangent circles.
-            // This is the common approach for a fixed Apollonian Gasket.
-            // Let's use the curvatures from the problem statement for n=1: (-1, 2, 2, 3)
-
-            const scale = width / 2.2; // Adjust to fit in canvas
-            const k_val = 1; // Base curvature for scaling
-
-            // Circle 1 (outer, negative curvature)
-            let c_out_k = -k_val;
-            let c_out = new Circle(center_x, center_y, c_out_k, [255, 0, 0, 80]); // Large outer circle
-
-            // Circle 2 (tangent to c_out)
-            let c2_k = 2 * k_val;
-            let c2 = new Circle(center_x, center_y + (c_out.radius - 1/c2_k) * scale, c2_k, [0, 255, 0, 150]);
-
-            // Circle 3 (tangent to c_out and c2)
-            // This is the part that is geometrically complex.
-            // We need to place them such that they are *mutually tangent*.
-            // A simple setup for (-1, 2, 2, 3) where the outer circle is at (0,0) and radius 1:
-            // C1: (0,0) k=-1
-            // C2: (0.5,0) k=2 (radius 0.5) -- NO, this is tangent to C1 if C1 is at (0,0) and radius 1.
-            // Let's use the coordinates for n=1: C_A = (-1,0), C_B = (1,0), C_C = (0,sqrt(3)), C_D = (0,-sqrt(3)).
-            // This is for 4 tangent circles of the same radius.
-
-            // Given the original problem statement's curvatures, we need to correctly place them.
-            // This usually requires a geometric setup or solving equations.
-            // Let's fix a common starting point for a visual gasket and then recursively fill.
-
-            // Initial circles for a standard Apollonian gasket:
-            // Three large tangent circles, then fill the void.
-            // c1, c2, c3 are mutually tangent.
-            const r_base = width / 4; // Base radius
-            const k_base = 1 / r_base;
-
-            let C_A = new Circle(center_x - r_base, center_y, k_base, [200, 50, 50, 180]); // Left
-            let C_B = new Circle(center_x + r_base, center_y, k_base, [50, 200, 50, 180]); // Right
-            let C_C = new Circle(center_x, center_y + r_base * Math.sqrt(3), k_base, [50, 50, 200, 180]); // Top
-
-            circles.push(C_A, C_B, C_C);
-            
-            let initialTripletStack = [];
-            initialTripletStack.push([C_A, C_B, C_C]);
-
-            let currentDepth = 0;
-            // Use a Set to avoid adding duplicate circles and to manage recursion efficiently.
-            let circleSet = new Set();
             const getCircleUniqueKey = (c) => `${c.center.x.toFixed(3)},${c.center.y.toFixed(3)},${c.curvature.toFixed(3)}`;
 
-            circles.forEach(c => circleSet.add(getCircleUniqueKey(c)));
+            // --- Initial three mutually tangent circles ---
+            // These three circles form the base of the gasket.
+            // We'll place them to be visually appealing and clearly tangent.
+            const center_x = width / 2;
+            const center_y = height / 2;
+            const baseRadius = width / 6; // Radius for the initial three circles
+            const kBase = 1 / baseRadius;
 
-            while (initialTripletStack.length > 0 && currentDepth < recursionDepth) {
-                let [c1, c2, c3] = initialTripletStack.shift();
-                
-                // Calculate the two new circles (inner and outer if applicable)
-                const k1 = c1.curvature;
-                const k2 = c2.curvature;
-                const k3 = c3.curvature;
+            // Place three circles forming an equilateral triangle
+            let cA = new Circle(center_x - baseRadius, center_y + (baseRadius * Math.sqrt(3) / 3), kBase, [200, 50, 50, 180]); // Left
+            let cB = new Circle(center_x + baseRadius, center_y + (baseRadius * Math.sqrt(3) / 3), kBase, [50, 200, 50, 180]); // Right
+            let cC = new Circle(center_x, center_y - (2 * baseRadius * Math.sqrt(3) / 3), kBase, [50, 50, 200, 180]); // Top
 
-                const z1 = new Complex(c1.center.x, c1.center.y);
-                const z2 = new Complex(c2.center.x, c2.center.y);
-                const z3 = new Complex(c3.center.x, c3.center.y);
+            // Add initial circles to our list and the set of generated keys
+            circles.push(cA, cB, cC);
+            generatedCircleKeys.add(getCircleUniqueKey(cA));
+            generatedCircleKeys.add(getCircleUniqueKey(cB));
+            generatedCircleKeys.add(getCircleUniqueKey(cC));
 
-                const sumK = k1 + k2 + k3;
-                let radicalPart = Math.max(0, k1*k2 + k2*k3 + k3*k1); // Ensure non-negative
-                const radical = 2 * Math.sqrt(radicalPart);
-                
-                const k4_solutions = [sumK + radical, sumK - radical];
+            // Push the first triplet to the queue
+            tripletQueue.push([cA, cB, cC]);
 
-                k4_solutions.forEach(k4 => {
-                    if (Math.abs(k4) < 1e-5) return; // Skip if curvature is almost zero (very large radius)
-                    if (Math.abs(1/k4) > width * 10) return; // Skip if radius is too large (likely unbounded)
+            let currentRecursion = 0;
+            while (tripletQueue.length > 0 && currentRecursion < recursionDepth) {
+                let [c1, c2, c3] = tripletQueue.shift();
 
-                    let S_sum = z1.scale(k1).add(z2.scale(k2)).add(z3.scale(k3));
-                    
-                    let T_term = z1.mult(z2).scale(k1*k2)
-                        .add(z2.mult(z3).scale(k2*k3))
-                        .add(z3.mult(z1).scale(k3*k1))
-                        .scale(2);
+                let newGeneratedCircles = getNewCircles(c1, c2, c3);
 
-                    let sum_k_sq = k1*k1 + k2*k2 + k3*k3 + k4*k4;
-                    let sqrt_content = T_term.sub(new Complex(sum_k_sq, 0));
+                newGeneratedCircles.forEach(newC => {
+                    const key = getCircleUniqueKey(newC);
+                    if (!generatedCircleKeys.has(key)) {
+                        circles.push(newC);
+                        generatedCircleKeys.add(key);
 
-                    // Taking care of numerical stability for sqrt_content.re potentially being negative
-                    if (sqrt_content.re < 0 && Math.abs(sqrt_content.re) < 1e-9) sqrt_content.re = 0;
-                    if (sqrt_content.im < 0 && Math.abs(sqrt_content.im) < 1e-9) sqrt_content.im = 0;
-
-
-                    let s_sqrt = sqrt_content.sqrt();
-                    let s_sqrt_neg = s_sqrt.scale(-1);
-
-                    [s_sqrt, s_sqrt_neg].forEach(s => {
-                        let z4_complex = S_sum.add(s).div(new Complex(k4, 0));
-                        
-                        let newC = new Circle(z4_complex.re, z4_complex.im, k4);
-                        
-                        const key = getCircleUniqueKey(newC);
-
-                        // Only add if not a duplicate and radius is reasonable
-                        if (!circleSet.has(key) && newC.radius > 1 && newC.radius < width * 2) {
-                            circles.push(newC);
-                            circleSet.add(key);
-
-                            // Push new triplets for recursion
-                            initialTripletStack.push([c1, c2, newC]);
-                            initialTripletStack.push([c1, c3, newC]);
-                            initialTripletStack.push([c2, c3, newC]);
-                        }
-                    });
+                        // Add new triplets for the next recursion step
+                        // A new circle 'newC' forms new triplets with existing circles
+                        tripletQueue.push([c1, c2, newC]);
+                        tripletQueue.push([c1, c3, newC]);
+                        tripletQueue.push([c2, c3, newC]);
+                    }
                 });
-                currentDepth++;
+                // Increment recursion depth only after processing all triplets at current level
+                // This is a level-order traversal, which is often what "recursion depth" implies
+                // for visual generation.
+                // A simpler way to control depth is to add a depth parameter to `getNewCircles` or `generateGasket`
+                // and check it before adding to queue.
+                // For now, let's increment `currentRecursion` here to limit iterations.
+                 if (tripletQueue.length === 0 && currentRecursion < recursionDepth) {
+                     // This condition for incrementing depth is tricky.
+                     // A better way is to pass depth into the recursive call.
+                     // Let's assume a fixed number of iterations for the queue.
+                     // A queue effectively does a breadth-first search.
+                     // The recursionDepth should control how many levels deep we go.
+                 }
+            }
+            // For a "recursion depth" controlled by a slider in a queue-based system,
+            // we need to manage it like this:
+            // The `while` loop runs until the queue is empty OR the recursion depth is reached.
+            // A more direct way to limit "depth" in a queue is to add a depth property to the
+            // triplet objects in the queue: `tripletQueue.push({circles: [c1, c2, c3], depth: 0})`
+            // Then, `currentDepth = triplet.depth + 1;` and check against `recursionDepth`.
+
+            // Let's refine the queue logic to accurately reflect recursion depth.
+            circles = []; // Clear for re-generation
+            tripletQueue = [];
+            generatedCircleKeys = new Set();
+
+            // Re-initialize for proper depth control
+            circles.push(cA, cB, cC);
+            generatedCircleKeys.add(getCircleUniqueKey(cA));
+            generatedCircleKeys.add(getCircleUniqueKey(cB));
+            generatedCircleKeys.add(getCircleUniqueKey(cC));
+            tripletQueue.push({triplet: [cA, cB, cC], depth: 0}); // Store triplet and its depth
+
+            let processedCountAtCurrentDepth = 0;
+            let currentLevelProcessed = 0;
+
+            while (tripletQueue.length > 0) {
+                let {triplet: [c1, c2, c3], depth} = tripletQueue.shift();
+
+                if (depth >= recursionDepth) {
+                    continue; // Skip if max depth reached
+                }
+
+                let newGeneratedCircles = getNewCircles(c1, c2, c3);
+
+                newGeneratedCircles.forEach(newC => {
+                    const key = getCircleUniqueKey(newC);
+                    if (!generatedCircleKeys.has(key)) {
+                        circles.push(newC);
+                        generatedCircleKeys.add(key);
+
+                        // Add new triplets for the next recursion level
+                        tripletQueue.push({triplet: [c1, c2, newC], depth: depth + 1});
+                        tripletQueue.push({triplet: [c1, c3, newC], depth: depth + 1});
+                        tripletQueue.push({triplet: [c2, c3, newC], depth: depth + 1});
+                    }
+                });
             }
         }
         
         function draw() {
             background(240);
-            
-            // Adjust origin for drawing a centered gasket
-            translate(0, 0); 
             
             // Draw all circles
             for (let circle of circles) {
