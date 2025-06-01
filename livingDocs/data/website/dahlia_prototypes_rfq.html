@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dahlia Prototypes - Request a Quote</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --dahlia-primary: #6a1b9a;
+            --dahlia-secondary: #9c27b0;
+            --dahlia-accent: #e1bee7;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+        }
+        
+        .dahlia-bg {
+            background: linear-gradient(135deg, var(--dahlia-primary), var(--dahlia-secondary));
+        }
+        
+        .chat-container {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .chat-container.open {
+            transform: translateX(0);
+        }
+        
+        .chat-message {
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        
+        .form-input:focus {
+            border-color: var(--dahlia-secondary);
+            box-shadow: 0 0 0 3px rgba(156, 39, 176, 0.2);
+        }
+        
+        .submit-btn {
+            background: linear-gradient(to right, var(--dahlia-primary), var(--dahlia-secondary));
+            transition: all 0.3s ease;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .floating-btn {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .floating-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="dahlia-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-cubes text-3xl"></i>
+                    <h1 class="text-2xl font-bold">Dahlia Prototypes</h1>
+                </div>
+                <nav>
+                    <ul class="flex space-x-6">
+                        <li><a href="#" class="hover:text-gray-200 transition">Home</a></li>
+                        <li><a href="#" class="hover:text-gray-200 transition">Services</a></li>
+                        <li><a href="#" class="hover:text-gray-200 transition">Portfolio</a></li>
+                        <li><a href="#" class="hover:text-gray-200 transition">About</a></li>
+                        <li><a href="#" class="hover:text-gray-200 transition">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 flex">
+        <!-- Form Section -->
+        <div class="w-full lg:w-3/4 pr-0 lg:pr-8">
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Request a Prototype Quote</h2>
+                <p class="text-gray-600 mb-6">Fill out the form below to get a quote for your custom prototype. Our team will review your request and get back to you within 24 hours.</p>
+                
+                <form id="quoteForm" class="space-y-6">
+                    <div>
+                        <label for="partDescription" class="block text-gray-700 font-medium mb-2">Part Description *</label>
+                        <textarea id="partDescription" name="partDescription" rows="4" class="w-full px-4 py-2 border rounded-lg form-input focus:outline-none focus:ring-1" placeholder="Describe your part in detail including dimensions, features, and functionality..." required></textarea>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="quantity" class="block text-gray-700 font-medium mb-2">Quantity Needed *</label>
+                            <input type="number" id="quantity" name="quantity" min="1" class="w-full px-4 py-2 border rounded-lg form-input focus:outline-none focus:ring-1" placeholder="e.g. 5" required>
+                        </div>
+                        
+                        <div>
+                            <label for="material" class="block text-gray-700 font-medium mb-2">Material Type *</label>
+                            <select id="material" name="material" class="w-full px-4 py-2 border rounded-lg form-input focus:outline-none focus:ring-1" required>
+                                <option value="">Select Material</option>
+                                <option value="ABS">ABS Plastic</option>
+                                <option value="PLA">PLA Plastic</option>
+                                <option value="Nylon">Nylon</option>
+                                <option value="Aluminum">Aluminum</option>
+                                <option value="Stainless Steel">Stainless Steel</option>
+                                <option value="Brass">Brass</option>
+                                <option value="Wood">Wood</option>
+                                <option value="Other">Other (Specify in Notes)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="dueDate" class="block text-gray-700 font-medium mb-2">Desired Due Date</label>
+                        <input type="date" id="dueDate" name="dueDate" class="w-full px-4 py-2 border rounded-lg form-input focus:outline-none focus:ring-1" min="">
+                    </div>
+                    
+                    <div>
+                        <label for="specialNotes" class="block text-gray-700 font-medium mb-2">Special Notes or Requirements</label>
+                        <textarea id="specialNotes" name="specialNotes" rows="3" class="w-full px-4 py-2 border rounded-lg form-input focus:outline-none focus:ring-1" placeholder="Any special requirements, tolerances, surface finishes, etc."></textarea>
+                    </div>
+                    
+                    <div>
+                        <label for="files" class="block text-gray-700 font-medium mb-2">Upload Files (Optional)</label>
+                        <input type="file" id="files" name="files" multiple class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-1">
+                        <p class="text-sm text-gray-500 mt-1">You can upload CAD files, drawings, or reference images (max 10MB)</p>
+                    </div>
+                    
+                    <div class="pt-4">
+                        <button type="submit" class="submit-btn text-white font-bold py-3 px-6 rounded-lg w-full md:w-auto">
+                            <i class="fas fa-paper-plane mr-2"></i> Submit Request
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Our Prototyping Capabilities</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <i class="fas fa-print text-2xl text-purple-600 mb-2"></i>
+                        <h4 class="font-bold text-gray-700">3D Printing</h4>
+                        <p class="text-sm text-gray-600">FDM, SLA, SLS technologies with various materials</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <i class="fas fa-cog text-2xl text-purple-600 mb-2"></i>
+                        <h4 class="font-bold text-gray-700">CNC Machining</h4>
+                        <p class="text-sm text-gray-600">Precision machining for metals and plastics</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <i class="fas fa-mold text-2xl text-purple-600 mb-2"></i>
+                        <h4 class="font-bold text-gray-700">Injection Molding</h4>
+                        <p class="text-sm text-gray-600">Low-volume production for plastic parts</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Chat Sidebar -->
+        <div class="hidden lg:block fixed right-0 top-0 h-full w-80 bg-white shadow-lg chat-container" id="chatSidebar">
+            <div class="h-full flex flex-col">
+                <!-- Chat Header -->
+                <div class="dahlia-bg text-white p-4 flex justify-between items-center">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-headset"></i>
+                        <h3 class="font-bold">Dahlia Support</h3>
+                    </div>
+                    <button id="closeChat" class="text-white hover:text-gray-200">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <!-- Chat Messages -->
+                <div class="flex-1 p-4 overflow-y-auto" id="chatMessages">
+                    <div class="mb-4">
+                        <div class="bg-gray-100 p-3 rounded-lg chat-message">
+                            <p class="text-sm">Hello! I'm Dahlia, your prototyping assistant. How can I help you today?</p>
+                            <p class="text-xs text-gray-500 mt-1">Just now</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chat Input -->
+                <div class="p-4 border-t">
+                    <div class="flex space-x-2">
+                        <input type="text" id="chatInput" placeholder="Type your message..." class="flex-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-purple-500">
+                        <button id="sendMessage" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Floating Chat Button -->
+    <button id="openChat" class="fixed bottom-6 right-6 bg-purple-600 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg floating-btn pulse">
+        <i class="fas fa-comment-dots text-2xl"></i>
+    </button>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Dahlia Prototypes</h3>
+                    <p class="text-gray-400">Precision prototyping services for innovators and creators.</p>
+                </div>
+                <div>
+                    <h4 class="text-md font-bold mb-4">Services</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">3D Printing</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">CNC Machining</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Injection Molding</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Rapid Prototyping</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-md font-bold mb-4">Company</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Our Team</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Careers</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Blog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-md font-bold mb-4">Contact</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-center space-x-2 text-gray-400">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>123 Prototype St, San Francisco, CA</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-gray-400">
+                            <i class="fas fa-phone"></i>
+                            <span>(555) 123-4567</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-gray-400">
+                            <i class="fas fa-envelope"></i>
+                            <span>hello@dahliaprototypes.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400">
+                <p>&copy; 2023 Dahlia Prototypes. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Set minimum date for due date field to tomorrow
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            const formattedDate = tomorrow.toISOString().split('T')[0];
+            document.getElementById('dueDate').min = formattedDate;
+            
+            // Chat functionality
+            const chatSidebar = document.getElementById('chatSidebar');
+            const openChatBtn = document.getElementById('openChat');
+            const closeChatBtn = document.getElementById('closeChat');
+            const chatInput = document.getElementById('chatInput');
+            const sendMessageBtn = document.getElementById('sendMessage');
+            const chatMessages = document.getElementById('chatMessages');
+            
+            openChatBtn.addEventListener('click', function() {
+                chatSidebar.classList.add('open');
+                openChatBtn.classList.remove('pulse');
+            });
+            
+            closeChatBtn.addEventListener('click', function() {
+                chatSidebar.classList.remove('open');
+            });
+            
+            function addMessage(text, isUser = false) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'mb-4';
+                
+                const messageContent = document.createElement('div');
+                messageContent.className = isUser ? 
+                    'bg-purple-100 p-3 rounded-lg chat-message ml-auto' : 
+                    'bg-gray-100 p-3 rounded-lg chat-message';
+                
+                const messageText = document.createElement('p');
+                messageText.className = 'text-sm';
+                messageText.textContent = text;
+                
+                const messageTime = document.createElement('p');
+                messageTime.className = 'text-xs text-gray-500 mt-1';
+                const now = new Date();
+                messageTime.textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                
+                messageContent.appendChild(messageText);
+                messageContent.appendChild(messageTime);
+                messageDiv.appendChild(messageContent);
+                chatMessages.appendChild(messageDiv);
+                
+                // Scroll to bottom
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            sendMessageBtn.addEventListener('click', function() {
+                const message = chatInput.value.trim();
+                if (message) {
+                    addMessage(message, true);
+                    chatInput.value = '';
+                    
+                    // Simulate response after 1-2 seconds
+                    setTimeout(() => {
+                        const responses = [
+                            "I can help with that. Could you provide more details?",
+                            "Our typical lead time for that process is 2-3 weeks.",
+                            "We have experience with similar projects. Would you like to see some examples?",
+                            "Let me check with our engineering team about your requirements.",
+                            "That's a great question! For material selection, we recommend considering..."
+                        ];
+                        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                        addMessage(randomResponse);
+                    }, 1000 + Math.random() * 1000);
+                }
+            });
+            
+            chatInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessageBtn.click();
+                }
+            });
+            
+            // Form submission
+            document.getElementById('quoteForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Thank you for your request! Our team will review it and get back to you shortly.');
+                this.reset();
+            });
+        });
+    </script>
+</body>
+</html>
