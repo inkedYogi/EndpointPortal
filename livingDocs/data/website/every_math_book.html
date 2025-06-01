@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Every Math Book Ever</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;400;700&family=Source+Sans+Pro:wght@300;400;600&display=swap');
+        
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #10b981;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
+        
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background-color: #f1f5f9;
+            color: var(--dark);
+        }
+        
+        h1, h2, h3 {
+            font-family: 'Roboto Slab', serif;
+        }
+        
+        .book-card {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .book-cover {
+            height: 300px;
+            object-fit: contain;
+            background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+        }
+        
+        .modal {
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal-content {
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal-open .modal-content {
+            transform: translateY(0);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-10">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-square-root-alt text-3xl text-blue-500"></i>
+                <h1 class="text-2xl font-bold text-gray-800">Every Math Book Ever</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <input type="text" placeholder="Search books..." class="search-input pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:border-blue-500 w-64">
+                    <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                </div>
+                <button id="contributeBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full flex items-center space-x-2 transition-colors">
+                    <i class="fas fa-plus"></i>
+                    <span>Contribute</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Stats -->
+        <div class="bg-white rounded-lg shadow p-6 mb-8 grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="text-center">
+                <div class="text-4xl font-bold text-blue-500">12,847</div>
+                <div class="text-gray-600">Books Cataloged</div>
+            </div>
+            <div class="text-center">
+                <div class="text-4xl font-bold text-green-500">327</div>
+                <div class="text-gray-600">New This Week</div>
+            </div>
+            <div class="text-center">
+                <div class="text-4xl font-bold text-purple-500">42</div>
+                <div class="text-gray-600">Languages</div>
+            </div>
+            <div class="text-center">
+                <div class="text-4xl font-bold text-yellow-500">5,231</div>
+                <div class="text-gray-600">Contributors</div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="flex flex-wrap gap-4 mb-8">
+            <select class="bg-white border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option>All Categories</option>
+                <option>Algebra</option>
+                <option>Calculus</option>
+                <option>Geometry</option>
+                <option>Statistics</option>
+                <option>Number Theory</option>
+            </select>
+            <select class="bg-white border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option>All Time Periods</option>
+                <option>Ancient</option>
+                <option>Medieval</option>
+                <option>Renaissance</option>
+                <option>18th Century</option>
+                <option>19th Century</option>
+                <option>Modern</option>
+            </select>
+            <select class="bg-white border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option>All Difficulty Levels</option>
+                <option>Beginner</option>
+                <option>Intermediate</option>
+                <option>Advanced</option>
+                <option>Research Level</option>
+            </select>
+        </div>
+
+        <!-- Book Gallery -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6" id="bookGallery">
+            <!-- Sample Book Cards (would be dynamically generated in a real app) -->
+            <div class="book-card bg-white rounded-lg overflow-hidden">
+                <img src="https://m.media-amazon.com/images/I/81xQBb5jRzL._AC_UF1000,1000_QL80_.jpg" alt="Principles of Mathematical Analysis" class="book-cover w-full p-4">
+                <div class="p-4">
+                    <h3 class="font-bold text-lg mb-1">Principles of Mathematical Analysis</h3>
+                    <p class="text-gray-600 text-sm mb-2">Walter Rudin</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">ISBN: 9780070542358</span>
+                        <span class="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded">1976</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="book-card bg-white rounded-lg overflow-hidden">
+                <img src="https://images-na.ssl-images-amazon.com/images/I/51j4Vb2ZqRL._SX342_SY445_QL70_ML2_.jpg" alt="Introduction to Linear Algebra" class="book-cover w-full p-4">
+                <div class="p-4">
+                    <h3 class="font-bold text-lg mb-1">Introduction to Linear Algebra</h3>
+                    <p class="text-gray-600 text-sm mb-2">Gilbert Strang</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">ISBN: 9780980232776</span>
+                        <span class="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded">2016</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="book-card bg-white rounded-lg overflow-hidden">
+                <img src="https://m.media-amazon.com/images/I/71Qh4Y4QyGL._AC_UF1000,1000_QL80_.jpg" alt="Calculus" class="book-cover w-full p-4">
+                <div class="p-4">
+                    <h3 class="font-bold text-lg mb-1">Calculus</h3>
+                    <p class="text-gray-600 text-sm mb-2">Michael Spivak</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">ISBN: 9780914098911</span>
+                        <span class="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded">1967</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="book-card bg-white rounded-lg overflow-hidden">
+                <img src="https://images-na.ssl-images-amazon.com/images/I/51VwYvmpWQL._SX342_SY445_QL70_ML2_.jpg" alt="Algebra" class="book-cover w-full p-4">
+                <div class="p-4">
+                    <h3 class="font-bold text-lg mb-1">Algebra</h3>
+                    <p class="text-gray-600 text-sm mb-2">Serge Lang</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">ISBN: 9780387953854</span>
+                        <span class="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded">2002</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="book-card bg-white rounded-lg overflow-hidden">
+                <img src="https://m.media-amazon.com/images/I/71Qh4Y4QyGL._AC_UF1000,1000_QL80_.jpg" alt="The Princeton Companion to Mathematics" class="book-cover w-full p-4">
+                <div class="p-4">
+                    <h3 class="font-bold text-lg mb-1">The Princeton Companion to Mathematics</h3>
+                    <p class="text-gray-600 text-sm mb-2">Timothy Gowers</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">ISBN: 9780691118802</span>
+                        <span class="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded">2008</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="book-card bg-white rounded-lg overflow-hidden">
+                <img src="https://images-na.ssl-images-amazon.com/images/I/51j4Vb2ZqRL._SX342_SY445_QL70_ML2_.jpg" alt="Concrete Mathematics" class="book-cover w-full p-4">
+                <div class="p-4">
+                    <h3 class="font-bold text-lg mb-1">Concrete Mathematics</h3>
+                    <p class="text-gray-600 text-sm mb-2">Ronald Graham, Donald Knuth, Oren Patashnik</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">ISBN: 9780201558029</span>
+                        <span class="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded">1994</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="book-card bg-white rounded-lg overflow-hidden">
+                <img src="https://m.media-amazon.com/images/I/81xQBb5jRzL._AC_UF1000,1000_QL80_.jpg" alt="Topology" class="book-cover w-full p-4">
+                <div class="p-4">
+                    <h3 class="font-bold text-lg mb-1">Topology</h3>
+                    <p class="text-gray-600 text-sm mb-2">James Munkres</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">ISBN: 9780131816299</span>
+                        <span class="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded">2000</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="book-card bg-white rounded-lg overflow-hidden">
+                <img src="https://images-na.ssl-images-amazon.com/images/I/51VwYvmpWQL._SX342_SY445_QL70_ML2_.jpg" alt="Probability Theory" class="book-cover w-full p-4">
+                <div class="p-4">
+                    <h3 class="font-bold text-lg mb-1">Probability Theory</h3>
+                    <p class="text-gray-600 text-sm mb-2">Andrey Kolmogorov</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">ISBN: 9780486612263</span>
+                        <span class="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded">1956</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-center mt-10">
+            <nav class="inline-flex rounded-md shadow">
+                <a href="#" class="px-3 py-2 rounded-l-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+                <a href="#" class="px-4 py-2 border-t border-b border-gray-300 bg-white text-blue-600 font-medium">1</a>
+                <a href="#" class="px-4 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50">2</a>
+                <a href="#" class="px-4 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50">3</a>
+                <a href="#" class="px-4 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50">4</a>
+                <a href="#" class="px-4 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50">5</a>
+                <a href="#" class="px-3 py-2 rounded-r-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </nav>
+        </div>
+    </main>
+
+    <!-- Contribution Modal -->
+    <div id="contributionModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-50">
+        <div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-md mx-4 transform transition-transform">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold">Contribute a Math Book</h2>
+                    <button id="closeModal" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <form id="contributionForm" class="space-y-4">
+                    <div>
+                        <label for="bookTitle" class="block text-sm font-medium text-gray-700 mb-1">Book Title</label>
+                        <input type="text" id="bookTitle" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label for="bookAuthor" class="block text-sm font-medium text-gray-700 mb-1">Author(s)</label>
+                        <input type="text" id="bookAuthor" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label for="bookISBN" class="block text-sm font-medium text-gray-700 mb-1">ISBN</label>
+                        <input type="text" id="bookISBN" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label for="bookYear" class="block text-sm font-medium text-gray-700 mb-1">Publication Year</label>
+                        <input type="number" id="bookYear" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label for="bookCover" class="block text-sm font-medium text-gray-700 mb-1">Book Cover Image</label>
+                        <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                            <div class="space-y-1 text-center">
+                                <div class="flex text-sm text-gray-600">
+                                    <label for="bookCover" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
+                                        <span>Upload a file</span>
+                                        <input id="bookCover" name="bookCover" type="file" class="sr-only" accept="image/*">
+                                    </label>
+                                    <p class="pl-1">or drag and drop</p>
+                                </div>
+                                <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-3 pt-4">
+                        <button type="button" id="cancelContribution" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Submit Book
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Every Math Book Ever</h3>
+                    <p class="text-gray-400">The most comprehensive collection of mathematics literature in the world.</p>
+                </div>
+                <div>
+                    <h4 class="text-md font-bold mb-4">Explore</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Featured Books</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">New Additions</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Rare Finds</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Textbooks</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-md font-bold mb-4">Community</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Contribute</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Discussion Forum</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Book Reviews</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Meetups</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-md font-bold mb-4">Connect</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook fa-lg"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram fa-lg"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-github fa-lg"></i></a>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-gray-400">Subscribe to our newsletter</p>
+                        <div class="mt-2 flex">
+                            <input type="email" placeholder="Your email" class="px-3 py-2 rounded-l-md text-gray-800 w-full">
+                            <button class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-r-md">Join</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>© 2023 Every Math Book Ever. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Modal functionality
+        const modal = document.getElementById('contributionModal');
+        const openModalBtn = document.getElementById('contributeBtn');
+        const closeModalBtn = document.getElementById('closeModal');
+        const cancelBtn = document.getElementById('cancelContribution');
+        const form = document.getElementById('contributionForm');
+        
+        function openModal() {
+            modal.classList.remove('pointer-events-none');
+            modal.classList.add('modal-open');
+            modal.classList.remove('opacity-0');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModal() {
+            modal.classList.add('pointer-events-none');
+            modal.classList.remove('modal-open');
+            modal.classList.add('opacity-0');
+            document.body.style.overflow = 'auto';
+            form.reset();
+        }
+        
+        openModalBtn.addEventListener('click', openModal);
+        closeModalBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+        
+        // Close modal when clicking outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+        
+        // Form submission
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Get form values
+            const title = document.getElementById('bookTitle').value;
+            const author = document.getElementById('bookAuthor').value;
+            const isbn = document.getElementById('bookISBN').value;
+            const year = document.getElementById('bookYear').value;
+            const coverFile = document.getElementById('bookCover').files[0];
+            
+            // In a real app, you would upload this to a server
+            // For this demo, we'll simulate adding a book to the gallery
+            
+            // Create a new book card
+            const bookCard = document.createElement('div');
+            bookCard.className = 'book-card bg-white rounded-lg overflow-hidden';
+            
+            // Create image element (using placeholder if no image was uploaded)
+            const img = document.createElement('img');
+            img.className = 'book-cover w-full p-4';
+            img.alt = title;
+            
+            if (coverFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(coverFile);
+            } else {
+                img.src = 'https://via.placeholder.com/300x400?text=No+Cover';
+            }
+            
+            // Create card content
+            const cardContent = document.createElement('div');
+            cardContent.className = 'p-4';
+            
+            const titleElement = document.createElement('h3');
+            titleElement.className = 'font-bold text-lg mb-1';
+            titleElement.textContent = title;
+            
+            const authorElement = document.createElement('p');
+            authorElement.className = 'text-gray-600 text-sm mb-2';
+            authorElement.textContent = author || 'Unknown Author';
+            
+            const metaContainer = document.createElement('div');
+            metaContainer.className = 'flex justify-between items-center';
+            
+            const isbnElement = document.createElement('span');
+            isbnElement.className = 'text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded';
+            isbnElement.textContent = `ISBN: ${isbn}`;
+            
+            const yearElement = document.createElement('span');
+            yearElement.className = 'text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded';
+            yearElement.textContent = year || 'Unknown Year';
+            
+            // Assemble the card
+            metaContainer.appendChild(isbnElement);
+            metaContainer.appendChild(yearElement);
+            
+            cardContent.appendChild(titleElement);
+            cardContent.appendChild(authorElement);
+            cardContent.appendChild(metaContainer);
+            
+            bookCard.appendChild(img);
+            bookCard.appendChild(cardContent);
+            
+            // Add to gallery (prepend to show at the top)
+            const gallery = document.getElementById('bookGallery');
+            gallery.insertBefore(bookCard, gallery.firstChild);
+            
+            // Close modal and reset form
+            closeModal();
+            
+            // Show success message
+            alert('Thank you for your contribution! The book has been added to our collection.');
+        });
+        
+        // Simple search functionality
+        const searchInput = document.querySelector('.search-input');
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase
+</html>
