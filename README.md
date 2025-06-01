@@ -54,7 +54,7 @@ https://drive.google.com/drive/home - Google Drive Home Page
 </div>
 <div>
   <a href="https://inkedYogi.github.io/EndpointPortal/livingDocs/data/website/geometric_product_visualizer.html">
-    geometric_product_visualizer.html
+    geometric_product_visualizer
   </a>
 </div>
 
