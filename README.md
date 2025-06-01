@@ -47,7 +47,7 @@ https://drive.google.com/drive/home - Google Drive Home Page
     golden_spiral_explorer
   </a>
 </div>
-<div>w
+<div>
   <a href="https://inkedYogi.github.io/EndpointPortal/livingDocs/data/website/linear_systems_visualuzer.html">
     linear_systems_visualuzer *
   </a>
@@ -55,6 +55,11 @@ https://drive.google.com/drive/home - Google Drive Home Page
 <div>
   <a href="https://inkedYogi.github.io/EndpointPortal/livingDocs/data/website/geometric_product_visualizer.html">
     geometric_product_visualizer
+  </a>
+</div>
+<div>
+  <a href="https://inkedYogi.github.io/EndpointPortal/livingDocs/data/website/every_math_book.html">
+    every_math_book
   </a>
 </div>
 
