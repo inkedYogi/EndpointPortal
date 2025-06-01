@@ -67,6 +67,11 @@ https://drive.google.com/drive/home - Google Drive Home Page
     dahlia_prototypes_rfq
   </a>
 </div>
+<div>
+  <a href="https://inkedYogi.github.io/EndpointPortal/livingDocs/data/website/lsd_part_designer.html">
+    lsd_part_designer
+  </a>
+</div>
 
 
 Mage: Caravan - Unprecedented.
