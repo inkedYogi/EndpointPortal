@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lotus Studio Designs - Part Designer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --dahlia-primary: #6a1b9a;
+            --dahlia-secondary: #9c27b0;
+            --dahlia-accent: #e1bee7;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+        }
+        
+        .dahlia-bg {
+            background: linear-gradient(135deg, var(--dahlia-primary), var(--dahlia-secondary));
+        }
+        
+        .chat-container {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .chat-container.open {
+            transform: translateX(0);
+        }
+        
+        .chat-message {
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        
+        .form-input:focus {
+            border-color: var(--dahlia-secondary);
+            box-shadow: 0 0 0 3px rgba(156, 39, 176, 0.2);
+        }
+        
+        .submit-btn {
+            background: linear-gradient(to right, var(--dahlia-primary), var(--dahlia-secondary));
+            transition: all 0.3s ease;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .floating-btn {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .floating-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="dahlia-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-cubes text-3xl"></i>
+                    <h1 class="text-2xl font-bold">Lotus Studio Designs</h1>
+                </div>
+                <nav>
+                    <ul class="flex space-x-6">
+                        <li><a href="#" class="hover:text-gray-200 transition">Home</a></li>
+                        <li><a href="#" class="hover:text-gray-200 transition">Services</a></li>
+                        <li><a href="#" class="hover:text-gray-200 transition">Portfolio</a></li>
+                        <li><a href="#" class="hover:text-gray-200 transition">About</a></li>
+                        <li><a href="#" class="hover:text-gray-200 transition">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 flex">
+        <!-- Design Canvas -->
+        <div class="w-full lg:w-3/4 pr-0 lg:pr-8">
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Part Designer</h2>
+                    <div class="flex space-x-2">
+                        <button id="exportBtn" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
+                            <i class="fas fa-download mr-2"></i> Export
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="flex space-x-4 mb-4">
+                    <button id="lineTool" class="px-3 py-1 border rounded-lg hover:bg-gray-100 active:bg-gray-200">
+                        <i class="fas fa-slash mr-1"></i> Line
+                    </button>
+                    <button id="rectTool" class="px-3 py-1 border rounded-lg hover:bg-gray-100 active:bg-gray-200">
+                        <i class="fas fa-square mr-1"></i> Rectangle
+                    </button>
+                    <button id="circleTool" class="px-3 py-1 border rounded-lg hover:bg-gray-100 active:bg-gray-200">
+                        <i class="fas fa-circle mr-1"></i> Circle
+                    </button>
+                    <button id="textTool" class="px-3 py-1 border rounded-lg hover:bg-gray-100 active:bg-gray-200">
+                        <i class="fas fa-font mr-1"></i> Text
+                    </button>
+                    <button id="leadLineTool" class="px-3 py-1 border rounded-lg hover:bg-gray-100 active:bg-gray-200">
+                        <i class="fas fa-arrow-right mr-1"></i> Lead Line
+                    </button>
+                    <input type="color" id="colorPicker" class="w-8 h-8 cursor-pointer">
+                </div>
+                
+                <canvas id="designCanvas" class="w-full h-96 border rounded-lg bg-gray-50"></canvas>
+            </div>
+        </div>
+        
+        <!-- Properties Panel -->
+        <div class="hidden lg:block fixed right-0 top-0 h-full w-80 bg-white shadow-lg">
+            <div class="h-full flex flex-col">
+                <!-- Panel Header -->
+                <div class="dahlia-bg text-white p-4">
+                    <h3 class="font-bold">Properties</h3>
+                </div>
+                
+                <!-- File Metadata -->
+                <div class="p-4 border-b">
+                    <h4 class="font-medium text-gray-700 mb-2">File Information</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-sm text-gray-500">Filename</label>
+                            <input type="text" id="filename" class="w-full px-2 py-1 border rounded" value="untitled.lsd">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-500">Created</label>
+                            <p class="text-sm" id="createdDate">Just now</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-500">Modified</label>
+                            <p class="text-sm" id="modifiedDate">Just now</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Selected Element Properties -->
+                <div class="p-4 border-b">
+                    <h4 class="font-medium text-gray-700 mb-2">Element Properties</h4>
+                    <div class="space-y-3" id="elementProps">
+                        <p class="text-sm text-gray-500 italic">No element selected</p>
+                    </div>
+                </div>
+                
+                <!-- Design Notes -->
+                <div class="p-4 flex-1">
+                    <h4 class="font-medium text-gray-700 mb-2">Design Notes</h4>
+                    <textarea id="designNotes" class="w-full h-full px-2 py-1 border rounded" placeholder="Add notes about your design..."></textarea>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Dahlia Prototypes</h3>
+                    <p class="text-gray-400">Precision prototyping services for innovators and creators.</p>
+                </div>
+                <div>
+                    <h4 class="text-md font-bold mb-4">Services</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">3D Printing</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">CNC Machining</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Injection Molding</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Rapid Prototyping</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-md font-bold mb-4">Company</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Our Team</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Careers</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Blog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-md font-bold mb-4">Contact</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-center space-x-2 text-gray-400">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>123 Prototype St, San Francisco, CA</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-gray-400">
+                            <i class="fas fa-phone"></i>
+                            <span>(555) 123-4567</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-gray-400">
+                            <i class="fas fa-envelope"></i>
+                            <span>hello@dahliaprototypes.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400">
+                <p>&copy; 2023 Dahlia Prototypes. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Drawing functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('designCanvas');
+            const ctx = canvas.getContext('2d');
+            let isDrawing = false;
+            let currentTool = 'line';
+            let currentColor = '#000000';
+            let startX, startY;
+            let elements = [];
+            let selectedElement = null;
+            
+            // Set canvas size
+            function resizeCanvas() {
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+                redrawCanvas();
+            }
+            
+            // Redraw all elements
+            function redrawCanvas() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                elements.forEach(element => {
+                    drawElement(element);
+                });
+            }
+            
+            // Draw a single element
+            function drawElement(element) {
+                ctx.strokeStyle = element.color;
+                ctx.fillStyle = element.color;
+                ctx.lineWidth = 2;
+                
+                switch(element.type) {
+                    case 'line':
+                        ctx.beginPath();
+                        ctx.moveTo(element.x1, element.y1);
+                        ctx.lineTo(element.x2, element.y2);
+                        ctx.stroke();
+                        break;
+                    case 'rect':
+                        ctx.strokeRect(element.x, element.y, element.width, element.height);
+                        break;
+                    case 'circle':
+                        ctx.beginPath();
+                        ctx.arc(element.x, element.y, element.radius, 0, Math.PI * 2);
+                        ctx.stroke();
+                        break;
+                    case 'text':
+                        ctx.font = '16px Arial';
+                        ctx.fillText(element.text, element.x, element.y);
+                        break;
+                    case 'leadLine':
+                        ctx.beginPath();
+                        ctx.moveTo(element.x1, element.y1);
+                        ctx.lineTo(element.x2, element.y2);
+                        ctx.stroke();
+                        // Arrowhead
+                        const angle = Math.atan2(element.y2 - element.y1, element.x2 - element.x1);
+                        ctx.beginPath();
+                        ctx.moveTo(element.x2, element.y2);
+                        ctx.lineTo(
+                            element.x2 - 10 * Math.cos(angle - Math.PI / 6),
+                            element.y2 - 10 * Math.sin(angle - Math.PI / 6)
+                        );
+                        ctx.moveTo(element.x2, element.y2);
+                        ctx.lineTo(
+                            element.x2 - 10 * Math.cos(angle + Math.PI / 6),
+                            element.y2 - 10 * Math.sin(angle + Math.PI / 6)
+                        );
+                        ctx.stroke();
+                        break;
+                }
+            }
+            
+            // Set up event listeners
+            canvas.addEventListener('mousedown', (e) => {
+                isDrawing = true;
+                const rect = canvas.getBoundingClientRect();
+                startX = e.clientX - rect.left;
+                startY = e.clientY - rect.top;
+                
+                if (currentTool === 'text') {
+                    const text = prompt('Enter text:', 'Label');
+                    if (text) {
+                        elements.push({
+                            type: 'text',
+                            x: startX,
+                            y: startY,
+                            text: text,
+                            color: currentColor
+                        });
+                        redrawCanvas();
+                    }
+                    isDrawing = false;
+                }
+            });
+            
+            canvas.addEventListener('mousemove', (e) => {
+                if (!isDrawing) return;
+                
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                // For preview while drawing
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                redrawCanvas();
+                
+                ctx.strokeStyle = currentColor;
+                ctx.fillStyle = currentColor;
+                ctx.lineWidth = 2;
+                
+                switch(currentTool) {
+                    case 'line':
+                        ctx.beginPath();
+                        ctx.moveTo(startX, startY);
+                        ctx.lineTo(x, y);
+                        ctx.stroke();
+                        break;
+                    case 'rect':
+                        ctx.strokeRect(
+                            startX,
+                            startY,
+                            x - startX,
+                            y - startY
+                        );
+                        break;
+                    case 'circle':
+                        const radius = Math.sqrt(Math.pow(x - startX, 2) + Math.pow(y - startY, 2));
+                        ctx.beginPath();
+                        ctx.arc(startX, startY, radius, 0, Math.PI * 2);
+                        ctx.stroke();
+                        break;
+                    case 'leadLine':
+                        ctx.beginPath();
+                        ctx.moveTo(startX, startY);
+                        ctx.lineTo(x, y);
+                        ctx.stroke();
+                        // Arrowhead preview
+                        const angle = Math.atan2(y - startY, x - startX);
+                        ctx.beginPath();
+                        ctx.moveTo(x, y);
+                        ctx.lineTo(
+                            x - 10 * Math.cos(angle - Math.PI / 6),
+                            y - 10 * Math.sin(angle - Math.PI / 6)
+                        );
+                        ctx.moveTo(x, y);
+                        ctx.lineTo(
+                            x - 10 * Math.cos(angle + Math.PI / 6),
+                            y - 10 * Math.sin(angle + Math.PI / 6)
+                        );
+                        ctx.stroke();
+                        break;
+                }
+            });
+            
+            canvas.addEventListener('mouseup', (e) => {
+                if (!isDrawing) return;
+                isDrawing = false;
+                
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                switch(currentTool) {
+                    case 'line':
+                        elements.push({
+                            type: 'line',
+                            x1: startX,
+                            y1: startY,
+                            x2: x,
+                            y2: y,
+                            color: currentColor
+                        });
+                        break;
+                    case 'rect':
+                        elements.push({
+                            type: 'rect',
+                            x: startX,
+                            y: startY,
+                            width: x - startX,
+                            height: y - startY,
+                            color: currentColor
+                        });
+                        break;
+                    case 'circle':
+                        const radius = Math.sqrt(Math.pow(x - startX, 2) + Math.pow(y - startY, 2));
+                        elements.push({
+                            type: 'circle',
+                            x: startX,
+                            y: startY,
+                            radius: radius,
+                            color: currentColor
+                        });
+                        break;
+                    case 'leadLine':
+                        elements.push({
+                            type: 'leadLine',
+                            x1: startX,
+                            y1: startY,
+                            x2: x,
+                            y2: y,
+                            color: currentColor
+                        });
+                        break;
+                }
+                
+                redrawCanvas();
+                updateModifiedDate();
+            });
+            
+            // Tool selection
+            document.getElementById('lineTool').addEventListener('click', () => currentTool = 'line');
+            document.getElementById('rectTool').addEventListener('click', () => currentTool = 'rect');
+            document.getElementById('circleTool').addEventListener('click', () => currentTool = 'circle');
+            document.getElementById('textTool').addEventListener('click', () => currentTool = 'text');
+            document.getElementById('leadLineTool').addEventListener('click', () => currentTool = 'leadLine');
+            
+            // Color picker
+            document.getElementById('colorPicker').addEventListener('input', (e) => {
+                currentColor = e.target.value;
+            });
+            
+            // Export functionality
+            document.getElementById('exportBtn').addEventListener('click', () => {
+                const link = document.createElement('a');
+                link.download = document.getElementById('filename').value.replace('.lsd', '.png');
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+            
+            // Update dates
+            function updateModifiedDate() {
+                const now = new Date();
+                document.getElementById('modifiedDate').textContent = now.toLocaleString();
+            }
+            
+            // Initialize
+            const now = new Date();
+            document.getElementById('createdDate').textContent = now.toLocaleString();
+            document.getElementById('modifiedDate').textContent = now.toLocaleString();
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+        });
+    </script>
+</body>
+</html>
