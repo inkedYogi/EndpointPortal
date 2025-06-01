@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geometric Product Visualizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.js"></script>
+    <style>
+        .slider-thumb::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+        }
+        .slider-thumb::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+        }
+        .vector-control {
+            transition: all 0.3s ease;
+        }
+        .vector-control:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .toggle-checkbox:checked {
+            right: 0;
+            background-color: #3b82f6;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #93c5fd;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">Geometric Product Visualizer</h1>
+            <p class="text-xl text-gray-600">Explore AB = A·B + A∧B in 2D space</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Visualization Canvas -->
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-lg overflow-hidden">
+                <div id="canvas-container" class="w-full h-96 lg:h-full"></div>
+            </div>
+
+            <!-- Controls Panel -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6">Controls</h2>
+                
+                <!-- Vector A Controls -->
+                <div class="vector-control bg-blue-50 rounded-lg p-4 mb-6">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-lg font-medium text-blue-800">Vector A</h3>
+                        <div class="relative inline-block w-10 mr-2 align-middle select-none">
+                            <input type="checkbox" id="isBivectorA" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
+                            <label for="isBivectorA" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                        </div>
+                        <span id="aTypeLabel" class="text-sm font-medium text-blue-600">Vector</span>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label for="aX" class="block text-sm font-medium text-gray-700 mb-1">X Component</label>
+                            <input type="range" id="aX" min="-5" max="5" step="0.1" value="1" class="slider-thumb w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>-5</span>
+                                <span id="aXValue">1.0</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="aY" class="block text-sm font-medium text-gray-700 mb-1">Y Component</label>
+                            <input type="range" id="aY" min="-5" max="5" step="0.1" value="1" class="slider-thumb w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>-5</span>
+                                <span id="aYValue">1.0</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Vector B Controls -->
+                <div class="vector-control bg-green-50 rounded-lg p-4 mb-6">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-lg font-medium text-green-800">Vector B</h3>
+                        <div class="relative inline-block w-10 mr-2 align-middle select-none">
+                            <input type="checkbox" id="isBivectorB" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
+                            <label for="isBivectorB" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                        </div>
+                        <span id="bTypeLabel" class="text-sm font-medium text-green-600">Vector</span>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label for="bX" class="block text-sm font-medium text-gray-700 mb-1">X Component</label>
+                            <input type="range" id="bX" min="-5" max="5" step="0.1" value="1" class="slider-thumb w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>-5</span>
+                                <span id="bXValue">1.0</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="bY" class="block text-sm font-medium text-gray-700 mb-1">Y Component</label>
+                            <input type="range" id="bY" min="-5" max="5" step="0.1" value="0" class="slider-thumb w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>-5</span>
+                                <span id="bYValue">0.0</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Results Display -->
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <h3 class="text-lg font-medium text-gray-800 mb-3">Geometric Product AB</h3>
+                    <div class="space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Dot Product (A·B):</span>
+                            <span id="dotProduct" class="font-mono">1.0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Wedge Product (A∧B):</span>
+                            <span id="wedgeProduct" class="font-mono">1.0</span>
+                        </div>
+                        <div class="pt-2 mt-2 border-t border-gray-200">
+                            <div class="flex justify-between">
+                                <span class="text-gray-800 font-medium">Total (AB):</span>
+                                <span id="totalProduct" class="font-mono font-bold">2.0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Explanation Section -->
+        <div class="mt-12 bg-white rounded-xl shadow-lg p-6">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">About the Geometric Product</h2>
+            <div class="prose max-w-none text-gray-700">
+                <p>The geometric product is a fundamental operation in geometric algebra that combines the dot product (A·B) and wedge product (A∧B):</p>
+                <p class="text-center text-xl font-mono my-4 p-2 bg-gray-100 rounded">AB = A·B + A∧B</p>
+                <ul class="list-disc pl-5 space-y-2">
+                    <li><strong>Dot Product (A·B):</strong> Represents the symmetric part of the product, giving a scalar value that measures how much the vectors align.</li>
+                    <li><strong>Wedge Product (A∧B):</strong> Represents the antisymmetric part, giving a bivector that represents the oriented area spanned by the vectors.</li>
+                    <li>When A and B are vectors, A·B is a scalar and A∧B is a bivector.</li>
+                    <li>When one operand is a bivector, the geometric product includes additional terms that rotate and scale the other operand.</li>
+                </ul>
+                <p class="mt-4">Use the controls to explore how different combinations of vectors and bivectors affect the geometric product.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables for sketch
+        let aX = 1, aY = 1, bX = 1, bY = 0;
+        let isBivectorA = false, isBivectorB = false;
+        let scale = 30;
+        let originX, originY;
+        
+        // Setup the p5.js sketch
+        function setup() {
+            let canvas = createCanvas(800, 600);
+            canvas.parent('canvas-container');
+            originX = width / 2;
+            originY = height / 2;
+            
+            // Set up event listeners for controls
+            document.getElementById('aX').addEventListener('input', updateValues);
+            document.getElementById('aY').addEventListener('input', updateValues);
+            document.getElementById('bX').addEventListener('input', updateValues);
+            document.getElementById('bY').addEventListener('input', updateValues);
+            document.getElementById('isBivectorA').addEventListener('change', updateValues);
+            document.getElementById('isBivectorB').addEventListener('change', updateValues);
+            
+            updateValues();
+        }
+        
+        function draw() {
+            background(255);
+            drawGrid();
+            drawAxes();
+            
+            // Draw vector A
+            if (isBivectorA) {
+                drawBivector(aX, aY, color(59, 130, 246), 'A');
+            } else {
+                drawVector(aX, aY, color(59, 130, 246), 'A');
+            }
+            
+            // Draw vector B
+            if (isBivectorB) {
+                drawBivector(bX, bY, color(16, 185, 129), 'B');
+            } else {
+                drawVector(bX, bY, color(16, 185, 129), 'B');
+            }
+            
+            // Calculate and display the geometric product
+            calculateGeometricProduct();
+        }
+        
+        function drawGrid() {
+            stroke(230);
+            strokeWeight(1);
+            
+            // Vertical lines
+            for (let x = -10; x <= 10; x++) {
+                line(originX + x * scale, 0, originX + x * scale, height);
+            }
+            
+            // Horizontal lines
+            for (let y = -10; y <= 10; y++) {
+                line(0, originY + y * scale, width, originY + y * scale);
+            }
+        }
+        
+        function drawAxes() {
+            stroke(150);
+            strokeWeight(2);
+            
+            // X axis
+            line(0, originY, width, originY);
+            // Y axis
+            line(originX, 0, originX, height);
+            
+            // Axis labels
+            fill(100);
+            noStroke();
+            textSize(14);
+            textAlign(CENTER, CENTER);
+            
+            // X axis labels
+            for (let x = -10; x <= 10; x++) {
+                if (x !== 0) {
+                    text(x, originX + x * scale, originY + 20);
+                }
+            }
+            
+            // Y axis labels
+            for (let y = -10; y <= 10; y++) {
+                if (y !== 0) {
+                    text(y, originX - 20, originY - y * scale);
+                }
+            }
+            
+            // Origin label
+            text('0', originX - 20, originY + 20);
+        }
+        
+        function drawVector(x, y, col, label) {
+            // Draw the vector line
+            stroke(col);
+            strokeWeight(3);
+            line(originX, originY, originX + x * scale, originY - y * scale);
+            
+            // Draw arrowhead
+            let angle = atan2(-y, x);
+            drawArrowhead(originX + x * scale, originY - y * scale, angle, col);
+            
+            // Draw label
+            noStroke();
+            fill(col);
+            textSize(16);
+            textAlign(CENTER, CENTER);
+            text(label, originX + x * scale * 0.6, originY - y * scale * 0.6 - 15);
+        }
+        
+        function drawBivector(x, y, col, label) {
+            // For bivector, we'll represent it as a parallelogram with the other side along (0,1)
+            // This is a simplified visualization for 2D bivectors
+            
+            let v1x = 1 * scale;
+            let v1y = 0;
+            let v2x = x * scale;
+            let v2y = -y * scale;
+            
+            // Draw the parallelogram
+            fill(red(col), green(col), blue(col), 50);
+            stroke(col);
+            strokeWeight(2);
+            beginShape();
+            vertex(originX, originY);
+            vertex(originX + v1x, originY + v1y);
+            vertex(originX + v1x + v2x, originY + v1y + v2y);
+            vertex(originX + v2x, originY + v2y);
+            endShape(CLOSE);
+            
+            // Draw orientation arrows
+            drawCurvedArrow(originX, originY, v1x, v1y, v2x, v2y, col);
+            drawCurvedArrow(originX, originY, v2x, v2y, v1x, v1y, col);
+            
+            // Draw label
+            noStroke();
+            fill(col);
+            textSize(16);
+            textAlign(CENTER, CENTER);
+            text(label, originX + (v1x + v2x)/2, originY + (v1y + v2y)/2);
+        }
+        
+        function drawArrowhead(x, y, angle, col) {
+            push();
+            translate(x, y);
+            rotate(angle);
+            fill(col);
+            noStroke();
+            beginShape();
+            vertex(0, 0);
+            vertex(-15, -5);
+            vertex(-15, 5);
+            endShape(CLOSE);
+            pop();
+        }
+        
+        function drawCurvedArrow(x, y, v1x, v1y, v2x, v2y, col) {
+            let midX = x + v1x * 0.5 + v2x * 0.2;
+            let midY = y + v1y * 0.5 + v2y * 0.2;
+            let angle = atan2(v1y + v2y * 0.4, v1x + v2x * 0.4);
+            
+            // Draw curved line
+            noFill();
+            stroke(col);
+            strokeWeight(2);
+            beginShape();
+            vertex(x + v1x * 0.2, y + v1y * 0.2);
+            quadraticVertex(midX, midY, x + v2x * 0.2 + v1x * 0.8, y + v2y * 0.2 + v1y * 0.8);
+            endShape();
+            
+            // Draw arrowhead
+            push();
+            translate(x + v2x * 0.2 + v1x * 0.8, y + v2y * 0.2 + v1y * 0.8);
+            rotate(angle);
+            fill(col);
+            noStroke();
+            beginShape();
+            vertex(0, 0);
+            vertex(-8, -4);
+            vertex(-8, 4);
+            endShape(CLOSE);
+            pop();
+        }
+        
+        function calculateGeometricProduct() {
+            let dotProduct, wedgeProduct;
+            
+            if (!isBivectorA && !isBivectorB) {
+                // Both are vectors: A·B is scalar, A∧B is bivector
+                dotProduct = aX * bX + aY * bY;
+                wedgeProduct = aX * bY - aY * bX;
+            } else if (isBivectorA && !isBivectorB) {
+                // A is bivector, B is vector: A·B is vector, A∧B is trivector (0 in 2D)
+                dotProduct = -aX * bY + aY * bX; // Rotates B by 90°
+                wedgeProduct = 0; // Trivector is zero in 2D
+            } else if (!isBivectorA && isBivectorB) {
+                // A is vector, B is bivector: A·B is vector, A∧B is trivector (0 in 2D)
+                dotProduct = aX * bY - aY * bX; // Rotates A by -90°
+                wedgeProduct = 0; // Trivector is zero in 2D
+            } else {
+                // Both are bivectors: A·B is scalar, A∧B is quadvector (0 in 2D)
+                dotProduct = aX * bX + aY * bY;
+                wedgeProduct = 0; // Quadvector is zero in 2D
+            }
+            
+            // Update the display
+            document.getElementById('dotProduct').textContent = dotProduct.toFixed(2);
+            document.getElementById('wedgeProduct').textContent = wedgeProduct.toFixed(2);
+            
+            // For display purposes, we'll show the sum of magnitudes
+            let totalMagnitude = Math.abs(dotProduct) + Math.abs(wedgeProduct);
+            document.getElementById('totalProduct').textContent = totalMagnitude.toFixed(2);
+            
+            // Visualize the result
+            drawResult(dotProduct, wedgeProduct);
+        }
+        
+        function drawResult(dotProduct, wedgeProduct) {
+            // Visualize the dot product (scalar or vector)
+            if (!isBivectorA && !isBivectorB) {
+                // Dot product is scalar - show as text
+                fill(200, 0, 0);
+                noStroke();
+                textSize(14);
+                textAlign(LEFT, TOP);
+                text(`A·B = ${dotProduct.toFixed(2)}`, 20, 20);
+                
+                // Wedge product is bivector - show as area
+                if (wedgeProduct !== 0) {
+                    let areaColor = color(200, 0, 200);
+                    fill(red(areaColor), green(areaColor), blue(areaColor), 50);
+                    stroke(areaColor);
+                    strokeWeight(1);
+                    
+                    beginShape();
+                    vertex(originX, originY);
+                    vertex(originX + aX * scale, originY - aY * scale);
+                    vertex(originX + (aX + bX) * scale, originY - (aY + bY) * scale);
+                    vertex(originX + bX * scale, originY - bY * scale);
+                    endShape(CLOSE);
+                    
+                    // Show orientation
+                    let midX = originX + (aX + bX) * 0.3 * scale;
+                    let midY = originY - (aY + bY) * 0.3 * scale;
+                    drawCurvedArrow(originX, originY, aX * scale, -aY * scale, bX * scale, -bY * scale, areaColor);
+                    
+                    // Label
+                    fill(areaColor);
+                    noStroke();
+                    text(`A∧B = ${wedgeProduct.toFixed(2)}`, 20, 40);
+                }
+            } else if (isBivectorA && !isBivectorB) {
+                // Dot product is vector (rotation of B by A)
+                let rotatedX = -aX * bY + aY * bX;
+                let rotatedY = -aY * bY - aX * bX;
+                
+                let rotColor = color(200, 100, 0);
+                stroke(rotColor);
+                strokeWeight(2);
+                line(originX, originY, originX + rotatedX * scale, originY - rotatedY * scale);
+                drawArrowhead(originX + rotatedX * scale, originY - rotatedY * scale, 
+                             atan2(-rotatedY, rotatedX), rotColor);
+                
+                fill(rotColor);
+                noStroke();
+                text(`A·B = [${rotatedX.toFixed(2)}, ${rotatedY.toFixed(2)}]`, 20, 20);
+            } else if (!isBivectorA && isBivectorB) {
+                // Dot product is vector (rotation of A by -B)
+                let rotatedX = aX * bY - aY * bX;
+                let rotatedY = aY * bY + aX * bX;
+                
+                let rotColor = color(200, 100, 0);
+                stroke(rotColor);
+                strokeWeight(2);
+                line(originX, originY, originX + rotatedX * scale, originY - rotatedY * scale);
+                drawArrowhead(originX + rotatedX * scale, originY - rotatedY * scale, 
+                             atan2(-rotatedY, rotatedX), rotColor);
+                
+                fill(rotColor);
+                noStroke();
+                text(`A·B = [${rotatedX.toFixed(2)}, ${rotatedY.toFixed(2)}]`, 20, 20);
+            } else {
+                // Both are bivectors - dot product is scalar
+                fill(200, 0, 0);
+                noStroke();
+                textSize(14);
+                textAlign(LEFT, TOP);
+                text(`A·B = ${dotProduct.toFixed(2)}`, 20, 20);
+            }
+        }
+        
+        function updateValues() {
+            aX = parseFloat(document.getElementById('aX').value);
+            aY = parseFloat(document.getElementById('aY').value);
+            bX = parseFloat(document.getElementById('bX').value);
+            bY = parseFloat(document.getElementById('bY').value);
+            
+            isBivectorA = document.getElementById('isBivectorA').checked;
+            isBivectorB = document.getElementById('isBivectorB').checked;
+            
+            // Update displayed values
+            document.getElementById('aXValue').textContent = aX.toFixed(1);
+            document.getElementById('aYValue').textContent = aY.toFixed(1);
+            document.getElementById('bXValue').textContent = bX.toFixed(1);
+            document.getElementById('bYValue').textContent = bY.toFixed(1);
+            
+            // Update type labels
+            document.getElementById('aTypeLabel').textContent = isBivectorA ? 'Bivector' : 'Vector';
+            document.getElementById('bTypeLabel').textContent = isBivectorB ? 'Bivector' : 'Vector';
+        }
+    </script>
+</body>
+</html>
