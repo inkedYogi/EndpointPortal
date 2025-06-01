@@ -34,12 +34,12 @@ https://drive.google.com/drive/home - Google Drive Home Page
 </div>
 <div>
   <a href="https://inkedYogi.github.io/EndpointPortal/livingDocs/data/website/conic_section_explorer.html">
-    conic_section_explorer
+    conic_section_explorer *
   </a>
 </div>
 <div>
   <a href="https://inkedYogi.github.io/EndpointPortal/livingDocs/data/website/apolonian_gasket_explorer.html">
-    apolonian_gasket_explorer
+    apolonian_gasket_explorer *
   </a>
 </div>
 <div>
@@ -47,9 +47,9 @@ https://drive.google.com/drive/home - Google Drive Home Page
     golden_spiral_explorer
   </a>
 </div>
-<div>
+<div>w
   <a href="https://inkedYogi.github.io/EndpointPortal/livingDocs/data/website/linear_systems_visualuzer.html">
-    linear_systems_visualuzer
+    linear_systems_visualuzer *
   </a>
 </div>
 <div>
@@ -57,5 +57,6 @@ https://drive.google.com/drive/home - Google Drive Home Page
     geometric_product_visualizer
   </a>
 </div>
+
 
 Mage: Caravan - Unprecedented.
