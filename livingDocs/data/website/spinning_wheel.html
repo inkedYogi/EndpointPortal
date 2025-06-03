@@ -79,17 +79,15 @@
         }
         #arrow {
             position: absolute;
-            /* Position arrow to the right of the wheel, adjusted for its own width */
-            left: calc(50% + 235px - 27px); /* 235px (radius) + padding - half arrow width */
-            top: 50%;
-            transform: translateY(-50%); /* Center vertically */
+            /* Position arrow to the top center of the wheel */
+            left: 50%; /* Center horizontally */
+            top: calc(50% - 235px + 27px); /* 235px (radius) + padding - half arrow height */
+            transform: translateX(-50%) rotate(180deg); /* Center horizontally and rotate to point down */
             z-index: 11;
             width: 54px;
             height: 54px;
             pointer-events: none; /* Allow clicks to pass through */
-            /* Rotate the arrow to point left (towards the wheel) */
             transform-origin: center;
-            transform: translateY(-50%) rotate(90deg); /* Rotate to point left if its default is up */
         }
         /* Confetti Styles */
         .confetti {
@@ -138,8 +136,8 @@
 
                 this.animationId = null;
                 this.currentRotation = 0; // Current rotation in radians
-                this.rotationSpeed = 0;   // Speed of rotation (radians per frame)
-                this.targetRotation = 0;  // Target rotation for the wheel to stop at
+                this.rotationSpeed = 0;    // Speed of rotation (radians per frame)
+                this.targetRotation = 0;   // Target rotation for the wheel to stop at
                 this.isSpinning = false;
                 this.lastTimestamp = 0;
 
@@ -147,9 +145,9 @@
                 this.minSpinDuration = 3000; // Minimum spin duration in ms
                 this.maxSpinDuration = 6000; // Maximum spin duration in ms
 
-                // The pointer is at the 3 o'clock position (right side)
-                // In canvas, 0 radians is to the right. So the pointer's angle is 0 radians.
-                this.pointerAngle = 0; // Fixed angle of the pointer
+                // The pointer is at the 12 o'clock position (upwards)
+                // In canvas, 0 radians is to the right. So the pointer's angle is -Math.PI / 2 (or 270 degrees).
+                this.pointerAngle = -Math.PI / 2; // Fixed angle of the pointer
 
                 this.init();
             }
@@ -308,35 +306,24 @@
                 // Select a random winning slot index
                 const winningSlotIndex = Math.floor(Math.random() * this.numSlots);
 
-                // Calculate the target rotation to align the *center* of the winning slot with the pointer (0 radians)
-                // The angle of the center of `winningSlotIndex` when the wheel is at 0 rotation is:
-                // `winningSlotIndex * this.angleStep + this.angleStep / 2`
-                // We want this angle to be at `this.pointerAngle` (which is 0 radians).
-                // So, `currentRotation + (winningSlotIndex * this.angleStep + this.angleStep / 2) = this.pointerAngle + N * 2*PI`
-                // `currentRotation = this.pointerAngle - (winningSlotIndex * this.angleStep + this.angleStep / 2)`
+                // Calculate the angle of the winning slot's center relative to the wheel's starting position (0 radians)
+                const winningSlotCenterAngle = winningSlotIndex * this.angleStep + (this.angleStep / 2);
 
-                // Target angle on the wheel that should land under the pointer
-                const targetSlotCenterAngle = winningSlotIndex * this.angleStep + (this.angleStep / 2);
+                // The pointer is at this.pointerAngle.
+                // We want `winningSlotCenterAngle` to align with `this.pointerAngle`.
+                let requiredRotation = this.pointerAngle - winningSlotCenterAngle;
 
-                // Calculate the rotation needed to bring this specific angle to the pointer
-                let rotationNeeded = this.pointerAngle - targetSlotCenterAngle;
+                // Normalize requiredRotation to be between -PI and PI to find the shortest path to the target.
+                requiredRotation = (requiredRotation + Math.PI) % (2 * Math.PI) - Math.PI;
 
-                // Ensure the wheel spins multiple full revolutions before stopping
+                // Ensure the wheel spins at least `minFullRotations` times and lands on the target.
                 const minFullRotations = 4; // Minimum number of full spins
                 const extraRotations = Math.random() * 3; // 0 to 3 extra full rotations
                 const totalRevolutions = minFullRotations + extraRotations;
 
-                // Add full revolutions to the current rotation to ensure a long spin
-                this.targetRotation = this.currentRotation + (totalRevolutions * 2 * Math.PI) + rotationNeeded;
-
-                // Normalize target rotation to be positive
-                this.targetRotation = (this.targetRotation % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
-
-                // If `targetRotation` is now less than `currentRotation` (due to modulo),
-                // add full circles until it's greater than currentRotation, ensuring forward spin.
-                while (this.targetRotation < this.currentRotation + (minFullRotations * 2 * Math.PI) - 0.01) { // Add a small buffer
-                    this.targetRotation += (2 * Math.PI);
-                }
+                // Calculate the true target rotation by adding the current rotation,
+                // the full revolutions, and the `requiredRotation` to land on the target.
+                this.targetRotation = this.currentRotation + (totalRevolutions * 2 * Math.PI) + requiredRotation;
 
                 // Cancel any existing animation frame before starting a new one
                 if (this.animationId) {
@@ -349,25 +336,21 @@
             determineWinner() {
                 // Determine the winner based on the final currentRotation
                 // The currentRotation is the total rotation of the wheel.
-                // We need to find which segment is under the pointer (0 radians).
+                // We need to find which segment is under the pointer (this.pointerAngle).
 
                 // Normalize current rotation to be within 0 and 2*PI
-                // (currentRotation % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI)
-                // This ensures it's always positive.
                 let normalizedRotation = (this.currentRotation % (2 * Math.PI));
                 if (normalizedRotation < 0) {
                     normalizedRotation += 2 * Math.PI;
                 }
 
-                // The angle of the segment that is at the `pointerAngle` (0 radians)
-                // If the wheel has rotated `normalizedRotation` (clockwise),
-                // then the segment that was originally at `(pointerAngle - normalizedRotation)` is now under the pointer.
-                let effectiveAngle = (this.pointerAngle - normalizedRotation + 2 * Math.PI) % (2 * Math.PI);
+                // Calculate the angle on the *wheel* that aligns with the pointer.
+                // If the wheel has rotated `normalizedRotation` clockwise,
+                // the segment that was originally at `(this.pointerAngle - normalizedRotation)` is now under the pointer.
+                let effectiveAngle = (this.pointerAngle - normalizedRotation);
 
-                // If effectiveAngle is negative after normalization, add 2*PI to make it positive
-                if (effectiveAngle < 0) {
-                    effectiveAngle += 2 * Math.PI;
-                }
+                // Adjust effectiveAngle to be within 0 to 2*PI for correct segment determination
+                effectiveAngle = (effectiveAngle % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
 
                 // Determine the slot index from this effective angle
                 // Slots are drawn clockwise, with slot 0 starting at 0 radians.
