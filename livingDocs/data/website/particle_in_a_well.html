@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Mechanics: Particle in a Box</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.7.0/math.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .theory-section {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .visualization-section {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .controls {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+        }
+        
+        .formula {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 20px 0;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .energy-levels {
+            margin-top: 30px;
+        }
+        
+        .energy-level {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .energy-color {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+        
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Quantum Mechanics: Finite Potential Well</h1>
+        <p>Exploring quantum bound states with finite potential barriers and atomic spectra</p>
+    </header>
+    
+    <div class="container">
+        <section class="theory-section">
+            <h2>Theoretical Background</h2>
+            
+            <h3>The Schrödinger Equation</h3>
+            <p>The time-independent Schrödinger equation for a particle in one dimension is:</p>
+            <div class="formula">
+                -ħ²/2m · d²ψ/dx² + V(x)ψ(x) = Eψ(x)
+            </div>
+            <p>Where:</p>
+            <ul>
+                <li>ħ is the reduced Planck constant</li>
+                <li>m is the particle mass</li>
+                <li>ψ(x) is the wavefunction</li>
+                <li>V(x) is the potential energy</li>
+                <li>E is the energy eigenvalue</li>
+            </ul>
+            
+            <h3>Finite Potential Well</h3>
+            <p>For a particle in a finite potential well of width L and depth V₀:</p>
+            <div class="formula">
+                V(x) = 0 for 0 ≤ x ≤ L<br>
+                V(x) = V₀ otherwise
+            </div>
+            
+            <p>The boundary conditions require that both ψ(x) and its derivative must be continuous at the walls.</p>
+            
+            <h3>Atomic Potential Wells</h3>
+            <p>In atoms, electrons experience a Coulomb potential well from the nucleus:</p>
+            <div class="formula">
+                V(r) = -e²/(4πε₀r)
+            </div>
+            <p>This leads to quantized energy levels that produce atomic spectra. The Schrödinger equation solutions match observed spectral lines with remarkable precision.</p>
+            
+            <h3>Solutions</h3>
+            <p>The normalized wavefunctions are:</p>
+            <div class="formula">
+                ψₙ(x) = √(2/L) · sin(nπx/L)
+            </div>
+            <p>With corresponding energy eigenvalues:</p>
+            <div class="formula">
+                Eₙ = n²h²/(8mL²)
+            </div>
+            <p>Where n = 1, 2, 3,... is the quantum number.</p>
+            
+            <h3>Key Observations</h3>
+            <ul>
+                <li>Energy levels are quantized but more closely spaced than infinite well</li>
+                <li>Wavefunctions extend into classically forbidden regions (quantum tunneling)</li>
+                <li>Number of bound states depends on well depth and width</li>
+                <li>Atomic spectra match predicted energy differences (ΔE = hν)</li>
+            </ul>
+            
+            <h3>Spectral Lines</h3>
+            <p>Transitions between energy levels emit/absorb photons with precise frequencies:</p>
+            <div class="formula">
+                ΔE = E₂ - E₁ = hν
+            </div>
+            <p>For hydrogen (1s→2p transition):</p>
+            <ul>
+                <li>Theoretical prediction: 10.204 eV (121.57 nm, Lyman-α)</li>
+                <li>Measured value: 10.1988 ± 0.0001 eV</li>
+                <li>Agreement to 0.05% demonstrates quantum theory's accuracy</li>
+            </ul>
+        </section>
+        
+        <section class="visualization-section">
+            <h2>Interactive Visualization</h2>
+            
+            <div class="controls">
+                <label for="quantumNumber">Quantum Number (n): <span id="nValue">1</span></label>
+                <input type="range" id="quantumNumber" min="1" max="5" value="1" step="1">
+                
+                <label for="boxWidth">Well Width (L): <span id="LValue">1</span> nm</label>
+                <input type="range" id="boxWidth" min="0.5" max="2" value="1" step="0.1">
+                
+                <label for="wellDepth">Well Depth (V₀): <span id="V0Value">10</span> eV</label>
+                <input type="range" id="wellDepth" min="1" max="20" value="10" step="1">
+                
+                <label for="particleMass">Particle Mass (m): <span id="mValue">1</span> mₑ (electron mass)</label>
+                <input type="range" id="particleMass" min="0.1" max="5" value="1" step="0.1">
+                
+                <button id="showWavefunction">Show Wavefunction (ψ)</button>
+                <button id="showProbability">Show Probability Density (|ψ|²)</button>
+                <button id="showBoth">Show Both</button>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="quantumChart"></canvas>
+            </div>
+            
+            <div class="energy-levels">
+                <h3>Energy Levels</h3>
+                <div class="energy-level">
+                    <div class="energy-color" style="background-color: #e74c3c;"></div>
+                    <span>E₁ = <span id="E1">1.50</span> eV</span>
+                </div>
+                <div class="energy-level">
+                    <div class="energy-color" style="background-color: #3498db;"></div>
+                    <span>E₂ = <span id="E2">6.02</span> eV</span>
+                </div>
+                <div class="energy-level">
+                    <div class="energy-color" style="background-color: #2ecc71;"></div>
+                    <span>E₃ = <span id="E3">13.55</span> eV</span>
+                </div>
+                <div class="energy-level">
+                    <div class="energy-color" style="background-color: #f39c12;"></div>
+                    <span>E₄ = <span id="E4">24.09</span> eV</span>
+                </div>
+                <div class="energy-level">
+                    <div class="energy-color" style="background-color: #9b59b6;"></div>
+                    <span>E₅ = <span id="E5">37.64</span> eV</span>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <footer>
+        <p>Quantum Mechanics Visualization Tool | Created for educational purposes</p>
+        <p>Note: This is a simplified model. Real quantum systems may have additional complexities.</p>
+    </footer>
+
+    <script>
+        // Constants
+        const h = 4.135667696e-15; // Planck's constant in eV·s
+        const m_e = 9.10938356e-31; // Electron mass in kg
+        const eV_to_J = 1.60218e-19; // Conversion factor from eV to Joules
+        const hbar = 6.582119569e-16; // Reduced Planck constant in eV·s
+        
+        // DOM elements
+        const quantumNumberSlider = document.getElementById('quantumNumber');
+        const boxWidthSlider = document.getElementById('boxWidth');
+        const particleMassSlider = document.getElementById('particleMass');
+        const nValueSpan = document.getElementById('nValue');
+        const LValueSpan = document.getElementById('LValue');
+        const mValueSpan = document.getElementById('mValue');
+        const showWavefunctionBtn = document.getElementById('showWavefunction');
+        const showProbabilityBtn = document.getElementById('showProbability');
+        const showBothBtn = document.getElementById('showBoth');
+        const energyLevelSpans = [
+            document.getElementById('E1'),
+            document.getElementById('E2'),
+            document.getElementById('E3'),
+            document.getElementById('E4'),
+            document.getElementById('E5')
+        ];
+        
+        // Chart setup
+        const ctx = document.getElementById('quantumChart').getContext('2d');
+        let quantumChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                datasets: [
+                    {
+                        label: 'Wavefunction ψ(x)',
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.1,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'Probability Density |ψ(x)|²',
+                        borderColor: '#e74c3c',
+                        backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.1,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Position (x) in nm'
+                        },
+                        min: 0,
+                        max: 1
+                    },
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: 'Wavefunction ψ(x)'
+                        },
+                        min: -2,
+                        max: 2
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: {
+                            display: true,
+                            text: 'Probability Density |ψ(x)|²'
+                        },
+                        min: 0,
+                        max: 4,
+                        grid: {
+                            drawOnChartArea: false
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Finite well solver
+        function solveFiniteWell(n, L, V0, m) {
+            // Convert to SI units
+            L = L * 1e-9; // nm to m
+            V0 = V0 * eV_to_J; // eV to J
+            m = m * m_e; // electron masses to kg
+            
+            // Characteristic values
+            const k0 = Math.sqrt(2*m*V0)/hbar;
+            const alpha = Math.sqrt(2*m*V0)/hbar;
+            
+            // Solve transcendental equation numerically
+            const tolerance = 1e-6;
+            const maxIterations = 100;
+            
+            // Initial guess based on infinite well
+            let k = n * Math.PI / L;
+            
+            for (let i = 0; i < maxIterations; i++) {
+                const f = k * Math.tan(k*L/2) - alpha;
+                const df = Math.tan(k*L/2) + (k*L/2) * Math.pow(1/Math.cos(k*L/2), 2);
+                
+                const delta = f / df;
+                k -= delta;
+                
+                if (Math.abs(delta) < tolerance) break;
+            }
+            
+            // Calculate energy
+            const E = (hbar*hbar * k*k) / (2 * m * eV_to_J); // Convert back to eV
+            
+            return {k, E};
+        }
+
+        // Initial state
+        let displayMode = 'both'; // 'wavefunction', 'probability', or 'both'
+        updateChart();
+        
+        // Event listeners
+        quantumNumberSlider.addEventListener('input', updateChart);
+        boxWidthSlider.addEventListener('input', updateChart);
+        particleMassSlider.addEventListener('input', updateChart);
+        
+        showWavefunctionBtn.addEventListener('click', () => {
+            displayMode = 'wavefunction';
+            updateChart();
+        });
+        
+        showProbabilityBtn.addEventListener('click', () => {
+            displayMode = 'probability';
+            updateChart();
+        });
+        
+        showBothBtn.addEventListener('click', () => {
+            displayMode = 'both';
+            updateChart();
+        });
+        
+        // Update the chart based on current parameters
+        function updateChart() {
+            const n = parseInt(quantumNumberSlider.value);
+            const L = parseFloat(boxWidthSlider.value); // in nm
+            const m = parseFloat(particleMassSlider.value); // in electron masses
+            
+            // Update displayed values
+            nValueSpan.textContent = n;
+            LValueSpan.textContent = L;
+            mValueSpan.textContent = m;
+            
+            const V0 = parseFloat(document.getElementById('wellDepth').value);
+            document.getElementById('V0Value').textContent = V0;
+            
+            // Calculate energy levels (in eV)
+            for (let i = 1; i <= 5; i++) {
+                try {
+                    const {E} = solveFiniteWell(i, L, V0, m);
+                    energyLevelSpans[i-1].textContent = E.toFixed(4);
+                } catch {
+                    energyLevelSpans[i-1].textContent = "N/A";
+                }
+            }
+            
+            // Generate data points
+            const points = 200;
+            const xValues = [];
+            const psiValues = [];
+            const probValues = [];
+            
+            for (let i = 0; i <= points; i++) {
+                const x = (i / points) * L;
+                xValues.push(x);
+                
+                // Wavefunction ψ(x) = √(2/L) * sin(nπx/L)
+                const psi = Math.sqrt(2/L) * Math.sin(n * Math.PI * x / L);
+                psiValues.push(psi);
+                
+                // Probability density |ψ(x)|²
+                const prob = psi * psi;
+                probValues.push(prob);
+            }
+            
+            // Update chart data
+            quantumChart.data.labels = xValues;
+            
+            // Update datasets based on display mode
+            quantumChart.data.datasets[0].data = (displayMode === 'probability') ? [] : psiValues;
+            quantumChart.data.datasets[1].data = (displayMode === 'wavefunction') ? [] : probValues;
+            
+            // Update visibility
+            quantumChart.data.datasets[0].hidden = (displayMode === 'probability');
+            quantumChart.data.datasets[1].hidden = (displayMode === 'wavefunction');
+            
+            // Update axis scales
+            quantumChart.options.scales.x.max = L;
+            
+            // Adjust y-axis scales based on quantum number
+            const maxPsi = Math.max(...psiValues.map(Math.abs));
+            const maxProb = Math.max(...probValues);
+            
+            quantumChart.options.scales.y.min = -maxPsi * 1.2;
+            quantumChart.options.scales.y.max = maxPsi * 1.2;
+            quantumChart.options.scales.y1.max = maxProb * 1.2;
+            
+            quantumChart.update();
+        }
+    </script>
+</body>
+</html>
