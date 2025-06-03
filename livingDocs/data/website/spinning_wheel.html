@@ -85,17 +85,30 @@
             0% { color: #fff; text-shadow: 0 0 22px #ff0a, 0 0 42px #f0f9; }
             100% { color: #ff0; text-shadow: 0 0 40px #f0f, 0 0 80px #0ff5; }
         }
-        #arrow {
+        /* Common arrow styles */
+        .arrow {
             position: absolute;
-            left: 50%; /* Center horizontally relative to container */
-            top: 0; /* Position at the very top of the container */
-            transform: translateX(-50%) translateY(-100%) rotate(180deg); /* Center horizontally, pull up by its own height, and point down */
+            top: 50%; /* Center vertically relative to container */
+            transform: translateY(-50%); /* Center vertically */
             z-index: 11;
             width: 54px;
             height: 54px;
             pointer-events: none; /* Allow clicks to pass through */
             transform-origin: center;
         }
+
+        /* Specific style for the left arrow, pointing right */
+        #arrow-left {
+            left: 0; /* Align its left edge with the container's left edge */
+            transform: translateY(-50%) rotate(270deg); /* Point right */
+        }
+
+        /* Specific style for the right arrow, pointing left */
+        #arrow-right {
+            right: 0; /* Align its right edge with the container's right edge */
+            transform: translateY(-50%) rotate(90deg); /* Point left */
+        }
+
         /* Confetti Styles */
         .confetti {
             position: absolute;
@@ -108,10 +121,17 @@
 <body>
     <div id="container">
         <canvas id="wheel" width="470" height="470"></canvas>
-        <svg id="arrow" viewBox="0 0 54 54">
+
+        <svg id="arrow-left" class="arrow" viewBox="0 0 54 54">
             <polygon points="27,0 44,38 27,28 10,38" fill="#fff800" stroke="#ff00a2" stroke-width="3"/>
             <circle cx="27" cy="40" r="8" fill="#fe36f2" stroke="#fff" stroke-width="3"/>
         </svg>
+
+        <svg id="arrow-right" class="arrow" viewBox="0 0 54 54">
+            <polygon points="27,0 44,38 27,28 10,38" fill="#fff800" stroke="#ff00a2" stroke-width="3"/>
+            <circle cx="27" cy="40" r="8" fill="#fe36f2" stroke="#fff" stroke-width="3"/>
+        </svg>
+
         <button id="spinBtn">SPIN!</button>
         <div id="result"></div>
     </div>
@@ -152,9 +172,9 @@
                 this.minSpinDuration = 3000; // Minimum spin duration in ms
                 this.maxSpinDuration = 6000; // Maximum spin duration in ms
 
-                // The pointer is at the 12 o'clock position (upwards)
-                // In canvas, 0 radians is to the right. So the pointer's angle is -Math.PI / 2 (or 270 degrees).
-                this.pointerAngle = -Math.PI / 2; // Fixed angle of the pointer
+                // The pointer is now at the 3 o'clock position (rightwards)
+                // In canvas, 0 radians is to the right.
+                this.pointerAngle = 0; // Fixed angle of the pointer
 
                 this.init();
             }
