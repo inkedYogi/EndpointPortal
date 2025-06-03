@@ -1,342 +1,455 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>7-Color Spinning Wheel</title>
-  <style>
-    html, body {
-      height: 100%;
-      background: radial-gradient(circle, #1e0035 0%, #4a1e90 100%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 0;
-      overflow: hidden;
-    }
-    #container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 40px;
-    }
-    canvas {
-      border-radius: 50%;
-      box-shadow: 0 0 40px 5px #fff5, 0 0 180px 40px #ff0a;
-      background: repeating-conic-gradient(#fff5 0 10deg, transparent 10deg 20deg);
-      transition: filter 0.2s;
-      filter: drop-shadow(0 0 8px #ffffff) drop-shadow(0 0 22px #ff00ee);
-    }
-    #spinBtn {
-      padding: 18px 42px;
-      font-size: 2rem;
-      font-weight: bold;
-      color: #fff;
-      background: linear-gradient(90deg, #f21 0%, #f09 100%);
-      border: none;
-      border-radius: 50px;
-      box-shadow: 0 4px 30px #f09b;
-      cursor: pointer;
-      animation: flashBtn 1.2s infinite alternate;
-    }
-    @keyframes flashBtn {
-      0% { filter: brightness(1.3) drop-shadow(0 0 2px #ff0a); }
-      100% { filter: brightness(1) drop-shadow(0 0 16px #fa0f); }
-    }
-    #result {
-      margin-top: 25px;
-      font-size: 2.7rem;
-      font-family: 'Impact', 'Arial Black', Arial, sans-serif;
-      color: #fff;
-      text-shadow: 0 0 8px #ff0, 0 0 24px #f0f, 0 0 32px #0ff;
-      opacity: 0;
-      animation: none;
-    }
-    #result.show {
-      opacity: 1;
-      animation: flashText 1s alternate infinite;
-    }
-    @keyframes flashText {
-      0% { color: #fff; text-shadow: 0 0 22px #ff0a, 0 0 42px #f0f9; }
-      100% { color: #ff0; text-shadow: 0 0 40px #f0f, 0 0 80px #0ff5; }
-    }
-    #arrow {
-      position: absolute;
-      left: 50%;
-      top: calc(50% - 235px);
-      transform: translateX(-50%);
-      z-index: 11;
-      width: 54px;
-      height: 54px;
-      pointer-events: none;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>7-Color Spinning Wheel</title>
+    <style>
+        html, body {
+            height: 100%;
+            background: radial-gradient(circle, #1e0035 0%, #4a1e90 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif; /* Added a default font */
+        }
+        #container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            position: relative; /* Added for correct arrow positioning */
+        }
+        canvas {
+            border-radius: 50%;
+            box-shadow: 0 0 40px 5px #fff5, 0 0 180px 40px #ff0a;
+            background: repeating-conic-gradient(#fff5 0 10deg, transparent 10deg 20deg);
+            transition: filter 0.2s;
+            filter: drop-shadow(0 0 8px #ffffff) drop-shadow(0 0 22px #ff00ee);
+            max-width: 90vw; /* Basic responsiveness */
+            max-height: 90vw;
+        }
+        #spinBtn {
+            padding: 18px 42px;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fff;
+            background: linear-gradient(90deg, #f21 0%, #f09 100%);
+            border: none;
+            border-radius: 50px;
+            box-shadow: 0 4px 30px #f09b;
+            cursor: pointer;
+            animation: flashBtn 1.2s infinite alternate;
+            transition: background 0.3s, box-shadow 0.3s, filter 0.3s;
+        }
+        #spinBtn:disabled {
+            background: linear-gradient(90deg, #555 0%, #333 100%); /* Disabled styling */
+            box-shadow: none;
+            cursor: not-allowed;
+            filter: brightness(0.7);
+            animation: none;
+        }
+        @keyframes flashBtn {
+            0% { filter: brightness(1.3) drop-shadow(0 0 2px #ff0a); }
+            100% { filter: brightness(1) drop-shadow(0 0 16px #fa0f); }
+        }
+        #result {
+            margin-top: 25px;
+            font-size: 2.7rem;
+            font-family: 'Impact', 'Arial Black', Arial, sans-serif;
+            color: #fff;
+            text-shadow: 0 0 8px #ff0, 0 0 24px #f0f, 0 0 32px #0ff;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        #result.show {
+            opacity: 1;
+            animation: flashText 1s alternate infinite;
+        }
+        @keyframes flashText {
+            0% { color: #fff; text-shadow: 0 0 22px #ff0a, 0 0 42px #f0f9; }
+            100% { color: #ff0; text-shadow: 0 0 40px #f0f, 0 0 80px #0ff5; }
+        }
+        #arrow {
+            position: absolute;
+            left: 50%;
+            /* Adjust top based on canvas size and desired arrow position */
+            top: -20px; /* Position arrow above the top of the wheel */
+            transform: translateX(-50%);
+            z-index: 11;
+            width: 54px;
+            height: 54px;
+            pointer-events: none;
+        }
+
+        /* Confetti Styles (optional, can be managed purely by JS if desired) */
+        .confetti {
+            position: absolute;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 999; /* Ensure confetti is on top */
+        }
+    </style>
 </head>
 <body>
-  <div id="container">
-    <canvas id="wheel" width="470" height="470"></canvas>
-    <svg id="arrow" viewBox="0 0 54 54">
-      <polygon points="27,0 44,38 27,28 10,38" fill="#fff800" stroke="#ff00a2" stroke-width="3"/>
-      <circle cx="27" cy="40" r="8" fill="#fe36f2" stroke="#fff" stroke-width="3"/>
-    </svg>
-    <button id="spinBtn">SPIN!</button>
-    <div id="result"></div>
-  </div>
-  <script>
-    // Wheel setup
-    const wheelCanvas = document.getElementById('wheel');
-    const ctx = wheelCanvas.getContext('2d');
-    const numSlots = 7;
-    const slotColors = [
-      "#f44336", // red
-      "#ffeb3b", // yellow
-      "#4caf50", // green
-      "#2196f3", // blue
-      "#ff9800", // orange
-      "#9c27b0", // purple
-      "#ff00ff"  // magenta
-    ];
-    const slotLabels = [
-      "1", "2", "3", "4", "5", "6", "7"
-    ];
-    const centerX = wheelCanvas.width / 2;
-    const centerY = wheelCanvas.height / 2;
-    const radius = 220;
-    const resultDiv = document.getElementById('result');
-    const spinBtn = document.getElementById('spinBtn');
+    <div id="container">
+        <canvas id="wheel" width="470" height="470"></canvas>
+        <svg id="arrow" viewBox="0 0 54 54">
+            <polygon points="27,0 44,38 27,28 10,38" fill="#fff800" stroke="#ff00a2" stroke-width="3"/>
+            <circle cx="27" cy="40" r="8" fill="#fe36f2" stroke="#fff" stroke-width="3"/>
+        </svg>
+        <button id="spinBtn">SPIN!</button>
+        <div id="result"></div>
+    </div>
 
-    // Draw wheel function
-    function drawWheel(rotationRad = 0) {
-      ctx.clearRect(0, 0, wheelCanvas.width, wheelCanvas.height);
-      const angleStep = 2 * Math.PI / numSlots;
-      for (let i = 0; i < numSlots; i++) {
-        // Sector
-        ctx.save();
-        ctx.beginPath();
-        ctx.moveTo(centerX, centerY);
-        let startAngle = i * angleStep + rotationRad;
-        let endAngle = startAngle + angleStep;
-        ctx.arc(centerX, centerY, radius, startAngle, endAngle, false);
-        ctx.closePath();
-        ctx.fillStyle = slotColors[i];
-        ctx.shadowColor = slotColors[(i+1)%numSlots];
-        ctx.shadowBlur = 24;
-        ctx.fill();
-        ctx.restore();
+    <script>
+        class SpinningWheel {
+            constructor(canvasId, resultId, spinBtnId) {
+                this.wheelCanvas = document.getElementById(canvasId);
+                this.ctx = this.wheelCanvas.getContext('2d');
+                this.resultDiv = document.getElementById(resultId);
+                this.spinBtn = document.getElementById(spinBtnId);
 
-        // Draw flashy border
-        ctx.save();
-        ctx.strokeStyle = "#fff";
-        ctx.lineWidth = 5;
-        ctx.setLineDash([15, 6]);
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, radius, startAngle, endAngle, false);
-        ctx.stroke();
-        ctx.restore();
+                this.numSlots = 7;
+                this.slotColors = [
+                    "#f44336", // red
+                    "#ffeb3b", // yellow
+                    "#4caf50", // green
+                    "#2196f3", // blue
+                    "#ff9800", // orange
+                    "#9c27b0", // purple
+                    "#ff00ff"  // magenta
+                ];
+                this.slotLabels = ["1", "2", "3", "4", "5", "6", "7"];
 
-        // Label
-        ctx.save();
-        ctx.translate(centerX, centerY);
-        ctx.rotate(startAngle + angleStep/2);
-        ctx.font = "bold 2.4rem Arial";
-        ctx.fillStyle = "#fff";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.shadowColor = "#000";
-        ctx.shadowBlur = 8;
-        ctx.fillText(slotLabels[i], radius * 0.70, 0);
-        ctx.restore();
-      }
-      // Center circle
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, radius * 0.2, 0, 2 * Math.PI, false);
-      ctx.fillStyle = "white";
-      ctx.shadowColor = "#ff00ff";
-      ctx.shadowBlur = 15;
-      ctx.fill();
-      ctx.strokeStyle = "#f0f";
-      ctx.lineWidth = 6;
-      ctx.stroke();
-      ctx.restore();
+                this.centerX = this.wheelCanvas.width / 2;
+                this.centerY = this.wheelCanvas.height / 2;
+                this.radius = 220;
+                this.angleStep = 2 * Math.PI / this.numSlots;
 
-      // Outer rim
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-      ctx.strokeStyle = "#fff";
-      ctx.lineWidth = 12;
-      ctx.shadowColor = "#ff00ff";
-      ctx.shadowBlur = 18;
-      ctx.stroke();
-      ctx.restore();
+                this.animationId = null;
+                this.currentRotation = 0; // Current rotation in radians
+                this.rotationSpeed = 0;   // Speed of rotation in radians per millisecond
+                this.targetRotation = 0;  // Target rotation to stop at
+                this.isSpinning = false;
+                this.lastTimestamp = 0;
 
-      // Sparkles around the wheel
-      for (let i = 0; i < 12; i++) {
-        ctx.save();
-        const sparkleAngle = i * Math.PI / 6 + rotationRad;
-        const sparkleX = centerX + (radius + 30) * Math.cos(sparkleAngle);
-        const sparkleY = centerY + (radius + 30) * Math.sin(sparkleAngle);
-        const sparkleSize = 8 + 6 * Math.sin(Date.now() / 200 + i);
-        
-        ctx.translate(sparkleX, sparkleY);
-        ctx.rotate(Date.now() / 500);
-        
-        ctx.beginPath();
-        for (let j = 0; j < 8; j++) {
-          const starAngle = j * Math.PI / 4;
-          const distance = j % 2 === 0 ? sparkleSize : sparkleSize / 2;
-          ctx.lineTo(
-            Math.cos(starAngle) * distance,
-            Math.sin(starAngle) * distance
-          );
-        }
-        ctx.closePath();
-        ctx.fillStyle = i % 2 === 0 ? "#fff" : "#ffff00";
-        ctx.shadowColor = "#ff00ff";
-        ctx.shadowBlur = 15;
-        ctx.fill();
-        ctx.restore();
-      }
-    }
+                this.friction = 0.99; // Adjusted friction for smoother stop
+                this.minSpinDuration = 3000; // Minimum spin duration in ms
+                this.maxSpinDuration = 6000; // Maximum spin duration in ms
 
-    // Animation variables
-    let animationId = null;
-    let currentRotation = 0;
-    let rotationSpeed = 0;
-    let targetRotation = 0;
-    let isSpinning = false;
-    let lastTimestamp = 0;
-    const friction = 0.992; // Controls how quickly wheel slows down
-
-    // Animate function
-    function animate(timestamp) {
-      if (!lastTimestamp) lastTimestamp = timestamp;
-      const elapsed = timestamp - lastTimestamp;
-      lastTimestamp = timestamp;
-      
-      // Update rotation based on current speed
-      currentRotation += rotationSpeed * elapsed / 16; // Normalize to ~60fps
-      
-      // Apply friction when slowing down
-      if (isSpinning && rotationSpeed > 0.001) {
-        rotationSpeed *= friction;
-      } else if (isSpinning) {
-        // Stop spinning when slow enough
-        isSpinning = false;
-        rotationSpeed = 0;
-        
-        // Calculate the winner
-        const normalizedRotation = currentRotation % (2 * Math.PI);
-        const anglePerSlot = 2 * Math.PI / numSlots;
-        
-        // The wheel is moving clockwise, so need to invert the winner calculation
-        // Adjust for the arrow position (top) and wheel direction
-        const winnerIndex = numSlots - 1 - Math.floor(normalizedRotation / anglePerSlot) % numSlots;
-        
-        // Show result with animation
-        resultDiv.textContent = `You won slot ${slotLabels[winnerIndex]}!`;
-        resultDiv.classList.add('show');
-        
-        // Add confetti effect
-        createConfetti(100);
-        
-        // Enable spin button
-        spinBtn.disabled = false;
-      }
-      
-      // Draw the wheel at current rotation
-      drawWheel(currentRotation);
-      
-      // Continue animation
-      animationId = requestAnimationFrame(animate);
-    }
-
-    // Spin function
-    function spin() {
-      if (isSpinning) return;
-      
-      // Reset result
-      resultDiv.textContent = '';
-      resultDiv.classList.remove('show');
-      
-      // Disable spin button during spin
-      spinBtn.disabled = true;
-      
-      // Set spinning parameters
-      isSpinning = true;
-      const minSpins = 3;
-      const maxSpins = 6;
-      const randomSpins = minSpins + Math.random() * (maxSpins - minSpins);
-      rotationSpeed = 0.25; // Initial speed
-      
-      // Cancel previous animation if any
-      if (animationId) {
-        cancelAnimationFrame(animationId);
-      }
-      
-      // Reset timestamp for smooth animation
-      lastTimestamp = 0;
-      
-      // Start animation
-      animationId = requestAnimationFrame(animate);
-    }
-
-    // Confetti effect
-    function createConfetti(amount) {
-      for (let i = 0; i < amount; i++) {
-        setTimeout(() => {
-          const confetti = document.createElement('div');
-          confetti.style.position = 'absolute';
-          confetti.style.width = Math.random() * 15 + 5 + 'px';
-          confetti.style.height = Math.random() * 8 + 5 + 'px';
-          confetti.style.background = slotColors[Math.floor(Math.random() * slotColors.length)];
-          confetti.style.left = Math.random() * window.innerWidth + 'px';
-          confetti.style.top = '-50px';
-          confetti.style.borderRadius = "3px";
-          confetti.style.opacity = "0.95";
-          confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
-          confetti.style.zIndex = 1000;
-          document.body.appendChild(confetti);
-
-          // Animate confetti falling
-          const duration = 1800 + Math.random() * 1200;
-          const endX = parseFloat(confetti.style.left) + (Math.random() - 0.5) * 200;
-          const endY = window.innerHeight + 100;
-
-          confetti.animate([
-            {
-              transform: confetti.style.transform,
-              top: confetti.style.top,
-              left: confetti.style.left,
-              opacity: 1
-            },
-            {
-              transform: `rotate(${Math.random() * 720}deg)`,
-              top: endY + 'px',
-              left: endX + 'px',
-              opacity: 0.2
+                this.init();
             }
-          ], {
-            duration: duration,
-            easing: 'ease-out'
-          });
 
-          setTimeout(() => {
-            confetti.remove();
-          }, duration);
-        }, i * 7);
-      }
-    }
+            init() {
+                this.drawWheel(0); // Initial draw
+                this.spinBtn.addEventListener('click', this.spin.bind(this));
+                // Request initial animation frame for sparkles even when not spinning
+                this.animate(0);
+            }
 
-    // Initial draw and event listener
-    drawWheel(0);
-    spinBtn.addEventListener('click', spin);
+            drawWheel(rotationRad = 0) {
+                this.ctx.clearRect(0, 0, this.wheelCanvas.width, this.wheelCanvas.height);
 
-    // For extra flashiness: automatically redraw for sparkles even when not spinning
-    setInterval(() => {
-      if (!isSpinning) drawWheel(currentRotation);
-    }, 40);
-  </script>
+                for (let i = 0; i < this.numSlots; i++) {
+                    const startAngle = i * this.angleStep + rotationRad;
+                    const endAngle = startAngle + this.angleStep;
+
+                    // Sector
+                    this.ctx.save();
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(this.centerX, this.centerY);
+                    this.ctx.arc(this.centerX, this.centerY, this.radius, startAngle, endAngle, false);
+                    this.ctx.closePath();
+                    this.ctx.fillStyle = this.slotColors[i];
+                    this.ctx.shadowColor = this.slotColors[(i + 1) % this.numSlots]; // Dynamic shadow color
+                    this.ctx.shadowBlur = 24;
+                    this.ctx.fill();
+                    this.ctx.restore();
+
+                    // Draw flashy border
+                    this.ctx.save();
+                    this.ctx.strokeStyle = "#fff";
+                    this.ctx.lineWidth = 5;
+                    this.ctx.setLineDash([15, 6]);
+                    this.ctx.beginPath();
+                    this.ctx.arc(this.centerX, this.centerY, this.radius, startAngle, endAngle, false);
+                    this.ctx.stroke();
+                    this.ctx.restore();
+
+                    // Label
+                    this.ctx.save();
+                    this.ctx.translate(this.centerX, this.centerY);
+                    // Rotate to the middle of the slot, then apply current wheel rotation
+                    this.ctx.rotate(startAngle + this.angleStep / 2);
+                    this.ctx.font = "bold 2.4rem Arial";
+                    this.ctx.fillStyle = "#fff";
+                    this.ctx.textAlign = "center";
+                    this.ctx.textBaseline = "middle";
+                    this.ctx.shadowColor = "#000";
+                    this.ctx.shadowBlur = 8;
+                    this.ctx.fillText(this.slotLabels[i], this.radius * 0.70, 0);
+                    this.ctx.restore();
+                }
+
+                // Center circle
+                this.ctx.save();
+                this.ctx.beginPath();
+                this.ctx.arc(this.centerX, this.centerY, this.radius * 0.2, 0, 2 * Math.PI, false);
+                this.ctx.fillStyle = "white";
+                this.ctx.shadowColor = "#ff00ff";
+                this.ctx.shadowBlur = 15;
+                this.ctx.fill();
+                this.ctx.strokeStyle = "#f0f";
+                this.ctx.lineWidth = 6;
+                this.ctx.stroke();
+                this.ctx.restore();
+
+                // Outer rim
+                this.ctx.save();
+                this.ctx.beginPath();
+                this.ctx.arc(this.centerX, this.centerY, this.radius, 0, 2 * Math.PI, false);
+                this.ctx.strokeStyle = "#fff";
+                this.ctx.lineWidth = 12;
+                this.ctx.shadowColor = "#ff00ff";
+                this.ctx.shadowBlur = 18;
+                this.ctx.stroke();
+                this.ctx.restore();
+
+                // Sparkles around the wheel
+                for (let i = 0; i < 12; i++) {
+                    this.ctx.save();
+                    const sparkleAngle = i * Math.PI / 6 + rotationRad;
+                    const sparkleX = this.centerX + (this.radius + 30) * Math.cos(sparkleAngle);
+                    const sparkleY = this.centerY + (this.radius + 30) * Math.sin(sparkleAngle);
+                    // Animate sparkle size based on time
+                    const sparkleSize = 8 + 6 * Math.sin(Date.now() / 200 + i);
+
+                    this.ctx.translate(sparkleX, sparkleY);
+                    this.ctx.rotate(Date.now() / 500); // Rotate sparkles over time
+
+                    this.ctx.beginPath();
+                    for (let j = 0; j < 8; j++) {
+                        const starAngle = j * Math.PI / 4;
+                        const distance = j % 2 === 0 ? sparkleSize : sparkleSize / 2;
+                        this.ctx.lineTo(
+                            Math.cos(starAngle) * distance,
+                            Math.sin(starAngle) * distance
+                        );
+                    }
+                    this.ctx.closePath();
+                    this.ctx.fillStyle = i % 2 === 0 ? "#fff" : "#ffff00";
+                    this.ctx.shadowColor = "#ff00ff";
+                    this.ctx.shadowBlur = 15;
+                    this.ctx.fill();
+                    this.ctx.restore();
+                }
+            }
+
+            animate(timestamp) {
+                if (!this.lastTimestamp) this.lastTimestamp = timestamp;
+                const elapsed = timestamp - this.lastTimestamp;
+                this.lastTimestamp = timestamp;
+
+                if (this.isSpinning) {
+                    this.currentRotation += this.rotationSpeed * elapsed / 16; // Adjust for frame rate
+                    this.rotationSpeed *= this.friction; // Apply friction
+
+                    // Stop condition: when speed is very low and past the target
+                    if (this.rotationSpeed < 0.0001 && this.currentRotation >= this.targetRotation) {
+                        this.isSpinning = false;
+                        this.rotationSpeed = 0;
+                        this.currentRotation = this.targetRotation; // Snap to target for precision
+
+                        // Calculate winner
+                        // Normalize rotation to be within 0 to 2*PI, accounting for multiple spins
+                        const normalizedRotation = (this.currentRotation % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
+
+                        // The arrow points to the top. The slots are drawn clockwise starting from the right (0 radians).
+                        // To find the winner, we need to know which slot is under the arrow.
+                        // The arrow is at the "top" of the wheel, which corresponds to 3/4 * 2*PI (or 3*PI/2) when rotated clockwise from the positive x-axis.
+                        // We need to find the angle of the segment under the arrow.
+                        // The `normalizedRotation` is the wheel's rotation.
+                        // A positive rotation moves the wheel clockwise.
+                        // To get the angle relative to the arrow, we take the arrow's angle (3*PI/2) and subtract the wheel's rotation.
+                        // Then normalize it again to be within 0 to 2*PI.
+
+                        // Angle of the center of the first slot (slot 0) when the wheel is at currentRotation.
+                        // This assumes slot 0 is initially at 0 radians (right-middle).
+                        // The arrow is at the top (-PI/2 or 3*PI/2).
+                        // We need to find the slot that is aligned with the arrow.
+                        // The angle of the arrow itself is -Math.PI / 2 (or 1.5 * Math.PI) if 0 is right.
+                        // We rotate the wheel by `currentRotation`.
+                        // The segments are drawn starting from `i * angleStep + rotationRad`.
+                        // The winner is the segment whose range covers the arrow's angle.
+
+                        // Let's adjust the winner calculation.
+                        // The arrow points "upwards" at the 12 o'clock position relative to the wheel.
+                        // In Canvas, 0 radians is to the right (3 o'clock).
+                        // The 12 o'clock position is -PI/2 radians or 3*PI/2 radians.
+                        // We need to consider the current rotation of the wheel `currentRotation`.
+                        // The angle of the arrow relative to the *unrotated* wheel's 0 position: -Math.PI / 2.
+                        // If the wheel rotates clockwise, the numbers move clockwise.
+                        // The angle the arrow is "looking at" on the wheel: `(currentRotation + Math.PI / 2)` (adjusted for arrow position)
+                        // Then normalize this angle to be positive and within 2*PI.
+
+                        // The 0th slot starts at 0 radians (right side). The arrow is at the top (-Math.PI/2).
+                        // The 'target' angle of the arrow on the static wheel: Math.PI / 2 (90 degrees, or the 'top' if the wheel was drawn starting from top).
+                        // Or, if 0 is right, then -Math.PI/2 is top.
+                        // Let's use the arrow position as 0 degrees for calculation by shifting the wheel's rotation.
+                        // Effectively, we want to know which slot is at the arrow's fixed position (top).
+                        // The wheel is rotating clockwise (positive rotation).
+                        // If the wheel rotates by `currentRotation`, then the angle that is at the arrow's position was previously at `(arrow_angle - currentRotation)`.
+                        // Arrow is at -PI/2. So, current_slot_angle = ( (currentRotation - Math.PI/2) % (2*Math.PI) + 2*Math.PI) % (2*Math.PI);
+                        // However, the labels are drawn `slotLabels[i]` at `startAngle + angleStep/2`.
+                        // Let's simplify the angle: Make the arrow point to the right (0 radians) for easier calculation.
+                        // If the arrow is fixed at the top (-PI/2), then we want to find which segment's *center* angle is closest to -PI/2 + (N * 2*PI).
+
+                        // Calculate the rotation needed to bring the 0-th slot center to the arrow (top).
+                        // Initial label position is radius * 0.70 at 0 radians relative to its segment.
+                        // The segment `i` starts at `i * angleStep`. Its center is `i * angleStep + angleStep / 2`.
+                        // The arrow is at -Math.PI / 2 (top).
+                        // We need to find which `i` satisfies: `(i * angleStep + angleStep / 2 + currentRotation)` is near `-Math.PI / 2`.
+                        // Or, equivalently, which slot is at `-Math.PI / 2 - currentRotation` (relative to the unrotated wheel).
+
+                        const rotationAtStop = this.currentRotation;
+                        // The angle where the arrow is located on the wheel. This is the "reference point".
+                        // Arrow is at the top of the canvas, which is -Math.PI/2 radians from the 0-degree (right) axis.
+                        const arrowAngle = -Math.PI / 2;
+
+                        // Normalize the current rotation to be within 0 to 2*PI
+                        const normalizedWheelRotation = (rotationAtStop % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
+
+                        // Calculate the angle on the wheel that is currently under the arrow.
+                        // If the wheel has rotated clockwise by `normalizedWheelRotation`,
+                        // then the slot that was originally at `arrowAngle - normalizedWheelRotation` (modulo 2*PI) is now under the arrow.
+                        let effectiveAngle = (arrowAngle - normalizedWheelRotation + 2 * Math.PI) % (2 * Math.PI);
+
+                        // If the effectiveAngle is negative after normalization, add 2*PI to make it positive
+                        if (effectiveAngle < 0) {
+                            effectiveAngle += 2 * Math.PI;
+                        }
+
+                        // Determine the slot index from this effective angle
+                        // Slots are drawn clockwise from 0 radians (right).
+                        // Slot 0 occupies angle range [0, angleStep], Slot 1 [angleStep, 2*angleStep], etc.
+                        const winnerIndex = Math.floor(effectiveAngle / this.angleStep);
+
+                        this.resultDiv.textContent = `You won slot ${this.slotLabels[winnerIndex]}!`;
+                        this.resultDiv.classList.add('show');
+
+                        this.createConfetti(100);
+                        this.spinBtn.disabled = false;
+                    }
+                } else {
+                    // Only update sparkles if not spinning to reduce redraws
+                    // The Date.now() in drawWheel makes sparkles animate even when not spinning
+                    // We only want to redraw if it's currently spinning OR if we are updating sparkles
+                    // If the current sparke animation is not dependent on the wheel's rotation,
+                    // this condition can be simplified or removed.
+                    // For now, let's keep redrawing for constant sparkle animation.
+                }
+
+                this.drawWheel(this.currentRotation);
+                this.animationId = requestAnimationFrame(this.animate.bind(this));
+            }
+
+            spin() {
+                if (this.isSpinning) return;
+
+                this.resultDiv.textContent = '';
+                this.resultDiv.classList.remove('show');
+                this.spinBtn.disabled = true;
+
+                this.isSpinning = true;
+                this.rotationSpeed = 0.3; // Initial speed
+
+                // Calculate a random target slot
+                const randomWinnerIndex = Math.floor(Math.random() * this.numSlots);
+
+                // Calculate the exact angle for the center of the random winner slot to align with the arrow.
+                // The arrow is at -Math.PI / 2 (top).
+                // The center of slot `randomWinnerIndex` is at `randomWinnerIndex * this.angleStep + this.angleStep / 2`.
+                // We want this center to align with `-Math.PI / 2`.
+                // So, the required rotation `targetRotation` will be:
+                // `targetRotation = (arrowAngle - (randomWinnerIndex * this.angleStep + this.angleStep / 2)) % (2 * Math.PI)`
+                // Make sure `targetRotation` is positive.
+                let baseTargetAngle = -Math.PI / 2 - (randomWinnerIndex * this.angleStep + this.angleStep / 2);
+
+                // Ensure the wheel spins at least 3-6 full rotations before stopping at the target.
+                const minFullRotations = 3;
+                const extraRotations = Math.random() * 3; // 0 to 3 extra full rotations
+                const totalRevolutions = minFullRotations + extraRotations; // Total full revolutions to spin
+
+                // The target rotation is the `baseTargetAngle` plus the total number of full revolutions.
+                // We add `2 * Math.PI` for each revolution.
+                this.targetRotation = baseTargetAngle + (totalRevolutions * 2 * Math.PI);
+
+                // Adjust `targetRotation` if it's less than `currentRotation` to ensure forward spin.
+                // This makes sure the wheel always spins forward to the target, even if currentRotation is already higher.
+                if (this.targetRotation < this.currentRotation) {
+                    this.targetRotation += Math.ceil((this.currentRotation - this.targetRotation) / (2 * Math.PI)) * (2 * Math.PI);
+                }
+
+                // If current rotation is too close to the target, ensure it spins at least one more full cycle
+                // to make the animation visible and ensure a proper deceleration.
+                if (this.targetRotation - this.currentRotation < 2 * Math.PI) {
+                    this.targetRotation += 2 * Math.PI;
+                }
+
+                // Stop previous animation if any
+                if (this.animationId) {
+                    cancelAnimationFrame(this.animationId);
+                }
+                this.lastTimestamp = 0; // Reset timestamp for smooth start
+                this.animationId = requestAnimationFrame(this.animate.bind(this));
+            }
+
+            createConfetti(amount) {
+                for (let i = 0; i < amount; i++) {
+                    setTimeout(() => {
+                        const confetti = document.createElement('div');
+                        confetti.classList.add('confetti');
+                        confetti.style.width = `${Math.random() * 15 + 5}px`;
+                        confetti.style.height = `${Math.random() * 8 + 5}px`;
+                        confetti.style.background = this.slotColors[Math.floor(Math.random() * this.slotColors.length)];
+                        confetti.style.left = `${Math.random() * window.innerWidth}px`;
+                        confetti.style.top = '-50px';
+                        confetti.style.borderRadius = "3px";
+                        confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                        document.body.appendChild(confetti);
+
+                        const duration = 1800 + Math.random() * 1200;
+                        const endX = parseFloat(confetti.style.left) + (Math.random() - 0.5) * 200;
+                        const endY = window.innerHeight + 100;
+
+                        confetti.animate([
+                            {
+                                transform: confetti.style.transform,
+                                top: confetti.style.top,
+                                left: confetti.style.left,
+                                opacity: 1
+                            },
+                            {
+                                transform: `rotate(${Math.random() * 720}deg)`,
+                                top: `${endY}px`,
+                                left: `${endX}px`,
+                                opacity: 0.2
+                            }
+                        ], {
+                            duration: duration,
+                            easing: 'ease-out'
+                        }).onfinish = () => confetti.remove(); // Remove after animation
+                    }, i * 7);
+                }
+            }
+        }
+
+        // Initialize the spinning wheel
+        document.addEventListener('DOMContentLoaded', () => {
+            new SpinningWheel('wheel', 'result', 'spinBtn');
+        });
+    </script>
 </body>
 </html>
-
