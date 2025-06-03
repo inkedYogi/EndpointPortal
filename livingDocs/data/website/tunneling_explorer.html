@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Tunneling Visualization</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.7.0/math.js"></script>
+    <style>
+        .slider-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            -webkit-appearance: none;
+            background: linear-gradient(90deg, #4f46e5, #a5b4fc);
+            border-radius: 4px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #4f46e5;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .equation-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid #4f46e5;
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+            font-family: monospace;
+            overflow-x: auto;
+        }
+        .wave-animation {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.05;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+    <!-- Wave animation background -->
+    <div class="wave-animation" id="waveCanvas"></div>
+
+    <div class="container mx-auto px-4 py-12 max-w-6xl">
+        <header class="mb-12 text-center">
+            <h1 class="text-4xl font-bold mb-4 bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">Quantum Tunneling Explorer</h1>
+            <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                Visualize how quantum particles can pass through classically forbidden barriers
+            </p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Controls and explanation -->
+            <div class="lg:col-span-1">
+                <div class="bg-gray-800 rounded-xl p-6 shadow-lg">
+                    <h2 class="text-2xl font-semibold mb-4 text-indigo-300">Parameters</h2>
+                    
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span>Barrier Height (V₀):</span>
+                            <span id="barrierHeightValue">5 eV</span>
+                        </div>
+                        <input type="range" id="barrierHeight" min="1" max="10" step="0.1" value="5" class="mb-2">
+                        
+                        <div class="slider-label">
+                            <span>Barrier Width (L):</span>
+                            <span id="barrierWidthValue">1 nm</span>
+                        </div>
+                        <input type="range" id="barrierWidth" min="0.1" max="3" step="0.1" value="1" class="mb-2">
+                        
+                        <div class="slider-label">
+                            <span>Particle Energy (E):</span>
+                            <span id="particleEnergyValue">3 eV</span>
+                        </div>
+                        <input type="range" id="particleEnergy" min="0.5" max="9" step="0.1" value="3" class="mb-2">
+                    </div>
+
+                    <div class="mt-6">
+                        <h3 class="text-lg font-medium mb-2 text-indigo-200">Transmission Probability:</h3>
+                        <div class="text-3xl font-bold text-green-400" id="transmissionProb">0%</div>
+                    </div>
+
+                    <div class="mt-8">
+                        <button id="resetBtn" class="w-full py-2 px-4 bg-gray-700 hover:bg-gray-600 rounded-lg transition">
+                            Reset to Defaults
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visualization -->
+            <div class="lg:col-span-2">
+                <div class="bg-gray-800 rounded-xl p-6 shadow-lg h-full">
+                    <h2 class="text-2xl font-semibold mb-4 text-indigo-300">Wave Function Visualization</h2>
+                    <div class="relative h-80">
+                        <canvas id="quantumChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-sm text-gray-400">
+                        <p>The blue curve shows the probability amplitude (|ψ|²) of the quantum particle. The orange area represents the potential barrier.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Explanation section -->
+        <div class="mt-12 bg-gray-800 rounded-xl p-6 shadow-lg">
+            <h2 class="text-2xl font-semibold mb-4 text-indigo-300">The Physics Behind Quantum Tunneling</h2>
+            
+            <p class="mb-4">
+                Quantum tunneling is a phenomenon where a quantum particle can pass through a potential barrier even when its energy is less than the barrier height. This is impossible in classical mechanics but occurs in quantum mechanics due to the wave-like nature of particles.
+            </p>
+            
+            <h3 class="text-xl font-medium mt-6 mb-3 text-indigo-200">The Schrödinger Equation</h3>
+            <p class="mb-4">
+                The behavior of quantum particles is described by the time-independent Schrödinger equation:
+            </p>
+            
+            <div class="equation-box">
+                -ħ²/2m · d²ψ/dx² + V(x)ψ = Eψ
+            </div>
+            
+            <p class="mb-4">
+                Where:
+            </p>
+            <ul class="list-disc pl-6 mb-4 space-y-2">
+                <li>ħ is the reduced Planck constant</li>
+                <li>m is the particle mass</li>
+                <li>ψ is the wave function</li>
+                <li>V(x) is the potential energy</li>
+                <li>E is the total energy of the particle</li>
+            </ul>
+            
+            <h3 class="text-xl font-medium mt-6 mb-3 text-indigo-200">Transmission Probability</h3>
+            <p class="mb-4">
+                For a rectangular barrier of height V₀ and width L, the transmission probability T can be approximated when E < V₀ as:
+            </p>
+            
+            <div class="equation-box">
+                T ≈ exp(-2κL) where κ = √(2m(V₀-E))/ħ
+            </div>
+            
+            <p>
+                This exponential dependence explains why tunneling probability decreases rapidly with increasing barrier width or height difference.
+            </p>
+        </div>
+
+        <footer class="mt-12 text-center text-gray-500 text-sm">
+            <p>Quantum Tunneling Visualization | Uses Chart.js for rendering | Physics based on standard quantum mechanics</p>
+        </footer>
+    </div>
+
+    <script>
+        // Initialize Chart.js
+        const ctx = document.getElementById('quantumChart').getContext('2d');
+        let quantumChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                datasets: [
+                    {
+                        label: 'Potential Barrier',
+                        data: [],
+                        borderColor: 'rgba(249, 115, 22, 1)',
+                        backgroundColor: 'rgba(249, 115, 22, 0.2)',
+                        fill: true,
+                        pointRadius: 0,
+                        borderWidth: 1,
+                        tension: 0.1
+                    },
+                    {
+                        label: 'Probability Density |ψ|²',
+                        data: [],
+                        borderColor: 'rgba(99, 102, 241, 1)',
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        fill: false,
+                        pointRadius: 0,
+                        borderWidth: 2,
+                        tension: 0.1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Position (nm)',
+                            color: '#9CA3AF'
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)'
+                        },
+                        ticks: {
+                            color: '#9CA3AF'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Energy (eV) / Probability',
+                            color: '#9CA3AF'
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)'
+                        },
+                        ticks: {
+                            color: '#9CA3AF'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#E5E7EB'
+                        }
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    }
+                }
+            }
+        });
+
+        // Parameters
+        let params = {
+            barrierHeight: 5,    // eV
+            barrierWidth: 1,     // nm
+            particleEnergy: 3,   // eV
+            // Constants (simplified for visualization)
+            hbar: 0.658,         // eV·fs (reduced Planck constant)
+            mass: 0.511,         // MeV/c² (electron mass)
+            xRange: 5            // nm (total range to display)
+        };
+
+        // Initialize wave animation canvas
+        const waveCanvas = document.getElementById('waveCanvas');
+        const waveCtx = waveCanvas.getContext('2d');
+        
+        function resizeCanvas() {
+            waveCanvas.width = window.innerWidth;
+            waveCanvas.height = window.innerHeight;
+        }
+        
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Wave animation variables
+        let time = 0;
+        const waveAmplitude = 20;
+        const waveFrequency = 0.01;
+        
+        function animateWaves() {
+            waveCtx.clearRect(0, 0, waveCanvas.width, waveCanvas.height);
+            waveCtx.strokeStyle = 'rgba(99, 102, 241, 0.3)';
+            waveCtx.lineWidth = 2;
+            
+            const height = waveCanvas.height;
+            const width = waveCanvas.width;
+            
+            waveCtx.beginPath();
+            
+            for (let x = 0; x < width; x++) {
+                const y = height/2 + waveAmplitude * Math.sin(x * waveFrequency + time);
+                if (x === 0) {
+                    waveCtx.moveTo(x, y);
+                } else {
+                    waveCtx.lineTo(x, y);
+                }
+            }
+            
+            waveCtx.stroke();
+            
+            time += 0.05;
+            requestAnimationFrame(animateWaves);
+        }
+        
+        animateWaves();
+
+        // Update chart based on parameters
+        function updateChart() {
+            const { barrierHeight, barrierWidth, particleEnergy, xRange } = params;
+            
+            // Calculate transmission probability
+            const kappa = Math.sqrt(2 * params.mass * 1e6 * (barrierHeight - particleEnergy)) / params.hbar; // in 1/nm
+            const transmission = Math.exp(-2 * kappa * barrierWidth);
+            
+            // Update display values
+            document.getElementById('barrierHeightValue').textContent = `${barrierHeight.toFixed(1)} eV`;
+            document.getElementById('barrierWidthValue').textContent = `${barrierWidth.toFixed(1)} nm`;
+            document.getElementById('particleEnergyValue').textContent = `${particleEnergy.toFixed(1)} eV`;
+            document.getElementById('transmissionProb').textContent = `${(transmission * 100).toFixed(2)}%`;
+            
+            // Generate data points
+            const barrierStart = (xRange - barrierWidth) / 2;
+            const barrierEnd = barrierStart + barrierWidth;
+            const step = 0.05;
+            const potentialData = [];
+            const waveData = [];
+            
+            for (let x = 0; x <= xRange; x += step) {
+                // Potential barrier
+                const potential = (x >= barrierStart && x <= barrierEnd) ? barrierHeight : 0;
+                potentialData.push({x, y: potential});
+                
+                // Wave function (simplified for visualization)
+                let waveValue;
+                if (x < barrierStart) {
+                    // Incident + reflected wave
+                    waveValue = Math.cos(10 * x) + 0.3 * Math.cos(-10 * x + Math.PI);
+                } else if (x > barrierEnd) {
+                    // Transmitted wave (reduced amplitude)
+                    waveValue = Math.sqrt(transmission) * Math.cos(10 * x);
+                } else {
+                    // Inside barrier (exponential decay)
+                    const barrierPos = (x - barrierStart) / barrierWidth;
+                    waveValue = Math.exp(-kappa * barrierWidth * barrierPos) * Math.cos(5 * x);
+                }
+                
+                // Probability density (|ψ|²)
+                const probability = Math.pow(waveValue, 2) * 2 * particleEnergy;
+                waveData.push({x, y: probability});
+            }
+            
+            // Update chart data
+            quantumChart.data.datasets[0].data = potentialData;
+            quantumChart.data.datasets[1].data = waveData;
+            quantumChart.update();
+        }
+
+        // Event listeners for sliders
+        document.getElementById('barrierHeight').addEventListener('input', function() {
+            params.barrierHeight = parseFloat(this.value);
+            updateChart();
+        });
+        
+        document.getElementById('barrierWidth').addEventListener('input', function() {
+            params.barrierWidth = parseFloat(this.value);
+            updateChart();
+        });
+        
+        document.getElementById('particleEnergy').addEventListener('input', function() {
+            params.particleEnergy = parseFloat(this.value);
+            updateChart();
+        });
+        
+        // Reset button
+        document.getElementById('resetBtn').addEventListener('click', function() {
+            params.barrierHeight = 5;
+            params.barrierWidth = 1;
+            params.particleEnergy = 3;
+            
+            document.getElementById('barrierHeight').value = params.barrierHeight;
+            document.getElementById('barrierWidth').value = params.barrierWidth;
+            document.getElementById('particleEnergy').value = params.particleEnergy;
+            
+            updateChart();
+        });
+
+        // Initial update
+        updateChart();
+    </script>
+</body>
+</html>
