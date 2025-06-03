@@ -23,7 +23,7 @@
             flex-direction: column;
             align-items: center;
             gap: 40px;
-            position: relative;
+            position: relative; /* Crucial for positioning arrow relative to container */
             z-index: 10; /* Ensure container is above confetti */
         }
         canvas {
@@ -66,11 +66,19 @@
             font-family: 'Impact', 'Arial Black', Arial, sans-serif;
             color: #fff;
             text-shadow: 0 0 8px #ff0, 0 0 24px #f0f, 0 0 32px #0ff;
-            opacity: 0;
-            transition: opacity 0.5s;
+            opacity: 0; /* Initial opacity */
+            min-height: 2.7rem; /* Reserve space to prevent layout shift */
+            display: flex; /* Use flex to center text vertically if it wraps */
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            animation: none; /* Resetting existing animation if any */
+            transform: translateY(-20px); /* Initial position for drop-down */
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out; /* Smooth transition for both */
         }
         #result.show {
             opacity: 1;
+            transform: translateY(0); /* Drop down to original position */
             animation: flashText 1s alternate infinite;
         }
         @keyframes flashText {
@@ -79,10 +87,9 @@
         }
         #arrow {
             position: absolute;
-            /* Position arrow to the top center of the wheel */
-            left: 50%; /* Center horizontally */
-            top: calc(50% - 235px + 27px); /* 235px (radius) + padding - half arrow height */
-            transform: translateX(-50%) rotate(180deg); /* Center horizontally and rotate to point down */
+            left: 50%; /* Center horizontally relative to container */
+            top: 0; /* Position at the very top of the container */
+            transform: translateX(-50%) translateY(-100%) rotate(180deg); /* Center horizontally, pull up by its own height, and point down */
             z-index: 11;
             width: 54px;
             height: 54px;
@@ -296,8 +303,12 @@
             spin() {
                 if (this.isSpinning) return;
 
+                // Reset result display before spin
                 this.resultDiv.textContent = '';
                 this.resultDiv.classList.remove('show');
+                this.resultDiv.style.opacity = 0;
+                this.resultDiv.style.transform = 'translateY(-20px)';
+
                 this.spinBtn.disabled = true;
 
                 this.isSpinning = true;
@@ -357,8 +368,11 @@
                 // Math.floor(angle / angleStep) gives the index.
                 const winnerIndex = Math.floor(effectiveAngle / this.angleStep);
 
-                this.resultDiv.textContent = `You won slot ${this.slotLabels[winnerIndex]}!`;
-                this.resultDiv.classList.add('show');
+                // Delay setting text content to ensure animation starts smoothly
+                setTimeout(() => {
+                    this.resultDiv.textContent = `You won slot ${this.slotLabels[winnerIndex]}!`;
+                    this.resultDiv.classList.add('show');
+                }, 50); // Small delay, allows CSS transition to kick in properly
             }
 
             createConfetti(amount) {
