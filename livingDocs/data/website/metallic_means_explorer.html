@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generalized Mandelbrot Set & Metallic Means Explorer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.7.0/math.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #4f6bff 0%, #0a1f8f 100%);
+        }
+        .control-panel {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .fractal-canvas {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        .info-card {
+            background: rgba(0, 0, 0, 0.6);
+            border-left: 3px solid #4f6bff;
+        }
+        .smooth-transition {
+            transition: all 0.3s ease;
+        }
+        .form-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #4f6bff;
+            box-shadow: 0 0 0 2px rgba(79, 107, 255, 0.3);
+        }
+        /* Custom range slider */
+        input[type="range"] {
+            -webkit-appearance: none;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #4f6bff;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        /* Custom radio buttons */
+        .radio-option input[type="radio"] {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #4f6bff;
+            border-radius: 50%;
+            margin-right: 8px;
+            position: relative;
+            top: 3px;
+        }
+        .radio-option input[type="radio"]:checked::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 8px;
+            height: 8px;
+            background: #4f6bff;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen text-white font-sans">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">
+                Generalized Mandelbrot Set & Metallic Means Explorer
+            </h1>
+            <p class="text-lg max-w-3xl mx-auto opacity-80">
+                Visualize the dynamics of z<sub>n+1</sub> = z<sub>n</sub><sup>2</sup> + pz<sub>n</sub> + c and explore the fascinating patterns of fractals and metallic means
+            </p>
+        </header>
+
+        <!-- Main content -->
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Left panel - Controls and info -->
+            <div class="w-full lg:w-1/3">
+                <div class="control-panel rounded-xl p-6 mb-6">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-sliders-h mr-2"></i> Parameters
+                    </h2>
+                    
+                    <!-- Parameter p -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-1">Parameter p (Complex Number)</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-xs opacity-70 mb-1">Real part (Re(p))</label>
+                                <input type="number" id="pReal" value="0.0" step="0.1" class="form-input w-full rounded px-3 py-2 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs opacity-70 mb-1">Imaginary part (Im(p))</label>
+                                <input type="number" id="pImag" value="0.0" step="0.1" class="form-input w-full rounded px-3 py-2 text-sm">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Parameter c -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-1">Parameter c (Complex Number)</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-xs opacity-70 mb-1">Real part (Re(c))</label>
+                                <input type="number" id="cReal" value="0.0" step="0.1" class="form-input w-full rounded px-3 py-2 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs opacity-70 mb-1">Imaginary part (Im(c))</label>
+                                <input type="number" id="cImag" value="0.0" step="0.1" class="form-input w-full rounded px-3 py-2 text-sm">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Max iterations -->
+                    <div class="mb-4">
+                        <label for="maxIterations" class="block text-sm font-medium mb-1">Max Iterations (200-1000)</label>
+                        <input type="range" id="maxIterations" min="200" max="1000" value="200" class="w-full mb-2">
+                        <div class="flex justify-between text-xs opacity-70">
+                            <span>200</span>
+                            <span id="maxIterationsValue">200</span>
+                            <span>1000</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Escape radius -->
+                    <div class="mb-6">
+                        <label for="escapeRadius" class="block text-sm font-medium mb-1">Escape Radius (0.5-10.0)</label>
+                        <input type="range" id="escapeRadius" min="0.5" max="10.0" step="0.1" value="2.0" class="w-full mb-2">
+                        <div class="flex justify-between text-xs opacity-70">
+                            <span>0.5</span>
+                            <span id="escapeRadiusValue">2.0</span>
+                            <span>10.0</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Visualization mode -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium mb-2">Visualization Mode</label>
+                        <div class="space-y-2">
+                            <label class="radio-option flex items-center">
+                                <input type="radio" name="visualizationMode" value="mandelbrot" checked>
+                                <span>Generalized Mandelbrot Set</span>
+                            </label>
+                            <label class="radio-option flex items-center">
+                                <input type="radio" name="visualizationMode" value="julia">
+                                <span>Julia Set</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Generate button -->
+                    <button id="generateBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg smooth-transition flex items-center justify-center">
+                        <i class="fas fa-sync-alt mr-2"></i> Generate Plot
+                    </button>
+                </div>
+                
+                <!-- Information section -->
+                <div class="info-card rounded-xl p-6">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-info-circle mr-2"></i> Information
+                    </h2>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="font-medium mb-1">Current Parameters</h3>
+                            <p id="currentParams" class="text-sm opacity-80">p = 0.0 + 0.0i, c = 0.0 + 0.0i</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-medium mb-1">Critical Point (z<sub>c</sub>)</h3>
+                            <p id="criticalPoint" class="text-sm opacity-80">z<sub>c</sub> = -p/2 = 0.0 + 0.0i</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-medium mb-1">Discriminant (Δ)</h3>
+                            <p id="discriminant" class="text-sm opacity-80">Δ = p² + 4c = 0.0 + 0.0i</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-medium mb-1">Metallic Mean (B)</h3>
+                            <p id="metallicMean" class="text-sm opacity-80">B = (p + √Δ)/2 = 0.0 + 0.0i</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-medium mb-1">Fixed Points of z<sub>n+1</sub> = z<sub>n</sub><sup>2</sup> + pz<sub>n</sub> + c</h3>
+                            <p id="fixedPoints" class="text-sm opacity-80">Fixed points: z² + (p-1)z + c = 0<br>0.0 + 0.0i (Multiplier: 0.0)<br>0.0 + 0.0i (Multiplier: 0.0)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right panel - Canvas -->
+            <div class="w-full lg:w-2/3 flex flex-col">
+                <div class="relative w-full aspect-square fractal-canvas rounded-xl overflow-hidden">
+                    <canvas id="fractalCanvas" class="absolute inset-0 w-full h-full"></canvas>
+                </div>
+                
+                <!-- Zoom controls -->
+                <div class="flex items-center justify-center mt-4 space-x-2">
+                    <button id="zoomInBtn" class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg">
+                        <i class="fas fa-search-plus"></i>
+                    </button>
+                    <button id="zoomOutBtn" class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg">
+                        <i class="fas fa-search-minus"></i>
+                    </button>
+                    <button id="resetBtn" class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg">
+                        <i class="fas fa-sync-alt"></i> Reset View
+                    </button>
+                    <button id="sampleParamsBtn" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg text-sm">
+                        <i class="fas fa-magic mr-1"></i> Sample Parameters
+                    </button>
+                </div>
+                
+                <!-- Explanation section -->
+                <div class="mt-8">
+                    <h2 class="text-2xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-lightbulb mr-2"></i> Explanation
+                    </h2>
+                    
+                    <div class="grid gap-6">
+                        <div class="bg-white/10 rounded-lg p-5">
+                            <h3 class="text-lg font-medium mb-2">Generalized Quadratic Map</h3>
+                            <p class="opacity-90">
+                                The map <span class="font-math">z<sub>n+1</sub> = z<sub>n</sub><sup>2</sup> + pz<sub>n</sub> + c</span> defines the iteration process.
+                                <br>
+                                - <strong>z</strong> is a complex number representing the point being iterated
+                                <br>
+                                - <strong>p</strong> is a complex parameter controlling the linear term
+                                <br>
+                                - <strong>c</strong> is a complex parameter controlling the constant term
+                            </p>
+                        </div>
+                        
+                        <div class="bg-white/10 rounded-lg p-5">
+                            <h3 class="text-lg font-medium mb-2">Generalized Mandelbrot Set</h3>
+                            <p class="opacity-90">
+                                For each complex <strong>c</strong> (while keeping <strong>p</strong> fixed), we compute whether the critical point <span class="font-math">z<sub>c</sub> = -p/2</span> remains bounded under iteration.
+                                The set of all such <strong>c</strong> values forms the generalized Mandelbrot set.
+                            </p>
+                        </div>
+                        
+                        <div class="bg-white/10 rounded-lg p-5">
+                            <h3 class="text-lg font-medium mb-2">Julia Sets</h3>
+                            <p class="opacity-90">
+                                For fixed complex parameters <strong>p</strong> and <strong>c</strong>, a Julia set consists of all complex numbers <span class="font-math">z<sub>0</sub></span> for which the orbit remains bounded under iteration.
+                                The Julia set is the boundary between points that escape to infinity and those that remain bounded.
+                            </p>
+                        </div>
+                        
+                        <div class="bg-white/10 rounded-lg p-5">
+                            <h3 class="text-lg font-medium mb-2">Metallic Means</h3>
+                            <p class="opacity-90">
+                                The metallic means are solutions to <span class="font-math">B<sup>2</sup> - pB - c = 0</span>, with positive root:
+                                <br><span class="font-math">B = (p + √(p² + 4c))/2</span>
+                                <br>These are distinct from the fixed points of the iterated map which solve <span class="font-math">z² + (p-1)z + c = 0</span>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Complex number operations
+        class Complex {
+            constructor(re, im) {
+                this.re = re;
+                this.im = im;
+            }
+            
+            add(other) {
+                return new Complex(this.re + other.re, this.im + other.im);
+            }
+            
+            sub(other) {
+                return new Complex(this.re - other.re, this.im - other.im);
+            }
+            
+            mul(other) {
+                return new Complex(
+                    this.re * other.re - this.im * other.im,
+                    this.re * other.im + this.im * other.re
+                );
+            }
+            
+            div(other) {
+                const denominator = other.re * other.re + other.im * other.im;
+                return new Complex(
+                    (this.re * other.re + this.im * other.im) / denominator,
+                    (this.im * other.re - this.re * other.im) / denominator
+                );
+            }
+            
+            magnitude() {
+                return Math.sqrt(this.re * this.re + this.im * this.im);
+            }
+            
+            sqrt() {
+                const r = Math.sqrt(this.magnitude());
+                const theta = Math.atan2(this.im, this.re) / 2;
+                return new Complex(r * Math.cos(theta), r * Math.sin(theta));
+            }
+            
+            toString() {
+                if (this.im === 0) return this.re.toFixed(4);
+                if (this.re === 0) return `${this.im.toFixed(4)}i`;
+                const imStr = Math.abs(this.im) === 1 ? 
+                    (this.im > 0 ? 'i' : '-i') : 
+                    `${this.im.toFixed(4)}i`;
+                return `${this.re.toFixed(4)} ${this.im > 0 ? '+' : '-'} ${imStr}`;
+            }
+        }
+
+        // DOM elements
+        const canvas = document.getElementById('fractalCanvas');
+        const ctx = canvas.getContext('2d');
+        const pRealInput = document.getElementById('pReal');
+        const pImagInput = document.getElementById('pImag');
+        const cRealInput = document.getElementById('cReal');
+        const cImagInput = document.getElementById('cImag');
+        const maxIterationsInput = document.getElementById('maxIterations');
+        const maxIterationsValue = document.getElementById('maxIterationsValue');
+        const escapeRadiusInput = document.getElementById('escapeRadius');
+        const escapeRadiusValue = document.getElementById('escapeRadiusValue');
+        const generateBtn = document.getElementById('generateBtn');
+        const currentParamsDisplay = document.getElementById('currentParams');
+        const criticalPointDisplay = document.getElementById('criticalPoint');
+        const discriminantDisplay = document.getElementById('discriminant');
+        const metallicMeanDisplay = document.getElementById('metallicMean');
+        const fixedPointsDisplay = document.getElementById('fixedPoints');
+        const zoomInBtn = document.getElementById('zoomInBtn');
+        const zoomOutBtn = document.getElementById('zoomOutBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const sampleParamsBtn = document.getElementById('sampleParamsBtn');
+        const visualizationModes = document.getElementsByName('visualizationMode');
+
+        // Set canvas size
+        function resizeCanvas() {
+            const container = canvas.parentElement;
+            const size = Math.min(container.clientWidth, container.clientHeight);
+            canvas.width = size;
+            canvas.height = size;
+        }
+
+        // Viewport state
+        let xMin = -2.5;
+        let xMax = 1.5;
+        let yMin = -2.0;
+        let yMax = 2.0;
+        let isDragging = false;
+        let lastMouseX, lastMouseY;
+
+        // Initialize
+        resizeCanvas();
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            drawFractal();
+        });
+
+        // Set up event listeners
+        maxIterationsInput.addEventListener('input', () => {
+            maxIterationsValue.textContent = maxIterationsInput.value;
+        });
+
+        escapeRadiusInput.addEventListener('input', () => {
+            escapeRadiusValue.textContent = parseFloat(escapeRadiusInput.value).toFixed(1);
+        });
+
+        generateBtn.addEventListener('click', drawFractal);
+        zoomInBtn.addEventListener('click', zoomIn);
+        zoomOutBtn.addEventListener('click', zoomOut);
+        resetBtn.addEventListener('click', resetView);
+        sampleParamsBtn.addEventListener('click', setSampleParameters);
+
+        canvas.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            lastMouseX = e.clientX;
+            lastMouseY = e.clientY;
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                const dx = e.clientX - lastMouseX;
+                const dy = e.clientY - lastMouseY;
+                lastMouseX = e.clientX;
+                lastMouseY = e.clientY;
+                
+                const xRange = xMax - xMin;
+                const yRange = yMax - yMin;
+                const dxScaled = -dx * xRange / canvas.width;
+                const dyScaled = dy * yRange / canvas.height;
+                
+                xMin += dxScaled;
+                xMax += dxScaled;
+                yMin += dyScaled;
+                yMax += dyScaled;
+                
+                drawFractal();
+            }
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        canvas.addEventListener('mouseleave', () => {
+            isDragging = false;
+        });
+
+        canvas.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const mouseX = e.offsetX;
+            const mouseY = e.offsetY;
+            
+            // Map mouse position to complex coordinates
+            const x = xMin + (xMax - xMin) * mouseX / canvas.width;
+            const y = yMin + (yMax - yMin) * (canvas.height - mouseY) / canvas.height;
+            
+            const zoomFactor = e.deltaY > 0 ? 1.2 : 0.8;
+            
+            // Apply zoom centered at mouse position
+            xMin = x - (x - xMin) * zoomFactor;
+            xMax = x + (xMax - x) * zoomFactor;
+            yMin = y - (y - yMin) * zoomFactor;
+            yMax = y + (yMax - y) * zoomFactor;
+            
+            drawFractal();
+        });
+
+        // Color palette generation
+        function getColor(iterations, maxIterations) {
+            if (iterations === maxIterations) {
+                return [0, 0, 0]; // Black for points in the set
+            }
+            
+            // Smooth coloring
+            const smoothed = iterations + 1 - Math.log(Math.log(Math.sqrt(iterations))) / Math.log(2);
+            const normalized = smoothed / maxIterations * 2 * Math.PI;
+            
+            // Color gradient - adjust this for different effects
+            const r = Math.floor(128 + 127 * Math.sin(normalized * 0.5 + 0.0));
+            const g = Math.floor(128 + 127 * Math.sin(normalized * 0.5 + 2.0));
+            const b = Math.floor(128 + 127 * Math.sin(normalized * 0.5 + 4.0));
+            
+            return [r, g, b];
+        }
+
+        // Main fractal drawing function
+        function drawFractal() {
+            resizeCanvas(); // Ensure canvas is proper size
+            
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            const pReal = parseFloat(pRealInput.value) || 0;
+            const pImag = parseFloat(pImagInput.value) || 0;
+            const cReal = parseFloat(cRealInput.value) || 0;
+            const cImag = parseFloat(cImagInput.value) || 0;
+            
+            const p = new Complex(pReal, pImag);
+            const c = new Complex(cReal, cImag);
+            
+            const maxIterations = parseInt(maxIterationsInput.value);
+            const escapeRadius = parseFloat(escapeRadiusInput.value);
+            
+            const visualizationMode = document.querySelector('input[name="visualizationMode"]:checked').value;
+            
+            // Update information display
+            updateInfoDisplay(p, c);
+            
+            // Get image data for faster pixel manipulation
+            const imageData = ctx.createImageData(width, height);
+            const pixels = imageData.data;
+            
+            // Create a worker pool for parallel computation
+            const workerCount = navigator.hardwareConcurrency || 4;
+            const rowsPerWorker = Math.ceil(height / workerCount);
+            
+            let completedWorkers = 0;
+            
+            for (let w = 0; w < workerCount; w++) {
+                const startRow = w * rowsPerWorker;
+                const endRow = Math.min(startRow + rowsPerWorker, height);
+                
+                setTimeout(() => {
+                    for (let y = startRow; y < endRow; y++) {
+                        for (let x = 0; x < width; x++) {
+                            // Map pixel to complex plane coordinates
+                            const zx = xMin + (xMax - xMin) * x / width;
+                            const zy = yMin + (yMax - yMin) * (height - y) / height;
+                            
+                            let iterations = 0;
+                            
+                            if (visualizationMode === 'mandelbrot') {
+                                // For Mandelbrot set, z0 is critical point (-p/2) and c is the pixel coordinate
+                                const z0 = new Complex(-p.re / 2, -p.im / 2);
+                                iterations = computeIterations(z0, new Complex(zx, zy), p, maxIterations, escapeRadius);
+                            } else {
+                                // For Julia set, z0 is the pixel coordinate, p and c are fixed
+                                iterations = computeIterations(new Complex(zx, zy), c, p, maxIterations, escapeRadius);
+                            }
+                            
+                            const color = getColor(iterations, maxIterations);
+                            const pixelIndex = (y * width + x) * 4;
+                            
+                            pixels[pixelIndex] = color[0];     // R
+                            pixels[pixelIndex + 1] = color[1]; // G
+                            pixels[pixelIndex + 2] = color[2]; // B
+                            pixels[pixelIndex + 3] = 255;      // A
+                        }
+                    }
+                    
+                    completedWorkers++;
+                    
+                    // When all workers are done, put the image data
+                    if (completedWorkers === workerCount) {
+                        ctx.putImageData(imageData, 0, 0);
+                        
+                        // Draw coordinate indicators if zoomed in
+                        if ((xMax - xMin) < 4 || (yMax - yMin) < 4) {
+                            drawCoordinateAxes();
+                        }
+                    }
+                }, 0);
+            }
+        }
+
+        // Compute iterations for a given point
+        function computeIterations(z0, c, p, maxIterations, escapeRadius) {
+            let z = z0;
+            let iterations = 0;
+            
+            while (iterations < maxIterations) {
+                // z_{n+1} = z_n^2 + p*z_n + c
+                z = z.mul(z).add(p.mul(z)).add(c);
+                iterations++;
+                
+                if (z.magnitude() > escapeRadius) {
+                    break;
+                }
+            }
+            
+            return iterations;
+        }
+
+        // Update information display
+        function updateInfoDisplay(p, c) {
+            currentParamsDisplay.textContent = `p = ${p.toString()}, c = ${c.toString()}`;
+            
+            // Critical point z_c = -p/2
+            const z_c = new Complex(-p.re/2, -p.im/2);
+            criticalPointDisplay.innerHTML = `z<sub>c</sub> = -p/2 = ${z_c.toString()}`;
+            
+            // Discriminant Δ = p² + 4c
+            const discriminant = p.mul(p).add(new Complex(4, 0).mul(c));
+            discriminantDisplay.innerHTML = `Δ = p² + 4c = ${discriminant.toString()}`;
+            
+            // Metallic mean B = (p + √Δ)/2
+            let metallicMean;
+            try {
+                metallicMean = p.add(discriminant.sqrt()).div(new Complex(2, 0));
+                metallicMeanDisplay.innerHTML = `B = (p + √Δ)/2 = ${metallicMean.toString()}`;
+            } catch (e) {
+                metallicMeanDisplay.innerHTML = `B = (p + √Δ)/2 = cannot compute (negative discriminant)`;
+            }
+            
+            // Fixed points z² + (p-1)z + c = 0
+            // Solutions to z = z² + pz + c => z² + (p-1)z + c = 0
+            const a = 1;
+            const b = p.sub(new Complex(1, 0));
+            
+            // Use quadratic formula: [-(p-1) ± √((p-1)² - 4c)] / 2
+            const discriminantFP = b.mul(b).sub(new Complex(4, 0).mul(c));
+            let sqrtDiscFP;
+            try {
+                sqrtDiscFP = discriminantFP.sqrt();
+            } catch (e) {
+                fixedPointsDisplay.innerHTML = "Fixed points: could not compute (negative discriminant)";
+                return;
+            }
+            
+            const fp1 = b.mul(new Complex(-1, 0)).add(sqrtDiscFP).div(new Complex(2, 0));
+            const fp2 = b.mul(new Complex(-1, 0)).sub(sqrtDiscFP).div(new Complex(2, 0));
+            
+            // Compute multipliers |2z + p|
+            const multiplier1 = new Complex(2 * fp1.re + p.re, 2 * fp1.im + p.im).magnitude();
+            const multiplier2 = new Complex(2 * fp2.re + p.re, 2 * fp2.im + p.im).magnitude();
+            
+            const stability1 = multiplier1 < 1 ? " (stable)" : " (unstable)";
+            const stability2 = multiplier2 < 1 ? " (stable)" : " (unstable)";
+            
+            fixedPointsDisplay.innerHTML = 
+                `Fixed points: z² + (p-1)z + c = 0<br>` +
+                `${fp1.toString()} (Multiplier: ${multiplier1.toFixed(4)}${stability1})<br>` +
+                `${fp2.toString()} (Multiplier: ${multiplier2.toFixed(4)}${stability2})`;
+        }
+
+        // Draw coordinate axes and labels
+        function drawCoordinateAxes() {
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.lineWidth = 1;
+            ctx.font = '10px Arial';
+            ctx.fillStyle = 'white';
+            
+            // Draw x-axis
+            const zeroY = height - (0 - yMin) / (yMax - yMin) * height;
+            if (zeroY > 0 && zeroY < height) {
+                ctx.beginPath();
+                ctx.moveTo(0, zeroY);
+                ctx.lineTo(width, zeroY);
+                ctx.stroke();
+                
+                // Label some x-ticks
+                const xStep = width / 10;
+                for (let x = 0; x < width; x += xStep) {
+                    const xValue = xMin + (x / width) * (xMax - xMin);
+                    const label = xValue.toFixed(2);
+                    ctx.fillText(label, x, zeroY + 12);
+                    ctx.beginPath();
+                    ctx.moveTo(x, zeroY - 3);
+                    ctx.lineTo(x, zeroY + 3);
+                    ctx.stroke();
+                }
+            }
+            
+            // Draw y-axis
+            const zeroX = (0 - xMin) / (xMax - xMin) * width;
+            if (zeroX > 0 && zeroX < width) {
+                ctx.beginPath();
+                ctx.moveTo(zeroX, 0);
+                ctx.lineTo(zeroX, height);
+                ctx.stroke();
+                
+                // Label some y-ticks
+                const yStep = height / 10;
+                for (let y = 0; y < height; y += yStep) {
+                    const yValue = yMin + (1 - y / height) * (yMax - yMin);
+                    const label = yValue.toFixed(2);
+                    ctx.fillText(label, zeroX + 5, y + 3);
+                    ctx.beginPath();
+                    ctx.moveTo(zeroX - 3, y);
+                    ctx.lineTo(zeroX + 3, y);
+                    ctx.stroke();
+                }
+            }
+        }
+
+        // Zoom functions
+        function zoomIn() {
+            const centerX = (xMin + xMax) / 2;
+            const centerY = (yMin + yMax) / 2;
+            const rangeX = (xMax - xMin) * 0.5;
+            const rangeY = (yMax - yMin) * 0.5;
+            
+            xMin = centerX - rangeX;
+            xMax = centerX + rangeX;
+            yMin = centerY - rangeY;
+            yMax = centerY + rangeY;
+            
+            drawFractal();
+        }
+
+        function zoomOut() {
+            const centerX = (xMin + xMax) / 2;
+            const centerY = (yMin + yMax) / 2;
+            const rangeX = (xMax - xMin) * 2;
+            const rangeY = (yMax - yMin) * 2;
+            
+            xMin = centerX - rangeX;
+            xMax = centerX + rangeX;
+            yMin = centerY - rangeY;
+            yMax = centerY + rangeY;
+            
+            drawFractal();
+        }
+
+        function resetView() {
+            xMin = -2.5;
+            xMax = 1.5;
+            yMin = -2.0;
+            yMax = 2.0;
+            drawFractal();
+        }
+
+        // Sample interesting parameter sets
+        function setSampleParameters() {
+            const samples = [
+                { name: "Classic Mandelbrot", pReal: 0, pImag: 0, cReal: 0, cImag: 0, mode: "mandelbrot" },
+                { name: "Classic Julia (-0.4 + 0.6i)", pReal: 0, pImag: 0, cReal: -0.4, cImag: 0.6, mode: "julia" },
+                { name: "Generalized M-set (p=1)", pReal: 1, pImag: 0, cReal: 0, cImag: 0, mode: "mandelbrot" },
+                { name: "Golden Mean", pReal: 1, pImag: 0, cReal: 1, cImag: 0, mode: "mandelbrot" },
+                { name: "Spiral Julia", pReal: -0.8, pImag: 0.6, cReal: -0.2, cImag: 0.1, mode: "julia" },
+                { name: "Dendrite Julia", pReal: 0, pImag: 0, cReal: 0, cImag: 1, mode: "julia" }
+            ];
+            
+            const sample = samples[Math.floor(Math.random() * samples.length)];
+            
+            pRealInput.value = sample.pReal;
+            pImagInput.value = sample.pImag;
+            cRealInput.value = sample.cReal;
+            cImagInput.value = sample.cImag;
+            
+            // Set visualization mode
+            for (const radio of visualizationModes) {
+                radio.checked = radio.value === sample.mode;
+            }
+            
+            // Reset zoom for Mandelbrot sets
+            if (sample.mode === 'mandelbrot') {
+                resetView();
+            }
+            
+            drawFractal();
+        }
+
+        // Initial draw
+        drawFractal();
+    </script>
+</body>
+</html>
