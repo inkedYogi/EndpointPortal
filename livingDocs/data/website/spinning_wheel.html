@@ -23,8 +23,8 @@
             flex-direction: column;
             align-items: center;
             gap: 40px;
-            position: relative; /* Crucial for positioning arrow relative to container */
-            z-index: 10; /* Ensure container is above confetti */
+            position: relative;
+            z-index: 10;
         }
         canvas {
             border-radius: 50%;
@@ -34,7 +34,7 @@
             filter: drop-shadow(0 0 8px #ffffff) drop-shadow(0 0 22px #ff00ee);
             max-width: 90vw;
             max-height: 90vw;
-            touch-action: none; /* Prevent scroll on touch devices */
+            touch-action: none;
         }
         #spinBtn {
             padding: 18px 42px;
@@ -66,19 +66,19 @@
             font-family: 'Impact', 'Arial Black', Arial, sans-serif;
             color: #fff;
             text-shadow: 0 0 8px #ff0, 0 0 24px #f0f, 0 0 32px #0ff;
-            opacity: 0; /* Initial opacity */
-            min-height: 2.7rem; /* Reserve space to prevent layout shift */
-            display: flex; /* Use flex to center text vertically if it wraps */
+            opacity: 0;
+            min-height: 2.7rem;
+            display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            animation: none; /* Resetting existing animation if any */
-            transform: translateY(-20px); /* Initial position for drop-down */
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out; /* Smooth transition for both */
+            animation: none;
+            transform: translateY(-20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
         }
         #result.show {
             opacity: 1;
-            transform: translateY(0); /* Drop down to original position */
+            transform: translateY(0);
             animation: flashText 1s alternate infinite;
         }
         @keyframes flashText {
@@ -88,44 +88,31 @@
         /* Common arrow styles */
         .arrow {
             position: absolute;
-            top: 50%; /* Center vertically relative to container */
-            transform: translateY(-50%); /* Center vertically */
+            top: 50%;
+            transform: translateY(-50%);
             z-index: 11;
             width: 54px;
             height: 54px;
-            pointer-events: none; /* Allow clicks to pass through */
+            pointer-events: none;
             transform-origin: center;
         }
-
-        /* Specific style for the left arrow, pointing right */
-        #arrow-left {
-            left: 0; /* Align its left edge with the container's left edge */
-            transform: translateY(-50%) rotate(270deg); /* Point right */
-        }
-
         /* Specific style for the right arrow, pointing left */
         #arrow-right {
-            right: 0; /* Align its right edge with the container's right edge */
-            transform: translateY(-50%) rotate(90deg); /* Point left */
+            right: 0;
+            transform: translateY(-50%) rotate(90deg);
         }
-
         /* Confetti Styles */
         .confetti {
             position: absolute;
             opacity: 0;
             z-index: 999;
-            will-change: transform, opacity; /* Optimize animations */
+            will-change: transform, opacity;
         }
     </style>
 </head>
 <body>
     <div id="container">
         <canvas id="wheel" width="470" height="470"></canvas>
-
-        <svg id="arrow-left" class="arrow" viewBox="0 0 54 54">
-            <polygon points="27,0 44,38 27,28 10,38" fill="#fff800" stroke="#ff00a2" stroke-width="3"/>
-            <circle cx="27" cy="40" r="8" fill="#fe36f2" stroke="#fff" stroke-width="3"/>
-        </svg>
 
         <svg id="arrow-right" class="arrow" viewBox="0 0 54 54">
             <polygon points="27,0 44,38 27,28 10,38" fill="#fff800" stroke="#ff00a2" stroke-width="3"/>
@@ -162,27 +149,25 @@
                 this.angleStep = (2 * Math.PI) / this.numSlots;
 
                 this.animationId = null;
-                this.currentRotation = 0; // Current rotation in radians
-                this.rotationSpeed = 0;    // Speed of rotation (radians per frame)
-                this.targetRotation = 0;   // Target rotation for the wheel to stop at
+                this.currentRotation = 0;
+                this.rotationSpeed = 0;
+                this.targetRotation = 0;
                 this.isSpinning = false;
                 this.lastTimestamp = 0;
 
-                this.friction = 0.99; // Factor by which speed reduces per frame
-                this.minSpinDuration = 3000; // Minimum spin duration in ms
-                this.maxSpinDuration = 6000; // Maximum spin duration in ms
+                this.friction = 0.99;
+                this.minSpinDuration = 3000;
+                this.maxSpinDuration = 6000;
 
-                // The pointer is now at the 3 o'clock position (rightwards)
-                // In canvas, 0 radians is to the right.
-                this.pointerAngle = 0; // Fixed angle of the pointer
+                // The pointer is at the 3 o'clock position (rightwards)
+                this.pointerAngle = 0;
 
                 this.init();
             }
 
             init() {
-                this.drawWheel(0); // Initial draw
+                this.drawWheel(0);
                 this.spinBtn.addEventListener('click', this.spin.bind(this));
-                // Start a continuous animation loop for sparkles even when not spinning
                 this.animationLoop();
             }
 
@@ -190,11 +175,9 @@
                 this.ctx.clearRect(0, 0, this.wheelCanvas.width, this.wheelCanvas.height);
 
                 for (let i = 0; i < this.numSlots; i++) {
-                    // Calculate start and end angles for the current segment, adjusted by rotation
                     const startAngle = i * this.angleStep + rotationRad;
                     const endAngle = startAngle + this.angleStep;
 
-                    // Draw Sector
                     this.ctx.save();
                     this.ctx.beginPath();
                     this.ctx.moveTo(this.centerX, this.centerY);
@@ -206,7 +189,6 @@
                     this.ctx.fill();
                     this.ctx.restore();
 
-                    // Draw Flashy Border (on top of segments)
                     this.ctx.save();
                     this.ctx.strokeStyle = "#fff";
                     this.ctx.lineWidth = 5;
@@ -216,10 +198,8 @@
                     this.ctx.stroke();
                     this.ctx.restore();
 
-                    // Draw Label
                     this.ctx.save();
                     this.ctx.translate(this.centerX, this.centerY);
-                    // Rotate context to the center of the current segment for text
                     this.ctx.rotate(startAngle + this.angleStep / 2);
                     this.ctx.font = "bold 2.4rem Arial";
                     this.ctx.fillStyle = "#fff";
@@ -231,7 +211,6 @@
                     this.ctx.restore();
                 }
 
-                // Draw Center Circle
                 this.ctx.save();
                 this.ctx.beginPath();
                 this.ctx.arc(this.centerX, this.centerY, this.radius * 0.2, 0, 2 * Math.PI, false);
@@ -244,7 +223,6 @@
                 this.ctx.stroke();
                 this.ctx.restore();
 
-                // Draw Outer Rim
                 this.ctx.save();
                 this.ctx.beginPath();
                 this.ctx.arc(this.centerX, this.centerY, this.radius, 0, 2 * Math.PI, false);
@@ -255,18 +233,16 @@
                 this.ctx.stroke();
                 this.ctx.restore();
 
-                // Draw Sparkles (now always animating regardless of wheel spin)
-                const time = Date.now(); // Get current time for dynamic sparkle animation
+                const time = Date.now();
                 for (let i = 0; i < 12; i++) {
                     this.ctx.save();
-                    // Calculate sparkle position around the wheel perimeter
-                    const sparkleAngle = i * Math.PI / 6 + time / 5000; // Slowly rotate sparkles
+                    const sparkleAngle = i * Math.PI / 6 + time / 5000;
                     const sparkleX = this.centerX + (this.radius + 30) * Math.cos(sparkleAngle);
                     const sparkleY = this.centerY + (this.radius + 30) * Math.sin(sparkleAngle);
-                    const sparkleSize = 8 + 6 * Math.sin(time / 200 + i); // Pulsating size
+                    const sparkleSize = 8 + 6 * Math.sin(time / 200 + i);
 
                     this.ctx.translate(sparkleX, sparkleY);
-                    this.ctx.rotate(time / 500); // Rotate individual sparkles
+                    this.ctx.rotate(time / 500);
 
                     this.ctx.beginPath();
                     for (let j = 0; j < 8; j++) {
@@ -286,27 +262,25 @@
                 }
             }
 
-            // Main animation loop, handles both spinning and static sparkle animation
             animationLoop(timestamp) {
                 if (!this.lastTimestamp) this.lastTimestamp = timestamp;
                 const deltaTime = timestamp - this.lastTimestamp;
                 this.lastTimestamp = timestamp;
 
                 if (this.isSpinning) {
-                    this.currentRotation += this.rotationSpeed * deltaTime; // Apply speed over time
-                    this.rotationSpeed *= this.friction; // Reduce speed
+                    this.currentRotation += this.rotationSpeed * deltaTime;
+                    this.rotationSpeed *= this.friction;
 
-                    // Check if close to target and decelerate more aggressively to stop
                     const remainingRotation = this.targetRotation - this.currentRotation;
-                    if (remainingRotation < 0.1 && this.rotationSpeed > 0.001) { // Small threshold for remaining
-                        this.rotationSpeed = Math.max(0.0001, this.rotationSpeed * 0.9); // Reduce faster as it approaches
+                    if (remainingRotation < 0.1 && this.rotationSpeed > 0.001) {
+                        this.rotationSpeed = Math.max(0.0001, this.rotationSpeed * 0.9);
                     }
 
-                    // Stop condition
+                    // Snap-to logic
                     if (this.rotationSpeed < 0.0001 || this.currentRotation >= this.targetRotation - 0.0001) {
                         this.isSpinning = false;
                         this.rotationSpeed = 0;
-                        this.currentRotation = this.targetRotation; // Snap to target for perfect alignment
+                        this.currentRotation = this.targetRotation;
 
                         this.determineWinner();
                         this.createConfetti(100);
@@ -314,7 +288,6 @@
                     }
                 }
 
-                // Always draw the wheel to keep sparkles animating
                 this.drawWheel(this.currentRotation);
 
                 this.animationId = requestAnimationFrame(this.animationLoop.bind(this));
@@ -323,7 +296,6 @@
             spin() {
                 if (this.isSpinning) return;
 
-                // Reset result display before spin
                 this.resultDiv.textContent = '';
                 this.resultDiv.classList.remove('show');
                 this.resultDiv.style.opacity = 0;
@@ -332,67 +304,45 @@
                 this.spinBtn.disabled = true;
 
                 this.isSpinning = true;
-                this.rotationSpeed = 0.02; // Initial speed (radians per ms, adjust as needed)
+                this.rotationSpeed = 0.02;
 
-                // Select a random winning slot index
                 const winningSlotIndex = Math.floor(Math.random() * this.numSlots);
 
-                // Calculate the angle of the winning slot's center relative to the wheel's starting position (0 radians)
                 const winningSlotCenterAngle = winningSlotIndex * this.angleStep + (this.angleStep / 2);
 
-                // The pointer is at this.pointerAngle.
-                // We want `winningSlotCenterAngle` to align with `this.pointerAngle`.
                 let requiredRotation = this.pointerAngle - winningSlotCenterAngle;
 
-                // Normalize requiredRotation to be between -PI and PI to find the shortest path to the target.
                 requiredRotation = (requiredRotation + Math.PI) % (2 * Math.PI) - Math.PI;
 
-                // Ensure the wheel spins at least `minFullRotations` times and lands on the target.
-                const minFullRotations = 4; // Minimum number of full spins
-                const extraRotations = Math.random() * 3; // 0 to 3 extra full rotations
+                const minFullRotations = 4;
+                const extraRotations = Math.random() * 3;
                 const totalRevolutions = minFullRotations + extraRotations;
 
-                // Calculate the true target rotation by adding the current rotation,
-                // the full revolutions, and the `requiredRotation` to land on the target.
                 this.targetRotation = this.currentRotation + (totalRevolutions * 2 * Math.PI) + requiredRotation;
 
-                // Cancel any existing animation frame before starting a new one
                 if (this.animationId) {
                     cancelAnimationFrame(this.animationId);
                 }
-                this.lastTimestamp = 0; // Reset timestamp for smooth start of new animation
+                this.lastTimestamp = 0;
                 this.animationId = requestAnimationFrame(this.animationLoop.bind(this));
             }
 
             determineWinner() {
-                // Determine the winner based on the final currentRotation
-                // The currentRotation is the total rotation of the wheel.
-                // We need to find which segment is under the pointer (this.pointerAngle).
-
-                // Normalize current rotation to be within 0 and 2*PI
                 let normalizedRotation = (this.currentRotation % (2 * Math.PI));
                 if (normalizedRotation < 0) {
                     normalizedRotation += 2 * Math.PI;
                 }
 
-                // Calculate the angle on the *wheel* that aligns with the pointer.
-                // If the wheel has rotated `normalizedRotation` clockwise,
-                // the segment that was originally at `(this.pointerAngle - normalizedRotation)` is now under the pointer.
                 let effectiveAngle = (this.pointerAngle - normalizedRotation);
 
-                // Adjust effectiveAngle to be within 0 to 2*PI for correct segment determination
                 effectiveAngle = (effectiveAngle % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
 
-                // Determine the slot index from this effective angle
-                // Slots are drawn clockwise, with slot 0 starting at 0 radians.
-                // Math.floor(angle / angleStep) gives the index.
                 const winnerIndex = Math.floor(effectiveAngle / this.angleStep);
 
-                // Delay setting text content to ensure animation starts smoothly
                 setTimeout(() => {
                     this.resultDiv.textContent = `You won slot ${this.slotLabels[winnerIndex]}!`;
                     this.resultDiv.classList.add('show');
-                }, 50); // Small delay, allows CSS transition to kick in properly
+                }, 50);
             }
 
             createConfetti(amount) {
@@ -429,13 +379,12 @@
                         ], {
                             duration: duration,
                             easing: 'ease-out'
-                        }).onfinish = () => confetti.remove(); // Remove after animation
+                        }).onfinish = () => confetti.remove();
                     }, i * 7);
                 }
             }
         }
 
-        // Initialize the spinning wheel once the DOM is fully loaded
         document.addEventListener('DOMContentLoaded', () => {
             new SpinningWheel('wheel', 'result', 'spinBtn');
         });
