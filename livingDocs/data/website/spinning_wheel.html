@@ -25,7 +25,6 @@
             gap: 40px;
             z-index: 10;
         }
-        /* NEW: Container for the wheel and pointer to fix alignment */
         #wheel-container {
             width: 470px;
             height: 470px;
@@ -94,14 +93,14 @@
         .arrow {
             position: absolute;
             top: 50%;
-            z-index: 2; /* Ensure pointer is on top of the wheel */
+            z-index: 2;
             width: 54px;
             height: 54px;
             pointer-events: none;
             transform-origin: center;
         }
         #arrow-right {
-            right: -27px; 
+            right: -27px;
             transform: translateY(-50%) rotate(270deg);
         }
         .confetti {
@@ -188,14 +187,11 @@
                 this.spinBtn = document.getElementById(spinBtnId);
                 this.historyList = document.getElementById('history-list');
                 this.historyContainer = document.getElementById('history-container');
-
                 this.numSlots = 7;
-                // UPDATED: Special Jackpot and Crash slots
                 this.slotColors = ["#FFD700", "#ffeb3b", "#4caf50", "#B22222", "#ff9800", "#9c27b0", "#ff00ff"];
                 this.slotLabels = ["JACKPOT", "2", "3", "CRASH", "5", "6", "7"];
                 this.jackpotIndex = 0;
                 this.crashIndex = 3;
-
                 this.centerX = this.wheelCanvas.width / 2;
                 this.centerY = this.wheelCanvas.height / 2;
                 this.radius = 220;
@@ -205,18 +201,16 @@
                 this.rotationSpeed = 0;
                 this.isSpinning = false;
                 this.lastTimestamp = 0;
-                this.maxSpinSpeed = 0.02; 
-                this.decelerationRate = 0; 
+                this.maxSpinSpeed = 0.02;
+                this.decelerationRate = 0;
                 this.pointerAngle = 0;
                 this.init();
             }
-
             init() {
                 this.drawWheel(0);
                 this.spinBtn.addEventListener('click', this.spin.bind(this));
                 this.animationLoop();
             }
-
             drawWheel(rotationRad = 0) {
                 this.ctx.clearRect(0, 0, this.wheelCanvas.width, this.wheelCanvas.height);
                 for (let i = 0; i < this.numSlots; i++) {
@@ -228,8 +222,6 @@
                     this.ctx.arc(this.centerX, this.centerY, this.radius, startAngle, endAngle, false);
                     this.ctx.closePath();
                     this.ctx.fillStyle = this.slotColors[i];
-                    
-                    // NEW: Conditional shadow for Jackpot and Crash slots
                     if (i === this.jackpotIndex) {
                         this.ctx.shadowColor = "#FFD700";
                         this.ctx.shadowBlur = 40;
@@ -240,7 +232,6 @@
                         this.ctx.shadowColor = this.slotColors[(i + 1) % this.numSlots];
                         this.ctx.shadowBlur = 24;
                     }
-
                     this.ctx.fill();
                     this.ctx.restore();
                     this.ctx.save();
@@ -254,11 +245,11 @@
                     this.ctx.save();
                     this.ctx.translate(this.centerX, this.centerY);
                     this.ctx.rotate(startAngle + this.angleStep / 2);
-                    // NEW: Bold font for special slots
+                    // UPDATED: Font sizes
                     if (i === this.jackpotIndex || i === this.crashIndex) {
-                         this.ctx.font = "bold 3rem Impact";
+                         this.ctx.font = "bold 2.2rem Impact";
                     } else {
-                         this.ctx.font = "bold 2.4rem Arial";
+                         this.ctx.font = "bold 2.8rem Arial";
                     }
                     this.ctx.fillStyle = "#fff";
                     this.ctx.textAlign = "center";
@@ -288,8 +279,6 @@
                 this.ctx.shadowBlur = 18;
                 this.ctx.stroke();
                 this.ctx.restore();
-
-                // RESTORED: Sparkle animation logic
                 const time = Date.now();
                 for (let i = 0; i < 12; i++) {
                     this.ctx.save();
@@ -316,12 +305,10 @@
                     this.ctx.restore();
                 }
             }
-
             animationLoop(timestamp) {
                 if (!this.lastTimestamp) this.lastTimestamp = timestamp;
                 const deltaTime = timestamp - this.lastTimestamp;
                 this.lastTimestamp = timestamp;
-
                 if (this.isSpinning) {
                     this.rotationSpeed -= this.decelerationRate * deltaTime;
                     this.currentRotation += this.rotationSpeed * deltaTime;
@@ -329,14 +316,12 @@
                         this.isSpinning = false;
                         this.rotationSpeed = 0;
                         this.determineWinner();
-                        this.createConfetti(100);
                         this.spinBtn.disabled = false;
                     }
                 }
                 this.drawWheel(this.currentRotation);
                 this.animationId = requestAnimationFrame(this.animationLoop.bind(this));
             }
-
             spin() {
                 if (this.isSpinning) return;
                 this.resultDiv.textContent = '';
@@ -345,18 +330,15 @@
                 this.resultDiv.style.transform = 'translateY(-20px)';
                 this.spinBtn.disabled = true;
                 this.isSpinning = true;
-
                 const winningSlotIndex = Math.floor(Math.random() * this.numSlots);
                 const winningSlotCenterAngle = winningSlotIndex * this.angleStep + (this.angleStep / 2);
                 let requiredRotation = this.pointerAngle - winningSlotCenterAngle;
                 requiredRotation = (requiredRotation + Math.PI) % (2 * Math.PI) - Math.PI;
-
                 const minFullRotations = 4;
                 const extraRotations = Math.random() * 3;
                 const totalRevolutions = minFullRotations + extraRotations;
                 const finalRotation = this.currentRotation + (totalRevolutions * 2 * Math.PI) + requiredRotation;
                 const distanceToTarget = finalRotation - this.currentRotation;
-
                 if (distanceToTarget > 0) {
                     this.rotationSpeed = this.maxSpinSpeed;
                     this.decelerationRate = (this.rotationSpeed * this.rotationSpeed) / (2 * distanceToTarget);
@@ -367,14 +349,12 @@
                     this.spinBtn.disabled = false;
                     return;
                 }
-
                 if (this.animationId) {
                     cancelAnimationFrame(this.animationId);
                 }
                 this.lastTimestamp = 0;
                 this.animationId = requestAnimationFrame(this.animationLoop.bind(this));
             }
-
             determineWinner() {
                 let normalizedRotation = (this.currentRotation % (2 * Math.PI));
                 if (normalizedRotation < 0) {
@@ -385,13 +365,26 @@
                 const winnerIndex = Math.floor(effectiveAngle / this.angleStep);
                 const resultText = `You won slot ${this.slotLabels[winnerIndex]}!`;
 
+                // NEW: Calculate confetti amount based on the winning slot
+                let confettiAmount = 0;
+                const winnerLabel = this.slotLabels[winnerIndex];
+                if (winnerLabel === "JACKPOT") {
+                    confettiAmount = 100; // Special high value
+                } else if (winnerLabel === "CRASH") {
+                    confettiAmount = 0;   // No confetti
+                } else {
+                    confettiAmount = parseInt(winnerLabel) * 10; // Scale with number
+                }
+
+                // Pass the dynamic amount to the confetti function
+                this.createConfetti(confettiAmount);
+
                 setTimeout(() => {
                     this.resultDiv.textContent = resultText;
                     this.resultDiv.classList.add('show');
                     this.updateHistory(resultText);
                 }, 50);
             }
-
             updateHistory(resultText) {
                 this.historyContainer.classList.add('show');
                 const li = document.createElement('li');
@@ -402,7 +395,6 @@
                     this.historyList.removeChild(this.historyList.lastChild);
                 }
             }
-
             createConfetti(amount) {
                 for (let i = 0; i < amount; i++) {
                     setTimeout(() => {
@@ -416,11 +408,9 @@
                         confetti.style.borderRadius = "3px";
                         confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
                         document.body.appendChild(confetti);
-
                         const duration = 1800 + Math.random() * 1200;
                         const endX = parseFloat(confetti.style.left) + (Math.random() - 0.5) * 200;
                         const endY = window.innerHeight + 100;
-
                         confetti.animate([
                             {
                                 transform: confetti.style.transform,
