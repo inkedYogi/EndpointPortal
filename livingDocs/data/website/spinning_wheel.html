@@ -13,12 +13,14 @@
             margin: 0;
             overflow: hidden;
             font-family: 'Arial', sans-serif;
-            -webkit-user-select: none; /* Disable text selection */
+            -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
         }
         #main-container {
+            /* CORRECTED: Set a fixed width to match the canvas for correct arrow positioning */
+            width: 470px; 
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -89,17 +91,17 @@
         .arrow {
             position: absolute;
             top: 50%;
-            transform: translateY(-50%);
             z-index: 11;
             width: 54px;
             height: 54px;
             pointer-events: none;
             transform-origin: center;
         }
-        /* Specific style for the right arrow, pointing left */
+        /* CORRECTED: Position and rotate the pointer to match the 3 o'clock pointerAngle */
         #arrow-right {
-            right: 0;
-            transform: translateY(-50%) rotate(90deg);
+            /* Position arrow's center at the edge of the wheel (470px width) */
+            right: -27px; 
+            transform: translateY(-50%) rotate(270deg); /* Rotate to point right */
         }
         /* Confetti Styles */
         .confetti {
@@ -108,7 +110,7 @@
             z-index: 999;
             will-change: transform, opacity;
         }
-        /* New history display styles */
+        /* History display styles */
         #history-container {
             position: absolute;
             bottom: 20px;
@@ -141,7 +143,7 @@
             padding: 0;
             margin: 0;
             display: flex;
-            flex-direction: column-reverse; /* New items appear at the top */
+            flex-direction: column-reverse;
         }
         #history-list li {
             padding: 8px;
@@ -329,12 +331,14 @@
                     this.currentRotation += this.rotationSpeed * deltaTime;
                     this.rotationSpeed *= this.friction;
 
-                    const remainingRotation = this.targetRotation - this.currentRotation;
-                    if (remainingRotation < 0.1 && this.rotationSpeed > 0.001) {
-                        this.rotationSpeed = Math.max(0.0001, this.rotationSpeed * 0.9);
+                    // CORRECTED: Introduce a more aggressive deceleration when close to target
+                    const remainingRotation = Math.abs(this.targetRotation - this.currentRotation);
+                    if (remainingRotation < 0.5) { // When within ~28 degrees of the target...
+                         this.rotationSpeed *= 0.95; // ...decelerate much faster
                     }
 
-                    if (this.rotationSpeed < 0.0001 || this.currentRotation >= this.targetRotation - 0.0001) {
+                    // The snap condition is now based on a very small remaining distance
+                    if (remainingRotation < 0.0001) {
                         this.isSpinning = false;
                         this.rotationSpeed = 0;
                         this.currentRotation = this.targetRotation;
@@ -390,24 +394,18 @@
                 const winnerIndex = Math.floor(effectiveAngle / this.angleStep);
                 const resultText = `You won slot ${this.slotLabels[winnerIndex]}!`;
 
-                // Delay setting text content to ensure animation starts smoothly
                 setTimeout(() => {
                     this.resultDiv.textContent = resultText;
                     this.resultDiv.classList.add('show');
-                    this.updateHistory(resultText); // Call the new function
+                    this.updateHistory(resultText);
                 }, 50);
             }
 
-            // NEW: Function to handle spin history
             updateHistory(resultText) {
-                // Ensure the history container is visible
                 this.historyContainer.classList.add('show');
-
                 const li = document.createElement('li');
                 li.textContent = resultText;
-                li.classList.add('new-item'); // Add a class for animation
-
-                // Prepend the new item and remove the oldest if the list is too long
+                li.classList.add('new-item');
                 this.historyList.prepend(li);
                 if (this.historyList.childNodes.length > 5) {
                     this.historyList.removeChild(this.historyList.lastChild);
