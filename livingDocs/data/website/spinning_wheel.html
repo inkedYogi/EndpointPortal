@@ -18,7 +18,7 @@
             -ms-user-select: none;
             user-select: none;
         }
-        #container {
+        #main-container {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -108,10 +108,62 @@
             z-index: 999;
             will-change: transform, opacity;
         }
+        /* New history display styles */
+        #history-container {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 250px;
+            max-height: 200px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid #fff;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        #history-container.show {
+            opacity: 1;
+        }
+        #history-container h3 {
+            margin: 0 0 10px 0;
+            color: #fff;
+            text-shadow: 0 0 5px #ff0;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+        #history-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column-reverse; /* New items appear at the top */
+        }
+        #history-list li {
+            padding: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease-in-out;
+            position: relative;
+            left: 0;
+        }
+        #history-list li:first-child {
+            border-bottom: none;
+        }
+        #history-list li.new-item {
+            animation: slideIn 0.5s forwards;
+        }
+        @keyframes slideIn {
+            0% { transform: translateX(-100%); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
     </style>
 </head>
 <body>
-    <div id="container">
+    <div id="main-container">
         <canvas id="wheel" width="470" height="470"></canvas>
 
         <svg id="arrow-right" class="arrow" viewBox="0 0 54 54">
@@ -122,6 +174,11 @@
         <button id="spinBtn">SPIN!</button>
         <div id="result"></div>
     </div>
+    
+    <div id="history-container">
+        <h3>Spin History</h3>
+        <ul id="history-list"></ul>
+    </div>
 
     <script>
         class SpinningWheel {
@@ -130,6 +187,8 @@
                 this.ctx = this.wheelCanvas.getContext('2d');
                 this.resultDiv = document.getElementById(resultId);
                 this.spinBtn = document.getElementById(spinBtnId);
+                this.historyList = document.getElementById('history-list');
+                this.historyContainer = document.getElementById('history-container');
 
                 this.numSlots = 7;
                 this.slotColors = [
@@ -159,7 +218,6 @@
                 this.minSpinDuration = 3000;
                 this.maxSpinDuration = 6000;
 
-                // The pointer is at the 3 o'clock position (rightwards)
                 this.pointerAngle = 0;
 
                 this.init();
@@ -276,7 +334,6 @@
                         this.rotationSpeed = Math.max(0.0001, this.rotationSpeed * 0.9);
                     }
 
-                    // Snap-to logic
                     if (this.rotationSpeed < 0.0001 || this.currentRotation >= this.targetRotation - 0.0001) {
                         this.isSpinning = false;
                         this.rotationSpeed = 0;
@@ -307,17 +364,13 @@
                 this.rotationSpeed = 0.02;
 
                 const winningSlotIndex = Math.floor(Math.random() * this.numSlots);
-
                 const winningSlotCenterAngle = winningSlotIndex * this.angleStep + (this.angleStep / 2);
-
                 let requiredRotation = this.pointerAngle - winningSlotCenterAngle;
-
                 requiredRotation = (requiredRotation + Math.PI) % (2 * Math.PI) - Math.PI;
 
                 const minFullRotations = 4;
                 const extraRotations = Math.random() * 3;
                 const totalRevolutions = minFullRotations + extraRotations;
-
                 this.targetRotation = this.currentRotation + (totalRevolutions * 2 * Math.PI) + requiredRotation;
 
                 if (this.animationId) {
@@ -332,17 +385,33 @@
                 if (normalizedRotation < 0) {
                     normalizedRotation += 2 * Math.PI;
                 }
-
                 let effectiveAngle = (this.pointerAngle - normalizedRotation);
-
                 effectiveAngle = (effectiveAngle % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
-
                 const winnerIndex = Math.floor(effectiveAngle / this.angleStep);
+                const resultText = `You won slot ${this.slotLabels[winnerIndex]}!`;
 
+                // Delay setting text content to ensure animation starts smoothly
                 setTimeout(() => {
-                    this.resultDiv.textContent = `You won slot ${this.slotLabels[winnerIndex]}!`;
+                    this.resultDiv.textContent = resultText;
                     this.resultDiv.classList.add('show');
+                    this.updateHistory(resultText); // Call the new function
                 }, 50);
+            }
+
+            // NEW: Function to handle spin history
+            updateHistory(resultText) {
+                // Ensure the history container is visible
+                this.historyContainer.classList.add('show');
+
+                const li = document.createElement('li');
+                li.textContent = resultText;
+                li.classList.add('new-item'); // Add a class for animation
+
+                // Prepend the new item and remove the oldest if the list is too long
+                this.historyList.prepend(li);
+                if (this.historyList.childNodes.length > 5) {
+                    this.historyList.removeChild(this.historyList.lastChild);
+                }
             }
 
             createConfetti(amount) {
