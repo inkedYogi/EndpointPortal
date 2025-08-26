@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic 8 Ball with Custom Messages</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        }
+        
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        
+        .eight-ball {
+            background: radial-gradient(circle at 30% 30%, #fff, #000 70%);
+            box-shadow: inset -25px -25px 40px rgba(0,0,0,.5),
+                        0 0 20px rgba(255,255,255,.1),
+                        0 0 30px rgba(0,150,255,.3);
+        }
+        
+        .window {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+        
+        .triangle {
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 20px solid white;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-900 to-purple-900 min-h-screen flex flex-col items-center justify-center p-4">
+    <div class="text-center mb-8">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-2">Magic 8 Ball</h1>
+        <p class="text-blue-200">Ask a yes/no question and shake the ball</p>
+    </div>
+    
+    <div class="relative w-64 h-64 md:w-80 md:h-80 rounded-full eight-ball flex items-center justify-center mb-10 cursor-pointer transition-transform duration-300 hover:scale-105" id="eightBall">
+        <div class="w-40 h-40 md:w-48 md:h-48 rounded-full bg-black flex items-center justify-center">
+            <div class="w-32 h-32 md:w-40 md:h-40 rounded-full bg-blue-900 flex flex-col items-center justify-center p-4 text-center">
+                <div class="text-5xl md:text-6xl font-bold text-white mb-2">8</div>
+                <div class="text-white text-sm md:text-base font-medium" id="answer">Ask away</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="flex flex-col sm:flex-row gap-4">
+        <button id="shakeBtn" class="bg-white text-blue-900 font-bold py-3 px-6 rounded-full hover:bg-blue-100 transition-colors flex items-center justify-center gap-2">
+            <i class="fas fa-hand-sparkles"></i> Shake Ball
+        </button>
+        <button id="customizeBtn" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-full hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
+            <i class="fas fa-cog"></i> Customize Messages
+        </button>
+    </div>
+    
+    <!-- Custom Messages Modal -->
+    <div id="customModal" class="window fixed inset-0 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl p-6 w-full max-w-2xl max-h-[80vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold text-gray-800">Customize 8 Ball Messages</h2>
+                <button id="closeModal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <p class="text-gray-600 mb-6">Enter your custom responses below (20 total):</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6" id="messageInputs">
+                <!-- Message inputs will be generated here -->
+            </div>
+            
+            <div class="flex justify-between">
+                <button id="resetDefault" class="bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded hover:bg-gray-300 transition-colors">
+                    Reset to Default
+                </button>
+                <button id="saveMessages" class="bg-blue-600 text-white font-medium py-2 px-6 rounded hover:bg-blue-700 transition-colors">
+                    Save Messages
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Default messages
+        const defaultMessages = [
+            "It is certain",
+            "It is decidedly so",
+            "Without a doubt",
+            "Yes definitely",
+            "You may rely on it",
+            "As I see it, yes",
+            "Most likely",
+            "Outlook good",
+            "Yes",
+            "Signs point to yes",
+            "Reply hazy, try again",
+            "Ask again later",
+            "Better not tell you now",
+            "Cannot predict now",
+            "Concentrate and ask again",
+            "Don't count on it",
+            "My reply is no",
+            "My sources say no",
+            "Outlook not so good",
+            "Very doubtful"
+        ];
+        
+        // Initialize messages from localStorage or use defaults
+        let messages = JSON.parse(localStorage.getItem('8ballMessages')) || [...defaultMessages];
+        
+        // DOM elements
+        const eightBall = document.getElementById('eightBall');
+        const answer = document.getElementById('answer');
+        const shakeBtn = document.getElementById('shakeBtn');
+        const customizeBtn = document.getElementById('customizeBtn');
+        const customModal = document.getElementById('customModal');
+        const closeModal = document.getElementById('closeModal');
+        const messageInputs = document.getElementById('messageInputs');
+        const saveMessages = document.getElementById('saveMessages');
+        const resetDefault = document.getElementById('resetDefault');
+        
+        // Generate message inputs
+        function generateMessageInputs() {
+            messageInputs.innerHTML = '';
+            for (let i = 0; i < 20; i++) {
+                const div = document.createElement('div');
+                div.className = 'flex flex-col';
+                
+                const label = document.createElement('label');
+                label.className = 'text-sm font-medium text-gray-700 mb-1';
+                label.textContent = `Message ${i + 1}`;
+                
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500';
+                input.value = messages[i] || '';
+                input.dataset.index = i;
+                
+                div.appendChild(label);
+                div.appendChild(input);
+                messageInputs.appendChild(div);
+            }
+        }
+        
+        // Shake the 8 ball and get a random answer
+        function shakeBall() {
+            eightBall.classList.add('shake');
+            answer.textContent = "Thinking...";
+            
+            setTimeout(() => {
+                eightBall.classList.remove('shake');
+                const randomIndex = Math.floor(Math.random() * messages.length);
+                answer.textContent = messages[randomIndex];
+                
+                // Add visual effect based on answer type
+                if (messages[randomIndex].toLowerCase().includes('yes') || 
+                    messages[randomIndex].toLowerCase().includes('certain') || 
+                    messages[randomIndex].toLowerCase().includes('rely')) {
+                    answer.className = 'text-white text-sm md:text-base font-medium text-green-300';
+                } else if (messages[randomIndex].toLowerCase().includes('no') || 
+                          messages[randomIndex].toLowerCase().includes('doubt') || 
+                          messages[randomIndex].toLowerCase().includes('count on it')) {
+                    answer.className = 'text-white text-sm md:text-base font-medium text-red-300';
+                } else {
+                    answer.className = 'text-white text-sm md:text-base font-medium text-yellow-300';
+                }
+            }, 1000);
+        }
+        
+        // Save custom messages
+        function saveCustomMessages() {
+            const inputs = messageInputs.querySelectorAll('input');
+            messages = [];
+            
+            inputs.forEach(input => {
+                if (input.value.trim() !== '') {
+                    messages.push(input.value.trim());
+                } else {
+                    // If empty, use the default message for that position
+                    messages.push(defaultMessages[input.dataset.index]);
+                }
+            });
+            
+            localStorage.setItem('8ballMessages', JSON.stringify(messages));
+            customModal.classList.add('hidden');
+            
+            // Show confirmation
+            const confirmation = document.createElement('div');
+            confirmation.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2';
+            confirmation.innerHTML = '<i class="fas fa-check-circle"></i> Messages saved successfully!';
+            document.body.appendChild(confirmation);
+            
+            setTimeout(() => {
+                confirmation.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+                setTimeout(() => confirmation.remove(), 300);
+            }, 2000);
+        }
+        
+        // Reset to default messages
+        function resetToDefault() {
+            messages = [...defaultMessages];
+            generateMessageInputs();
+            
+            // Show confirmation
+            const confirmation = document.createElement('div');
+            confirmation.className = 'fixed bottom-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2';
+            confirmation.innerHTML = '<i class="fas fa-info-circle"></i> Reset to default messages!';
+            document.body.appendChild(confirmation);
+            
+            setTimeout(() => {
+                confirmation.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+                setTimeout(() => confirmation.remove(), 300);
+            }, 2000);
+        }
+        
+        // Event listeners
+        shakeBtn.addEventListener('click', shakeBall);
+        eightBall.addEventListener('click', shakeBall);
+        
+        customizeBtn.addEventListener('click', () => {
+            generateMessageInputs();
+            customModal.classList.remove('hidden');
+        });
+        
+        closeModal.addEventListener('click', () => {
+            customModal.classList.add('hidden');
+        });
+        
+        saveMessages.addEventListener('click', saveCustomMessages);
+        resetDefault.addEventListener('click', resetToDefault);
+        
+        // Close modal when clicking outside
+        customModal.addEventListener('click', (e) => {
+            if (e.target === customModal) {
+                customModal.classList.add('hidden');
+            }
+        });
+        
+        // Initialize with default answer style
+        answer.className = 'text-white text-sm md:text-base font-medium';
+    </script>
+</body>
+</html>
