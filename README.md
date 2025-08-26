@@ -92,6 +92,11 @@ https://drive.google.com/drive/home - Google Drive Home Page
     portal_rooms
   </a>
 </div>
+<div>
+  <a href="https://inkedYogi.github.io/EndpointPortal/livingDocs/data/website/magic_8_ball.html">
+    magic_8_ball
+  </a>
+</div>
 
 
 Mage: Caravan - Unprecedented.
