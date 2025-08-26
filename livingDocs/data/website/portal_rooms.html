@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Explorer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .player {
+            animation: float 3s ease-in-out infinite;
+            transition: all 0.2s ease-out;
+        }
+        .portal {
+            transition: all 0.3s ease;
+        }
+        .portal:hover {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.7));
+        }
+        .room {
+            background-size: cover;
+            background-position: center;
+            transition: opacity 0.5s ease;
+        }
+        #game-container {
+            perspective: 1000px;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white overflow-hidden">
+    <div id="game-container" class="relative w-full h-screen">
+        <!-- Current Room -->
+        <div id="current-room" class="room absolute inset-0 bg-gradient-to-br from-purple-900 to-blue-900 flex flex-col items-center justify-center">
+            <h1 class="text-4xl font-bold mb-8 text-center">Portal Explorer</h1>
+            
+            <div class="relative w-full h-3/4 max-w-4xl mx-auto">
+                <!-- Player Character -->
+                <div id="player" class="player absolute w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center z-50">
+                    <div class="w-8 h-8 bg-yellow-300 rounded-full flex items-center justify-center">
+                        <div class="w-4 h-4 bg-black rounded-full"></div>
+                    </div>
+                </div>
+                
+                <!-- Portals -->
+                <a href="#" class="portal absolute top-10 left-1/4 w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold hover:bg-blue-400" data-room="blue-room">Blue</a>
+                <a href="#" class="portal absolute top-1/2 right-10 w-16 h-16 bg-red-500 rounded-full flex items-center justify-center text-white font-bold hover:bg-red-400" data-room="red-room">Red</a>
+                <a href="#" class="portal absolute bottom-10 left-1/2 w-16 h-16 bg-green-500 rounded-full flex items-center justify-center text-white font-bold hover:bg-green-400" data-room="green-room">Green</a>
+                <a href="#" class="portal absolute top-1/3 left-10 w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold hover:bg-purple-400" data-room="purple-room">Purple</a>
+            </div>
+            
+            <div class="mt-8 text-center">
+                <p class="mb-2">Use WASD keys to move</p>
+                <p>Walk into portals to change rooms</p>
+            </div>
+        </div>
+        
+        <!-- Blue Room (hidden by default) -->
+        <div id="blue-room" class="room hidden absolute inset-0 bg-gradient-to-br from-blue-900 to-indigo-900 flex flex-col items-center justify-center">
+            <div class="relative w-full h-3/4 max-w-4xl mx-auto">
+                <div id="player-blue" class="player absolute w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center z-50">
+                    <div class="w-8 h-8 bg-yellow-300 rounded-full flex items-center justify-center">
+                        <div class="w-4 h-4 bg-black rounded-full"></div>
+                    </div>
+                </div>
+                
+                <a href="#" class="portal absolute bottom-10 right-10 w-16 h-16 bg-white rounded-full flex items-center justify-center text-blue-900 font-bold hover:bg-gray-200" data-room="current-room">Exit</a>
+                <a href="#" class="portal absolute top-1/2 left-1/2 w-20 h-20 bg-teal-500 rounded-full flex items-center justify-center text-white font-bold hover:bg-teal-400" data-room="ocean-room">Ocean</a>
+            </div>
+            
+            <h2 class="text-3xl font-bold mt-4">Blue Dimension</h2>
+        </div>
+        
+        <!-- Red Room (hidden by default) -->
+        <div id="red-room" class="room hidden absolute inset-0 bg-gradient-to-br from-red-900 to-orange-900 flex flex-col items-center justify-center">
+            <div class="relative w-full h-3/4 max-w-4xl mx-auto">
+                <div id="player-red" class="player absolute w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center z-50">
+                    <div class="w-8 h-8 bg-yellow-300 rounded-full flex items-center justify-center">
+                        <div class="w-4 h-4 bg-black rounded-full"></div>
+                    </div>
+                </div>
+                
+                <a href="#" class="portal absolute bottom-10 right-10 w-16 h-16 bg-white rounded-full flex items-center justify-center text-red-900 font-bold hover:bg-gray-200" data-room="current-room">Exit</a>
+                <a href="#" class="portal absolute top-20 left-1/2 w-20 h-20 bg-yellow-500 rounded-full flex items-center justify-center text-white font-bold hover:bg-yellow-400" data-room="desert-room">Desert</a>
+            </div>
+            
+            <h2 class="text-3xl font-bold mt-4">Red Dimension</h2>
+        </div>
+        
+        <!-- Green Room (hidden by default) -->
+        <div id="green-room" class="room hidden absolute inset-0 bg-gradient-to-br from-green-900 to-emerald-900 flex flex-col items-center justify-center">
+            <div class="relative w-full h-3/4 max-w-4xl mx-auto">
+                <div id="player-green" class="player absolute w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center z-50">
+                    <div class="w-8 h-8 bg-yellow-300 rounded-full flex items-center justify-center">
+                        <div class="w-4 h-4 bg-black rounded-full"></div>
+                    </div>
+                </div>
+                
+                <a href="#" class="portal absolute bottom-10 right-10 w-16 h-16 bg-white rounded-full flex items-center justify-center text-green-900 font-bold hover:bg-gray-200" data-room="current-room">Exit</a>
+                <a href="#" class="portal absolute top-1/2 left-1/4 w-20 h-20 bg-lime-500 rounded-full flex items-center justify-center text-white font-bold hover:bg-lime-400" data-room="forest-room">Forest</a>
+            </div>
+            
+            <h2 class="text-3xl font-bold mt-4">Green Dimension</h2>
+        </div>
+        
+        <!-- Purple Room (hidden by default) -->
+        <div id="purple-room" class="room hidden absolute inset-0 bg-gradient-to-br from-purple-900 to-pink-900 flex flex-col items-center justify-center">
+            <div class="relative w-full h-3/4 max-w-4xl mx-auto">
+                <div id="player-purple" class="player absolute w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center z-50">
+                    <div class="w-8 h-8 bg-yellow-300 rounded-full flex items-center justify-center">
+                        <div class="w-4 h-4 bg-black rounded-full"></div>
+                    </div>
+                </div>
+                
+                <a href="#" class="portal absolute bottom-10 right-10 w-16 h-16 bg-white rounded-full flex items-center justify-center text-purple-900 font-bold hover:bg-gray-200" data-room="current-room">Exit</a>
+                <a href="#" class="portal absolute top-1/4 right-1/4 w-20 h-20 bg-fuchsia-500 rounded-full flex items-center justify-center text-white font-bold hover:bg-fuchsia-400" data-room="cosmic-room">Cosmos</a>
+            </div>
+            
+            <h2 class="text-3xl font-bold mt-4">Purple Dimension</h2>
+        </div>
+        
+        <!-- Additional Rooms -->
+        <div id="ocean-room" class="room hidden absolute inset-0 bg-gradient-to-br from-blue-400 to-teal-600 flex flex-col items-center justify-center">
+            <div class="relative w-full h-3/4 max-w-4xl mx-auto">
+                <div id="player-ocean" class="player absolute w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center z-50">
+                    <div class="w-8 h-8 bg-yellow-300 rounded-full flex items-center justify-center">
+                        <div class="w-4 h-4 bg-black rounded-full"></div>
+                    </div>
+                </div>
+                
+                <a href="#" class="portal absolute bottom-10 right-10 w-16 h-16 bg-white rounded-full flex items-center justify-center text-blue-900 font-bold hover:bg-gray-200" data-room="blue-room">Exit</a>
+            </div>
+            
+            <h2 class="text-3xl font-bold mt-4">Ocean Depths</h2>
+        </div>
+        
+        <div id="desert-room" class="room hidden absolute inset-0 bg-gradient-to-br from-yellow-600 to-orange-500 flex flex-col items-center justify-center">
+            <div class="relative w-full h-3/4 max-w-4xl mx-auto">
+                <div id="player-desert" class="player absolute w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center z-50">
+                    <div class="w-8 h-8 bg-yellow-300 rounded-full flex items-center justify-center">
+                        <div class="w-4 h-4 bg-black rounded-full"></div>
+                    </div>
+                </div>
+                
+                <a href="#" class="portal absolute bottom-10 right-10 w-16 h-16 bg-white rounded-full flex items-center justify-center text-orange-900 font-bold hover:bg-gray-200" data-room="red-room">Exit</a>
+            </div>
+            
+            <h2 class="text-3xl font-bold mt-4">Desert Wasteland</h2>
+        </div>
+        
+        <div id="forest-room" class="room hidden absolute inset-0 bg-gradient-to-br from-green-600 to-lime-500 flex flex-col items-center justify-center">
+            <div class="relative w-full h-3/4 max-w-4xl mx-auto">
+                <div id="player-forest" class="player absolute w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center z-50">
+                    <div class="w-8 h-8 bg-yellow-300 rounded-full flex items-center justify-center">
+                        <div class="w-4 h-4 bg-black rounded-full"></div>
+                    </div>
+                </div>
+                
+                <a href="#" class="portal absolute bottom-10 right-10 w-16 h-16 bg-white rounded-full flex items-center justify-center text-green-900 font-bold hover:bg-gray-200" data-room="green-room">Exit</a>
+            </div>
+            
+            <h2 class="text-3xl font-bold mt-4">Enchanted Forest</h2>
+        </div>
+        
+        <div id="cosmic-room" class="room hidden absolute inset-0 bg-gradient-to-br from-indigo-900 to-purple-700 flex flex-col items-center justify-center">
+            <div class="relative w-full h-3/4 max-w-4xl mx-auto">
+                <div id="player-cosmic" class="player absolute w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center z-50">
+                    <div class="w-8 h-8 bg-yellow-300 rounded-full flex items-center justify-center">
+                        <div class="w-4 h-4 bg-black rounded-full"></div>
+                    </div>
+                </div>
+                
+                <a href="#" class="portal absolute bottom-10 right-10 w-16 h-16 bg-white rounded-full flex items-center justify-center text-purple-900 font-bold hover:bg-gray-200" data-room="purple-room">Exit</a>
+            </div>
+            
+            <h2 class="text-3xl font-bold mt-4">Cosmic Void</h2>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Player position
+            let playerX = window.innerWidth / 2;
+            let playerY = window.innerHeight / 2;
+            const playerSpeed = 5;
+            const playerRadius = 24;
+            
+            // Current room
+            let currentRoom = 'current-room';
+            
+            // Get all rooms and portals
+            const rooms = document.querySelectorAll('.room');
+            const portals = document.querySelectorAll('.portal');
+            
+            // Initialize player element
+            let player = document.getElementById('player');
+            
+            // Set initial player position
+            updatePlayerPosition();
+            
+            // Handle keyboard input
+            const keys = {
+                w: false,
+                a: false,
+                s: false,
+                d: false
+            };
+            
+            document.addEventListener('keydown', function(e) {
+                if (e.key.toLowerCase() in keys) {
+                    keys[e.key.toLowerCase()] = true;
+                    e.preventDefault();
+                }
+            });
+            
+            document.addEventListener('keyup', function(e) {
+                if (e.key.toLowerCase() in keys) {
+                    keys[e.key.toLowerCase()] = false;
+                    e.preventDefault();
+                }
+            });
+            
+            // Game loop
+            function gameLoop() {
+                // Move player based on key states
+                if (keys.w) playerY -= playerSpeed;
+                if (keys.a) playerX -= playerSpeed;
+                if (keys.s) playerY += playerSpeed;
+                if (keys.d) playerX += playerSpeed;
+                
+                // Keep player within bounds
+                const roomElement = document.getElementById(currentRoom);
+                const roomRect = roomElement.getBoundingClientRect();
+                
+                playerX = Math.max(playerRadius, Math.min(playerX, roomRect.width - playerRadius));
+                playerY = Math.max(playerRadius, Math.min(playerY, roomRect.height - playerRadius));
+                
+                // Update player position
+                updatePlayerPosition();
+                
+                // Check for portal collisions
+                checkPortalCollisions();
+                
+                requestAnimationFrame(gameLoop);
+            }
+            
+            function updatePlayerPosition() {
+                player.style.left = `${playerX - playerRadius}px`;
+                player.style.top = `${playerY - playerRadius}px`;
+                
+                // Update player in all rooms (for smooth transitions)
+                document.querySelectorAll('[id^="player-"]').forEach(p => {
+                    p.style.left = `${playerX - playerRadius}px`;
+                    p.style.top = `${playerY - playerRadius}px`;
+                });
+            }
+            
+            function checkPortalCollisions() {
+                const playerRect = player.getBoundingClientRect();
+                
+                portals.forEach(portal => {
+                    // Only check portals in current room
+                    if (portal.closest('.room').id === currentRoom) {
+                        const portalRect = portal.getBoundingClientRect();
+                        
+                        // Simple collision detection (circle vs circle)
+                        const playerCenter = {
+                            x: playerRect.left + playerRect.width / 2,
+                            y: playerRect.top + playerRect.height / 2
+                        };
+                        
+                        const portalCenter = {
+                            x: portalRect.left + portalRect.width / 2,
+                            y: portalRect.top + portalRect.height / 2
+                        };
+                        
+                        const distance = Math.sqrt(
+                            Math.pow(playerCenter.x - portalCenter.x, 2) + 
+                            Math.pow(playerCenter.y - portalCenter.y, 2)
+                        );
+                        
+                        if (distance < (playerRect.width / 2 + portalRect.width / 2) * 0.8) {
+                            changeRoom(portal.dataset.room);
+                        }
+                    }
+                });
+            }
+            
+            function changeRoom(newRoom) {
+                // Don't do anything if we're already in this room
+                if (newRoom === currentRoom) return;
+                
+                // Hide current room
+                document.getElementById(currentRoom).classList.add('hidden');
+                
+                // Show new room
+                document.getElementById(newRoom).classList.remove('hidden');
+                
+                // Update current room
+                currentRoom = newRoom;
+                
+                // Update player reference
+                player = document.getElementById(`player${newRoom !== 'current-room' ? '-' + newRoom : ''}`);
+            }
+            
+            // Handle portal clicks (for accessibility)
+            portals.forEach(portal => {
+                portal.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    changeRoom(this.dataset.room);
+                });
+            });
+            
+            // Start the game loop
+            gameLoop();
+        });
+    </script>
+</body>
+</html>
