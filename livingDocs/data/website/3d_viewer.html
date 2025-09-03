@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Model Viewer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/OBJLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/MTLLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <style>
+        #drop-zone {
+            border: 2px dashed #3b82f6;
+            transition: all 0.3s ease;
+        }
+        #drop-zone.drag-over {
+            background-color: rgba(59, 130, 246, 0.1);
+            border-color: #2563eb;
+        }
+        #render-container {
+            background: linear-gradient(135deg, #f3f4f6 25%, #e5e7eb 25%, #e5e7eb 50%, #f3f4f6 50%, #f3f4f6 75%, #e5e7eb 75%);
+            background-size: 20px 20px;
+        }
+        .model-info {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">3D Model Viewer</h1>
+            <p class="text-gray-600 max-w-2xl mx-auto">Upload your OBJ files to visualize them in 3D. Supports textures when provided.</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="space-y-6">
+                <div id="drop-zone" class="rounded-xl p-8 text-center cursor-pointer">
+                    <div class="flex flex-col items-center justify-center space-y-4">
+                        <i data-feather="upload-cloud" class="w-12 h-12 text-blue-500"></i>
+                        <h3 class="text-xl font-semibold text-gray-700">Drag & Drop your OBJ file here</h3>
+                        <p class="text-gray-500">or click to browse files</p>
+                        <input type="file" id="file-input" class="hidden" accept=".obj,.mtl" multiple>
+                        <button id="browse-btn" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
+                            Select Files
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Instructions</h3>
+                    <ul class="space-y-3 text-gray-600">
+                        <li class="flex items-start">
+                            <i data-feather="check-circle" class="w-5 h-5 text-green-500 mr-2 mt-0.5"></i>
+                            <span>Upload a single .obj file or with its .mtl and texture files</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i data-feather="alert-triangle" class="w-5 h-5 text-yellow-500 mr-2 mt-0.5"></i>
+                            <span>For best results, keep all files in the same directory</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i data-feather="rotate-ccw" class="w-5 h-5 text-blue-500 mr-2 mt-0.5"></i>
+                            <span>Drag to rotate, scroll to zoom, right-click to pan</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div id="file-info" class="bg-white rounded-xl shadow-md p-6 hidden">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Loaded Files</h3>
+                    <div id="file-list" class="space-y-2"></div>
+                </div>
+            </div>
+
+            <div class="relative">
+                <div id="render-container" class="w-full h-96 lg:h-full rounded-xl shadow-lg overflow-hidden relative">
+                    <div id="loading" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+                        <div class="text-white text-center">
+                            <i data-feather="loader" class="w-8 h-8 animate-spin mx-auto mb-2"></i>
+                            <p>Loading model...</p>
+                        </div>
+                    </div>
+                    <div id="no-model" class="absolute inset-0 flex items-center justify-center">
+                        <div class="text-center text-gray-500">
+                            <i data-feather="box" class="w-12 h-12 mx-auto mb-4"></i>
+                            <p>No model loaded</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="model-info" class="model-info absolute bottom-4 left-4 right-4 p-3 rounded-lg shadow-md hidden">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h4 class="font-medium text-gray-800" id="model-name">Model</h4>
+                            <p class="text-sm text-gray-600" id="model-stats">0 vertices, 0 faces</p>
+                        </div>
+                        <div class="space-x-2">
+                            <button id="reset-view" class="p-2 rounded-full hover:bg-gray-200 transition" title="Reset View">
+                                <i data-feather="target" class="w-4 h-4"></i>
+                            </button>
+                            <button id="toggle-wireframe" class="p-2 rounded-full hover:bg-gray-200 transition" title="Toggle Wireframe">
+                                <i data-feather="grid" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        feather.replace();
+        
+        // Three.js variables
+        let scene, camera, renderer, controls, model;
+        let isWireframe = false;
+        let loadedFiles = [];
+
+        // Initialize Three.js scene
+        function initScene() {
+            const container = document.getElementById('render-container');
+            
+            // Scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xf3f4f6);
+            
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.z = 5;
+            
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+            
+            // Controls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.25;
+            
+            // Lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+            
+            // Grid helper
+            const gridHelper = new THREE.GridHelper(10, 10);
+            scene.add(gridHelper);
+            
+            // Axes helper
+            const axesHelper = new THREE.AxesHelper(5);
+            scene.add(axesHelper);
+            
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                controls.update();
+                renderer.render(scene, camera);
+            }
+            animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+        }
+
+        // Load OBJ model
+        function loadModel(objFile, mtlFile = null, textureFiles = []) {
+            const loadingElement = document.getElementById('loading');
+            const noModelElement = document.getElementById('no-model');
+            
+            loadingElement.classList.remove('hidden');
+            noModelElement.classList.add('hidden');
+            
+            // Clear previous model
+            if (model) {
+                scene.remove(model);
+            }
+            
+            const objLoader = new THREE.OBJLoader();
+            const mtlLoader = new THREE.MTLLoader();
+            
+            if (mtlFile) {
+                mtlLoader.load(URL.createObjectURL(mtlFile), (materials) => {
+                    materials.preload();
+                    objLoader.setMaterials(materials);
+                    loadObj();
+                });
+            } else {
+                loadObj();
+            }
+            
+            function loadObj() {
+                objLoader.load(URL.createObjectURL(objFile), (object) => {
+                    model = object;
+                    
+                    // Center and scale model
+                    const box = new THREE.Box3().setFromObject(model);
+                    const center = box.getCenter(new THREE.Vector3());
+                    const size = box.getSize(new THREE.Vector3());
+                    
+                    model.position.sub(center);
+                    
+                    const maxDim = Math.max(size.x, size.y, size.z);
+                    const scale = 5 / maxDim;
+                    model.scale.set(scale, scale, scale);
+                    
+                    scene.add(model);
+                    
+                    // Update model info
+                    updateModelInfo(objFile.name, model);
+                    
+                    loadingElement.classList.add('hidden');
+                    document.getElementById('model-info').classList.remove('hidden');
+                }, undefined, (error) => {
+                    console.error('Error loading model:', error);
+                    loadingElement.classList.add('hidden');
+                    noModelElement.classList.remove('hidden');
+                    alert('Error loading model. Please check the file and try again.');
+                });
+            }
+        }
+
+        // Update model information display
+        function updateModelInfo(name, model) {
+            document.getElementById('model-name').textContent = name;
+            
+            let vertices = 0;
+            let faces = 0;
+            
+            model.traverse((child) => {
+                if (child.isMesh) {
+                    vertices += child.geometry.attributes.position.count;
+                    faces += child.geometry.index ? child.geometry.index.count / 3 : child.geometry.attributes.position.count / 3;
+                }
+            });
+            
+            document.getElementById('model-stats').textContent = 
+                `${vertices.toLocaleString()} vertices, ${faces.toLocaleString()} faces`;
+        }
+
+        // Handle file drop
+        function handleFileDrop(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            const dropZone = document.getElementById('drop-zone');
+            dropZone.classList.remove('drag-over');
+            
+            const files = event.dataTransfer ? event.dataTransfer.files : event.target.files;
+            processFiles(files);
+        }
+
+        // Process uploaded files
+        function processFiles(files) {
+            loadedFiles = Array.from(files);
+            
+            // Display file list
+            const fileListElement = document.getElementById('file-list');
+            fileListElement.innerHTML = '';
+            
+            loadedFiles.forEach(file => {
+                const fileElement = document.createElement('div');
+                fileElement.className = 'flex items-center justify-between p-2 bg-gray-50 rounded';
+                fileElement.innerHTML = `
+                    <div class="flex items-center">
+                        <i data-feather="${file.name.endsWith('.obj') ? 'box' : file.name.endsWith('.mtl') ? 'file-text' : 'image'}" class="w-4 h-4 mr-2"></i>
+                        <span class="text-sm">${file.name}</span>
+                    </div>
+                    <span class="text-xs text-gray-500">${(file.size / 1024).toFixed(1)} KB</span>
+                `;
+                fileListElement.appendChild(fileElement);
+            });
+            
+            document.getElementById('file-info').classList.remove('hidden');
+            feather.replace();
+            
+            // Find OBJ file
+            const objFile = loadedFiles.find(file => file.name.toLowerCase().endsWith('.obj'));
+            if (!objFile) {
+                alert('No OBJ file found in the uploaded files.');
+                return;
+            }
+            
+            // Find MTL file (same name as OBJ)
+            const objName = objFile.name.replace('.obj', '').replace('.OBJ', '');
+            const mtlFile = loadedFiles.find(file => 
+                file.name.toLowerCase() === `${objName.toLowerCase()}.mtl` ||
+                file.name.toLowerCase() === `${objName.toLowerCase()}.MTL`
+            );
+            
+            // Find texture files (referenced in MTL or common image formats)
+            const textureFiles = loadedFiles.filter(file => 
+                !file.name.endsWith('.obj') && 
+                !file.name.endsWith('.mtl') &&
+                !file.name.endsWith('.OBJ') && 
+                !file.name.endsWith('.MTL') &&
+                (file.name.endsWith('.jpg') || file.name.endsWith('.jpeg') || 
+                 file.name.endsWith('.png') || file.name.endsWith('.gif') ||
+                 file.name.endsWith('.JPG') || file.name.endsWith('.JPEG') || 
+                 file.name.endsWith('.PNG') || file.name.endsWith('.GIF'))
+            );
+            
+            loadModel(objFile, mtlFile, textureFiles);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initScene();
+            
+            // Set up drag and drop
+            const dropZone = document.getElementById('drop-zone');
+            const fileInput = document.getElementById('file-input');
+            const browseBtn = document.getElementById('browse-btn');
+            
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.classList.add('drag-over');
+            });
+            
+            dropZone.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.classList.remove('drag-over');
+            });
+            
+            dropZone.addEventListener('drop', handleFileDrop);
+            dropZone.addEventListener('click', () => fileInput.click());
+            browseBtn.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', handleFileDrop);
+            
+            // Model controls
+            document.getElementById('reset-view').addEventListener('click', () => {
+                controls.reset();
+                camera.position.z = 5;
+            });
+            
+            document.getElementById('toggle-wireframe').addEventListener('click', () => {
+                isWireframe = !isWireframe;
+                model.traverse((child) => {
+                    if (child.isMesh) {
+                        child.material.wireframe = isWireframe;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
