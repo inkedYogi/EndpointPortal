@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Sheet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        .stat-block {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        }
+        .inventory-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .nav-tab.active {
+            border-bottom: 2px solid #10b981;
+            color: #10b981;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <header class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-emerald-400" id="characterName">Character Name</h1>
+            <button onclick="window.location.href='index.html'" class="flex items-center text-gray-400 hover:text-emerald-400 transition">
+                <i data-feather="arrow-left" class="mr-1"></i> Back
+            </button>
+        </header>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Left Column -->
+            <div class="lg:w-1/3">
+                <div class="bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-6" data-aos="fade-right">
+                    <div class="p-6">
+                        <div class="flex justify-center mb-6">
+                            <div class="w-32 h-32 rounded-full bg-gray-700 overflow-hidden border-2 border-emerald-500">
+                                <img src="http://static.photos/fantasy/200x200/1" alt="Character Portrait" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h2 class="text-xl font-semibold mb-1" id="charName">Name</h2>
+                            <p class="text-gray-400 mb-4" id="charRaceClass">Race & Class</p>
+                            <div class="flex justify-center gap-4">
+                                <div class="text-center">
+                                    <p class="text-sm text-gray-400">Level</p>
+                                    <p class="text-xl font-bold" id="charLevel">1</p>
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-sm text-gray-400">HP</p>
+                                    <p class="text-xl font-bold" id="charHP">10/10</p>
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-sm text-gray-400">AC</p>
+                                    <p class="text-xl font-bold" id="charAC">10</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-6" data-aos="fade-right">
+                    <div class="p-6">
+                        <h2 class="text-xl font-semibold mb-4 flex items-center">
+                            <i data-feather="activity" class="mr-2"></i> Stats
+                        </h2>
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="stat-block p-3 rounded-lg text-center">
+                                <p class="text-sm text-gray-400">STR</p>
+                                <p class="text-2xl font-bold" id="charSTR">10</p>
+                            </div>
+                            <div class="stat-block p-3 rounded-lg text-center">
+                                <p class="text-sm text-gray-400">DEX</p>
+                                <p class="text-2xl font-bold" id="charDEX">10</p>
+                            </div>
+                            <div class="stat-block p-3 rounded-lg text-center">
+                                <p class="text-sm text-gray-400">CON</p>
+                                <p class="text-2xl font-bold" id="charCON">10</p>
+                            </div>
+                            <div class="stat-block p-3 rounded-lg text-center">
+                                <p class="text-sm text-gray-400">INT</p>
+                                <p class="text-2xl font-bold" id="charINT">10</p>
+                            </div>
+                            <div class="stat-block p-3 rounded-lg text-center">
+                                <p class="text-sm text-gray-400">WIS</p>
+                                <p class="text-2xl font-bold" id="charWIS">10</p>
+                            </div>
+                            <div class="stat-block p-3 rounded-lg text-center">
+                                <p class="text-sm text-gray-400">CHA</p>
+                                <p class="text-2xl font-bold" id="charCHA">10</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-800 rounded-xl shadow-lg overflow-hidden" data-aos="fade-right">
+                    <div class="p-6">
+                        <h2 class="text-xl font-semibold mb-4 flex items-center">
+                            <i data-feather="calendar" class="mr-2"></i> Upcoming Adventures
+                        </h2>
+                        <div id="upcomingAdventures" class="space-y-3">
+                            <!-- Will be populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="lg:w-2/3">
+                <div class="bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-6" data-aos="fade-left">
+                    <div class="border-b border-gray-700">
+                        <nav class="flex -mb-px">
+                            <button class="nav-tab active py-4 px-6 font-medium" data-tab="character">Character</button>
+                            <button class="nav-tab py-4 px-6 font-medium" data-tab="inventory">Inventory</button>
+                            <button class="nav-tab py-4 px-6 font-medium" data-tab="adventures">Adventures</button>
+                        </nav>
+                    </div>
+
+                    <div class="p-6">
+                        <!-- Character Tab -->
+                        <div id="character-tab" class="tab-content active">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h3 class="text-lg font-semibold mb-3 text-emerald-400">Details</h3>
+                                    <div class="space-y-2">
+                                        <p><span class="text-gray-400">Race:</span> <span id="charRace">-</span></p>
+                                        <p><span class="text-gray-400">Class:</span> <span id="charClass">-</span></p>
+                                        <p><span class="text-gray-400">Background:</span> <span id="charBackground">-</span></p>
+                                        <p><span class="text-gray-400">Alignment:</span> <span id="charAlignment">-</span></p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold mb-3 text-emerald-400">Proficiencies</h3>
+                                    <div id="charProficiencies" class="flex flex-wrap gap-2">
+                                        <!-- Will be populated by JS -->
+                                    </div>
+                                </div>
+                                <div class="md:col-span-2">
+                                    <h3 class="text-lg font-semibold mb-3 text-emerald-400">Features & Traits</h3>
+                                    <div id="charFeatures" class="space-y-3">
+                                        <!-- Will be populated by JS -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Inventory Tab -->
+                        <div id="inventory-tab" class="tab-content">
+                            <div class="mb-6">
+                                <h3 class="text-lg font-semibold mb-3 text-emerald-400">Carried Items</h3>
+                                <div id="carriedItems" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <!-- Will be populated by JS -->
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold mb-3 text-emerald-400">Stored Items</h3>
+                                <div id="storedItems" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <!-- Will be populated by JS -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Adventures Tab -->
+                        <div id="adventures-tab" class="tab-content">
+                            <div class="mb-6">
+                                <h3 class="text-lg font-semibold mb-3 text-emerald-400">Past Adventures</h3>
+                                <div id="pastAdventures" class="space-y-4">
+                                    <!-- Will be populated by JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            feather.replace();
+            AOS.init();
+
+            // Tab functionality
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const tabId = this.getAttribute('data-tab');
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
+            });
+
+            // Load character data from session storage
+            const characterData = JSON.parse(sessionStorage.getItem('characterData'));
+            if (!characterData) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Populate character data
+            document.getElementById('characterName').textContent = characterData.name || 'Unnamed Character';
+            document.getElementById('charName').textContent = characterData.name || 'Unnamed Character';
+            document.getElementById('charRaceClass').textContent = `${characterData.race || 'Unknown'} ${characterData.class || 'Adventurer'}`;
+            document.getElementById('charLevel').textContent = characterData.level || '1';
+            document.getElementById('charHP').textContent = `${characterData.hp?.current || 0}/${characterData.hp?.max || 0}`;
+            document.getElementById('charAC').textContent = characterData.ac || '10';
+            
+            // Stats
+            document.getElementById('charSTR').textContent = characterData.stats?.strength || '10';
+            document.getElementById('charDEX').textContent = characterData.stats?.dexterity || '10';
+            document.getElementById('charCON').textContent = characterData.stats?.constitution || '10';
+            document.getElementById('charINT').textContent = characterData.stats?.intelligence || '10';
+            document.getElementById('charWIS').textContent = characterData.stats?.wisdom || '10';
+            document.getElementById('charCHA').textContent = characterData.stats?.charisma || '10';
+            
+            // Details
+            document.getElementById('charRace').textContent = characterData.race || '-';
+            document.getElementById('charClass').textContent = characterData.class || '-';
+            document.getElementById('charBackground').textContent = characterData.background || '-';
+            document.getElementById('charAlignment').textContent = characterData.alignment || '-';
+            
+            // Proficiencies
+            const proficienciesContainer = document.getElementById('charProficiencies');
+            if (characterData.proficiencies && characterData.proficiencies.length > 0) {
+                characterData.proficiencies.forEach(prof => {
+                    const chip = document.createElement('span');
+                    chip.className = 'bg-gray-700 text-sm px-3 py-1 rounded-full';
+                    chip.textContent = prof;
+                    proficienciesContainer.appendChild(chip);
+                });
+            } else {
+                proficienciesContainer.innerHTML = '<p class="text-gray-500">No proficiencies</p>';
+            }
+            
+            // Features & Traits
+            const featuresContainer = document.getElementById('charFeatures');
+            if (characterData.features && characterData.features.length > 0) {
+                characterData.features.forEach(feat => {
+                    const feature = document.createElement('div');
+                    feature.className = 'bg-gray-700 p-3 rounded-lg';
+                    feature.innerHTML = `
+                        <h4 class="font-medium">${feat.name || 'Feature'}</h4>
+                        <p class="text-sm text-gray-400 mt-1">${feat.description || 'No description available.'}</p>
+                    `;
+                    featuresContainer.appendChild(feature);
+                });
+            } else {
+                featuresContainer.innerHTML = '<p class="text-gray-500">No features or traits</p>';
+            }
+            
+            // Inventory
+            const carriedItemsContainer = document.getElementById('carriedItems');
+            const storedItemsContainer = document.getElementById('storedItems');
+            
+            if (characterData.inventory?.carried && characterData.inventory.carried.length > 0) {
+                characterData.inventory.carried.forEach(item => {
+                    const itemElement = createInventoryItem(item);
+                    carriedItemsContainer.appendChild(itemElement);
+                });
+            } else {
+                carriedItemsContainer.innerHTML = '<p class="text-gray-500 col-span-2">No items carried</p>';
+            }
+            
+            if (characterData.inventory?.stored && characterData.inventory.stored.length > 0) {
+                characterData.inventory.stored.forEach(item => {
+                    const itemElement = createInventoryItem(item);
+                    storedItemsContainer.appendChild(itemElement);
+                });
+            } else {
+                storedItemsContainer.innerHTML = '<p class="text-gray-500 col-span-2">No items stored</p>';
+            }
+            
+            // Adventures
+            const pastAdventuresContainer = document.getElementById('pastAdventures');
+            const upcomingAdventuresContainer = document.getElementById('upcomingAdventures');
+            
+            if (characterData.adventures?.past && characterData.adventures.past.length > 0) {
+                characterData.adventures.past.forEach(adventure => {
+                    const adventureElement = createAdventureElement(adventure, false);
+                    pastAdventuresContainer.appendChild(adventureElement);
+                });
+            } else {
+                pastAdventuresContainer.innerHTML = '<p class="text-gray-500">No past adventures</p>';
+            }
+            
+            if (characterData.adventures?.upcoming && characterData.adventures.upcoming.length > 0) {
+                characterData.adventures.upcoming.forEach(adventure => {
+                    const adventureElement = createAdventureElement(adventure, true);
+                    upcomingAdventuresContainer.appendChild(adventureElement);
+                });
+            } else {
+                upcomingAdventuresContainer.innerHTML = '<p class="text-gray-500">No upcoming adventures</p>';
+            }
+            
+            function createInventoryItem(item) {
+                const element = document.createElement('div');
+                element.className = 'inventory-item bg-gray-700 p-3 rounded-lg transition duration-200';
+                element.innerHTML = `
+                    <div class="flex items-start">
+                        <div class="bg-gray-600 p-2 rounded-lg mr-3">
+                            <i data-feather="${item.type === 'weapon' ? 'sword' : item.type === 'armor' ? 'shield' : 'package'}" class="w-5 h-5"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-medium">${item.name || 'Item'}</h4>
+                            <p class="text-sm text-gray-400">${item.description || 'No description'}</p>
+                            ${item.quantity ? `<p class="text-xs text-gray-500 mt-1">Quantity: ${item.quantity}</p>` : ''}
+                        </div>
+                    </div>
+                `;
+                return element;
+            }
+            
+            function createAdventureElement(adventure, isUpcoming) {
+                const element = document.createElement('div');
+                element.className = `bg-gray-700 p-4 rounded-lg ${isUpcoming ? 'mb-3' : ''}`;
+                
+                const date = adventure.date ? new Date(adventure.date).toLocaleDateString() : 'Date unknown';
+                const status = isUpcoming ? 
+                    `<span class="bg-emerald-900 text-emerald-300 text-xs px-2 py-1 rounded-full">Upcoming</span>` : 
+                    `<span class="bg-purple-900 text-purple-300 text-xs px-2 py-1 rounded-full">Completed</span>`;
+                
+                element.innerHTML = `
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-medium">${adventure.name || 'Adventure'}</h3>
+                        ${status}
+                    </div>
+                    <p class="text-sm text-gray-400 mb-2">${date} • ${adventure.dm || 'DM unknown'}</p>
+                    <p class="text-sm">${adventure.description || 'No description available.'}</p>
+                    ${adventure.rewards ? `
+                        <div class="mt-3 pt-3 border-t border-gray-600">
+                            <h4 class="text-xs font-semibold text-gray-400 mb-1">REWARDS</h4>
+                            <p class="text-sm">${adventure.rewards}</p>
+                        </div>
+                    ` : ''}
+                `;
+                return element;
+            }
+        });
+    </script>
+</body>
+</html>
