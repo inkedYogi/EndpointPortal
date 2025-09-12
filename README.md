@@ -104,7 +104,7 @@ https://drive.google.com/drive/home - Google Drive Home Page
 </div>
 <div>
   <a href="https://inkedYogi.github.io/EndpointPortal/livingDocs/data/website/adventure_time.html">
-    3d_viewer
+    adventure_time
   </a>
 </div>
 
