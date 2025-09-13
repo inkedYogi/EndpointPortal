@@ -204,6 +204,15 @@
                                 <div id="pastAdventures" class="space-y-4">
                                 </div>
                             </div>
+                            <div class="bg-gray-700 p-4 rounded-xl border border-gray-600">
+                                <h4 class="text-lg font-semibold text-emerald-400 mb-2">Add New Adventure</h4>
+                                <p class="text-gray-400 text-sm mb-4">Paste the adventure summary JSON below and click 'Add'.</p>
+                                <textarea id="adventureInput" class="w-full h-32 p-2 mb-4 bg-gray-800 rounded-lg border border-gray-600 focus:outline-none focus:ring focus:ring-emerald-500 text-sm" placeholder="Paste JSON here, e.g., { 'name': '...', 'rewards': '...' }"></textarea>
+                                <button id="addAdventureButton" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded transition">
+                                    Add Adventure to Log
+                                </button>
+                                <p id="addMessage" class="text-sm text-center text-gray-500 mt-2 hidden"></p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -456,6 +465,56 @@
                 `;
                 return element;
             }
+
+            // New event listener for adding adventures
+            const adventureInput = document.getElementById('adventureInput');
+            const addAdventureButton = document.getElementById('addAdventureButton');
+            const addMessage = document.getElementById('addMessage');
+
+            addAdventureButton.addEventListener('click', function() {
+                const jsonText = adventureInput.value.trim();
+                if (!jsonText) {
+                    addMessage.textContent = "Please paste a JSON object.";
+                    addMessage.classList.remove('hidden');
+                    return;
+                }
+
+                try {
+                    const newAdventure = JSON.parse(jsonText);
+                    
+                    let characterData = JSON.parse(sessionStorage.getItem('characterData'));
+                    if (!characterData) {
+                        addMessage.textContent = "Please load a character sheet first.";
+                        addMessage.classList.remove('hidden');
+                        return;
+                    }
+
+                    if (!characterData.adventures) {
+                        characterData.adventures = {};
+                    }
+                    if (!characterData.adventures.past) {
+                        characterData.adventures.past = [];
+                    }
+
+                    characterData.adventures.past.unshift(newAdventure); // Add new adventure to the beginning
+
+                    // Update sessionStorage and re-render the page
+                    sessionStorage.setItem('characterData', JSON.stringify(characterData));
+                    populateCharacterData(characterData);
+                    
+                    addMessage.textContent = "Adventure added successfully!";
+                    addMessage.classList.remove('hidden');
+                    adventureInput.value = ''; // Clear the text area
+
+                    setTimeout(() => {
+                        addMessage.classList.add('hidden');
+                    }, 3000);
+
+                } catch (error) {
+                    addMessage.textContent = `Error: Invalid JSON format. Details: ${error.message}`;
+                    addMessage.classList.remove('hidden');
+                }
+            });
         });
     </script>
 </body>
