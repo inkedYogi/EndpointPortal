@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adventure Parser</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        .rounded-xl {
+            border-radius: 1rem;
+        }
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen flex items-center justify-center p-4">
+
+    <!-- Main Container -->
+    <div class="bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-2xl" data-aos="fade-up">
+        <h1 class="text-3xl font-bold text-center text-emerald-400 mb-6">Adventure Parser</h1>
+        <p class="text-gray-400 text-center mb-6">Upload a detailed adventure JSON file to generate a simplified summary for your character sheet.</p>
+
+        <div class="space-y-6">
+            <!-- File Input -->
+            <div>
+                <label for="adventureFile" class="block text-gray-400 font-semibold mb-2">Select Adventure JSON File:</label>
+                <input type="file" id="adventureFile" accept=".json" class="block w-full text-gray-100
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-full file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-emerald-50 file:text-emerald-700
+                    hover:file:bg-emerald-100 transition" />
+            </div>
+
+            <!-- Date Input (for the simplified JSON) -->
+            <div>
+                <label for="adventureDate" class="block text-gray-400 font-semibold mb-2">Adventure Date:</label>
+                <input type="date" id="adventureDate" class="w-full p-2 bg-gray-700 rounded-lg border border-gray-600 focus:outline-none focus:ring focus:ring-emerald-500">
+            </div>
+
+            <!-- Parse Button -->
+            <button id="parseButton" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded transition">
+                Parse and Summarize Adventure
+            </button>
+        </div>
+
+        <!-- Output Section -->
+        <div id="outputSection" class="mt-8 hidden" data-aos="fade-in">
+            <h2 class="text-xl font-bold text-emerald-400 mb-4 flex items-center">
+                <i data-feather="file-text" class="mr-2"></i> Simplified JSON
+            </h2>
+            <div class="relative bg-gray-700 p-4 rounded-xl border border-gray-600">
+                <pre id="outputJson" class="text-sm overflow-x-auto whitespace-pre-wrap break-words"></pre>
+                <button id="copyButton" class="absolute top-4 right-4 text-gray-400 hover:text-white transition" title="Copy to Clipboard">
+                    <i data-feather="copy" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <p id="copyMessage" class="text-sm text-center text-gray-500 mt-2 hidden">Copied to clipboard!</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init();
+            feather.replace();
+
+            const adventureFile = document.getElementById('adventureFile');
+            const adventureDate = document.getElementById('adventureDate');
+            const parseButton = document.getElementById('parseButton');
+            const outputSection = document.getElementById('outputSection');
+            const outputJson = document.getElementById('outputJson');
+            const copyButton = document.getElementById('copyButton');
+            const copyMessage = document.getElementById('copyMessage');
+            
+            // Set today's date as the default
+            adventureDate.valueAsDate = new Date();
+
+            // Handle the file parsing
+            parseButton.addEventListener('click', function() {
+                if (adventureFile.files.length === 0) {
+                    // Use a custom message instead of alert()
+                    outputJson.textContent = 'Please select a JSON file to upload.';
+                    outputSection.classList.remove('hidden');
+                    return;
+                }
+
+                const file = adventureFile.files[0];
+                const reader = new FileReader();
+
+                reader.onload = function(event) {
+                    try {
+                        const detailedData = JSON.parse(event.target.result);
+                        const simplifiedAdventure = parseAdventureData(detailedData);
+                        const formattedJson = JSON.stringify(simplifiedAdventure, null, 2);
+                        
+                        outputJson.textContent = formattedJson;
+                        outputSection.classList.remove('hidden');
+                        AOS.refresh();
+
+                    } catch (error) {
+                        outputJson.textContent = `Error parsing file. Please check the JSON format. Details: ${error.message}`;
+                        outputSection.classList.remove('hidden');
+                    }
+                };
+                reader.readAsText(file);
+            });
+
+            // Parse function to summarize detailed JSON
+            function parseAdventureData(data) {
+                let totalGold = 0;
+                let rewards = [];
+
+                if (data.rooms) {
+                    data.rooms.forEach(room => {
+                        if (room.encounters) {
+                            room.encounters.forEach(encounter => {
+                                if (encounter.loot) {
+                                    if (encounter.loot.gold) {
+                                        totalGold += encounter.loot.gold;
+                                    }
+                                    if (encounter.loot.items) {
+                                        rewards = rewards.concat(encounter.loot.items);
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+
+                const rewardSummary = `Total Gold: ${totalGold}${rewards.length > 0 ? `, Items: ${rewards.join(', ')}` : ''}`;
+
+                return {
+                    name: data.title || "Untitled Adventure",
+                    date: adventureDate.value,
+                    description: data.summary || "No summary provided.",
+                    dm: data.dm || "DM unknown",
+                    rewards: rewardSummary,
+                    tags: data.tags || [],
+                    party_members: data.party_members || [],
+                    location: data.location || "Location unknown"
+                };
+            }
+
+            // Copy to clipboard functionality
+            copyButton.addEventListener('click', function() {
+                const textToCopy = outputJson.textContent;
+                
+                // Use the older, more compatible clipboard API
+                const tempTextarea = document.createElement('textarea');
+                tempTextarea.value = textToCopy;
+                document.body.appendChild(tempTextarea);
+                tempTextarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempTextarea);
+
+                // Show a brief message
+                copyMessage.classList.remove('hidden');
+                setTimeout(() => {
+                    copyMessage.classList.add('hidden');
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>
