@@ -112,6 +112,11 @@ https://drive.google.com/drive/home - Google Drive Home Page
     room_chain
   </a>
 </div>
+<div>
+  <a href="https://inkedYogi.github.io/EndpointPortal/livingDocs/data/website/book.html">
+    book
+  </a>
+</div>
 
 
 Mage: Caravan - Unprecedented.
