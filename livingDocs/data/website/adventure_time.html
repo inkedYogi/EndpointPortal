@@ -27,6 +27,9 @@
             border-bottom: 2px solid #10b981;
             color: #10b981;
         }
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.75);
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen">
@@ -63,12 +66,11 @@
                 <div class="bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-6" data-aos="fade-right">
                     <div class="p-6">
                         <div class="flex justify-center mb-6">
-                            <div class="w-32 h-32 rounded-full bg-gray-700 overflow-hidden border-2 border-emerald-500">
+                            <div class="w-40 h-40 rounded-full bg-gray-700 overflow-hidden border-2 border-emerald-500">
                                 <img src="http://static.photos/fantasy/200x200/1" alt="Character Portrait" class="w-full h-full object-cover">
                             </div>
                         </div>
                         <div class="text-center">
-                            <h2 class="text-xl font-semibold mb-1" id="charName">Name</h2>
                             <p class="text-gray-400 mb-4" id="charRaceClass">Race & Class</p>
                             <div class="flex justify-center gap-4">
                                 <div class="text-center">
@@ -122,13 +124,22 @@
                     </div>
                 </div>
 
+                <div class="bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-6" data-aos="fade-right">
+                    <div class="p-6">
+                        <h2 class="text-xl font-semibold mb-4 flex items-center">
+                            <i data-feather="book-open" class="mr-2"></i> Backstory
+                        </h2>
+                        <p id="charBackstory" class="text-sm text-gray-400 italic">No backstory available.</p>
+                    </div>
+                </div>
+
                 <div class="bg-gray-800 rounded-xl shadow-lg overflow-hidden" data-aos="fade-right">
                     <div class="p-6">
                         <h2 class="text-xl font-semibold mb-4 flex items-center">
                             <i data-feather="calendar" class="mr-2"></i> Upcoming Adventures
                         </h2>
                         <div id="upcomingAdventures" class="space-y-3">
-                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -139,6 +150,7 @@
                         <nav class="flex -mb-px">
                             <button class="nav-tab active py-4 px-6 font-medium" data-tab="character">Character</button>
                             <button class="nav-tab py-4 px-6 font-medium" data-tab="inventory">Inventory</button>
+                            <button class="nav-tab py-4 px-6 font-medium" data-tab="skills">Skills</button>
                             <button class="nav-tab py-4 px-6 font-medium" data-tab="adventures">Adventures</button>
                         </nav>
                     </div>
@@ -158,12 +170,12 @@
                                 <div>
                                     <h3 class="text-lg font-semibold mb-3 text-emerald-400">Proficiencies</h3>
                                     <div id="charProficiencies" class="flex flex-wrap gap-2">
-                                        </div>
+                                    </div>
                                 </div>
                                 <div class="md:col-span-2">
                                     <h3 class="text-lg font-semibold mb-3 text-emerald-400">Features & Traits</h3>
                                     <div id="charFeatures" class="space-y-3">
-                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -172,12 +184,17 @@
                             <div class="mb-6">
                                 <h3 class="text-lg font-semibold mb-3 text-emerald-400">Carried Items</h3>
                                 <div id="carriedItems" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                        </div>
+                                </div>
                             </div>
                             <div>
                                 <h3 class="text-lg font-semibold mb-3 text-emerald-400">Stored Items</h3>
                                 <div id="storedItems" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                        </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="skills-tab" class="tab-content">
+                            <div id="craftingSkills" class="space-y-4">
                             </div>
                         </div>
 
@@ -185,7 +202,7 @@
                             <div class="mb-6">
                                 <h3 class="text-lg font-semibold mb-3 text-emerald-400">Past Adventures</h3>
                                 <div id="pastAdventures" class="space-y-4">
-                                        </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -193,19 +210,65 @@
             </div>
         </div>
     </div>
-    
+
+    <div id="itemModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">
+        <div class="absolute inset-0 modal-overlay" onclick="closeItemModal()"></div>
+        <div class="bg-gray-800 rounded-xl shadow-2xl p-6 w-full max-w-lg z-10 transition-transform transform scale-95 duration-300 ease-out">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold text-emerald-400" id="itemModalName">Item Name</h3>
+                <button onclick="closeItemModal()" class="text-gray-400 hover:text-white transition">
+                    <i data-feather="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <p id="itemModalDesc" class="text-gray-300 text-sm mb-4">Item description.</p>
+            <div id="itemModalDetails" class="space-y-2 text-sm text-gray-400">
+                </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             AOS.init();
-
+            
+            // Simulating an external item database. In a real-world scenario, you would fetch this from a CSV file.
+            const itemDatabase = {
+                "longsword": {
+                    "name": "Longsword",
+                    "description": "A classic one-handed sword with a double-edged blade. Versatile and reliable.",
+                    "damage": "1d8",
+                    "type": "Slashing",
+                    "properties": ["Versatile (1d10)"],
+                    "weight": "3 lbs"
+                },
+                "chain_mail": {
+                    "name": "Chain Mail",
+                    "description": "Heavy armor made of interlocking metal rings. Offers excellent protection but is noisy.",
+                    "ac_bonus": "+16",
+                    "disadvantage": "Stealth checks",
+                    "weight": "55 lbs"
+                },
+                "healing_potion": {
+                    "name": "Potion of Healing",
+                    "description": "A crimson liquid that restores vitality. Instantly restores health when consumed.",
+                    "effect": "Restores 2d4 + 2 HP",
+                    "weight": "0.5 lbs"
+                },
+                "silver_locket": {
+                    "name": "Silver Locket",
+                    "description": "A small, heart-shaped locket crafted from silver. Inside, it holds a small, faded portrait of a loved one.",
+                    "value": "15 gp",
+                    "weight": "0.1 lbs"
+                }
+            };
+            
             const uploaderPage = document.getElementById('uploader-page');
             const characterViewer = document.getElementById('character-viewer');
             const fileInput = document.getElementById('jsonFile');
             const uploadButton = document.getElementById('uploadButton');
             const backButton = document.getElementById('backButton');
+            const itemModal = document.getElementById('itemModal');
             const characterData = JSON.parse(sessionStorage.getItem('characterData'));
-
-            // Check if character data exists on page load and show the correct page
+            
             if (characterData) {
                 uploaderPage.style.display = 'none';
                 characterViewer.style.display = 'block';
@@ -215,7 +278,6 @@
                 characterViewer.style.display = 'none';
             }
 
-            // --- Event Listeners ---
             uploadButton.addEventListener('click', function() {
                 if (fileInput.files.length === 0) {
                     alert('Please select a JSON file to upload.');
@@ -244,8 +306,11 @@
                 uploaderPage.style.display = 'flex';
                 characterViewer.style.display = 'none';
             });
+            
+            window.closeItemModal = function() {
+                itemModal.style.display = 'none';
+            };
 
-            // --- Tab Functionality ---
             const tabs = document.querySelectorAll('.nav-tab');
             tabs.forEach(tab => {
                 tab.addEventListener('click', function() {
@@ -258,11 +323,9 @@
                     document.getElementById(`${tabId}-tab`).classList.add('active');
                 });
             });
-
-            // --- Functions to create and populate elements ---
+            
             function populateCharacterData(data) {
                 document.getElementById('characterName').textContent = data.name || 'Unnamed Character';
-                document.getElementById('charName').textContent = data.name || 'Unnamed Character';
                 document.getElementById('charRaceClass').textContent = `${data.race || 'Unknown'} ${data.class || 'Adventurer'}`;
                 document.getElementById('charLevel').textContent = data.level || '1';
                 document.getElementById('charHP').textContent = `${data.hp?.current || 0}/${data.hp?.max || 0}`;
@@ -275,6 +338,8 @@
                 document.getElementById('charWIS').textContent = data.stats?.wisdom || '10';
                 document.getElementById('charCHA').textContent = data.stats?.charisma || '10';
                 
+                document.getElementById('charBackstory').textContent = data.backstory || 'No backstory available.';
+                
                 document.getElementById('charRace').textContent = data.race || '-';
                 document.getElementById('charClass').textContent = data.class || '-';
                 document.getElementById('charBackground').textContent = data.background || '-';
@@ -284,6 +349,7 @@
                 updateList(document.getElementById('charFeatures'), data.features, createFeatureElement, '<p class="text-gray-500">No features or traits</p>');
                 updateList(document.getElementById('carriedItems'), data.inventory?.carried, createInventoryItem, '<p class="text-gray-500 col-span-2">No items carried</p>');
                 updateList(document.getElementById('storedItems'), data.inventory?.stored, createInventoryItem, '<p class="text-gray-500 col-span-2">No items stored</p>');
+                updateList(document.getElementById('craftingSkills'), data.skills, createSkillElement, '<p class="text-gray-500">No skills available.</p>');
                 updateList(document.getElementById('pastAdventures'), data.adventures?.past, adventure => createAdventureElement(adventure, false), '<p class="text-gray-500">No past adventures</p>');
                 updateList(document.getElementById('upcomingAdventures'), data.adventures?.upcoming, adventure => createAdventureElement(adventure, true), '<p class="text-gray-500">No upcoming adventures</p>');
                 feather.replace();
@@ -314,10 +380,22 @@
                 `;
                 return feature;
             }
+            
+            function createSkillElement(skill) {
+                const element = document.createElement('div');
+                element.className = 'bg-gray-700 p-4 rounded-lg';
+                element.innerHTML = `
+                    <h3 class="font-medium text-lg mb-2">${skill.name || 'Skill'}</h3>
+                    <p class="text-sm text-gray-400 mb-2">${skill.description || 'No description available.'}</p>
+                    ${skill.details ? `<p class="text-xs text-gray-500">Details: ${skill.details}</p>` : ''}
+                `;
+                return element;
+            }
 
             function createInventoryItem(item) {
                 const element = document.createElement('div');
-                element.className = 'inventory-item bg-gray-700 p-3 rounded-lg transition duration-200';
+                element.className = 'inventory-item bg-gray-700 p-3 rounded-lg transition duration-200 cursor-pointer';
+                element.setAttribute('onclick', `showItemDetailsModal('${item.id || item.name}')`);
                 element.innerHTML = `
                     <div class="flex items-start">
                         <div class="bg-gray-600 p-2 rounded-lg mr-3">
@@ -331,6 +409,26 @@
                     </div>
                 `;
                 return element;
+            }
+            
+            function showItemDetailsModal(itemId) {
+                const details = itemDatabase[itemId.toLowerCase().replace(/ /g, '_')] || {name: itemId, description: 'Details not found.', details: 'This item is not in the canonical item database.'};
+                
+                document.getElementById('itemModalName').textContent = details.name;
+                document.getElementById('itemModalDesc').textContent = details.description;
+                
+                const detailsContainer = document.getElementById('itemModalDetails');
+                detailsContainer.innerHTML = '';
+                
+                for (const key in details) {
+                    if (key !== 'name' && key !== 'description') {
+                        const detailElement = document.createElement('p');
+                        detailElement.innerHTML = `<span class="font-semibold capitalize">${key.replace(/_/g, ' ')}:</span> ${details[key]}`;
+                        detailsContainer.appendChild(detailElement);
+                    }
+                }
+                
+                itemModal.style.display = 'flex';
             }
             
             function createAdventureElement(adventure, isUpcoming) {
