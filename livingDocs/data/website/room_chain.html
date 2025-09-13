@@ -30,13 +30,11 @@
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen flex items-center justify-center p-4">
 
-    <!-- Main Container -->
     <div class="bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-2xl" data-aos="fade-up">
         <h1 class="text-3xl font-bold text-center text-emerald-400 mb-6">Adventure Parser</h1>
         <p class="text-gray-400 text-center mb-6">Upload a detailed adventure JSON file to generate a simplified summary for your character sheet.</p>
 
         <div class="space-y-6">
-            <!-- File Input -->
             <div>
                 <label for="adventureFile" class="block text-gray-400 font-semibold mb-2">Select Adventure JSON File:</label>
                 <input type="file" id="adventureFile" accept=".json" class="block w-full text-gray-100
@@ -47,19 +45,16 @@
                     hover:file:bg-emerald-100 transition" />
             </div>
 
-            <!-- Date Input (for the simplified JSON) -->
             <div>
                 <label for="adventureDate" class="block text-gray-400 font-semibold mb-2">Adventure Date:</label>
                 <input type="date" id="adventureDate" class="w-full p-2 bg-gray-700 rounded-lg border border-gray-600 focus:outline-none focus:ring focus:ring-emerald-500">
             </div>
 
-            <!-- Parse Button -->
             <button id="parseButton" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded transition">
                 Parse and Summarize Adventure
             </button>
         </div>
 
-        <!-- Output Section -->
         <div id="outputSection" class="mt-8 hidden" data-aos="fade-in">
             <h2 class="text-xl font-bold text-emerald-400 mb-4 flex items-center">
                 <i data-feather="file-text" class="mr-2"></i> Simplified JSON
@@ -93,7 +88,6 @@
             // Handle the file parsing
             parseButton.addEventListener('click', function() {
                 if (adventureFile.files.length === 0) {
-                    // Use a custom message instead of alert()
                     outputJson.textContent = 'Please select a JSON file to upload.';
                     outputSection.classList.remove('hidden');
                     return;
@@ -120,9 +114,10 @@
                 reader.readAsText(file);
             });
 
-            // Parse function to summarize detailed JSON
+            // Your updated parseAdventureData function
             function parseAdventureData(data) {
                 let totalGold = 0;
+                let totalXP = 0;
                 let rewards = [];
 
                 if (data.rooms) {
@@ -137,12 +132,20 @@
                                         rewards = rewards.concat(encounter.loot.items);
                                     }
                                 }
+                                if (encounter.xp_reward) {
+                                    totalXP += encounter.xp_reward;
+                                }
                             });
                         }
                     });
                 }
 
-                const rewardSummary = `Total Gold: ${totalGold}${rewards.length > 0 ? `, Items: ${rewards.join(', ')}` : ''}`;
+                // Handle top-level rewards if they exist
+                if (data.overall_rewards && data.overall_rewards.quest_reward) {
+                    rewards.push(data.overall_rewards.quest_reward);
+                }
+
+                const rewardSummary = `Total Gold: ${totalGold}, Total XP: ${totalXP}${rewards.length > 0 ? `, Items: ${rewards.join(', ')}` : ''}`;
 
                 return {
                     name: data.title || "Untitled Adventure",
@@ -160,7 +163,6 @@
             copyButton.addEventListener('click', function() {
                 const textToCopy = outputJson.textContent;
                 
-                // Use the older, more compatible clipboard API
                 const tempTextarea = document.createElement('textarea');
                 tempTextarea.value = textToCopy;
                 document.body.appendChild(tempTextarea);
@@ -168,7 +170,6 @@
                 document.execCommand('copy');
                 document.body.removeChild(tempTextarea);
 
-                // Show a brief message
                 copyMessage.classList.remove('hidden');
                 setTimeout(() => {
                     copyMessage.classList.add('hidden');
