@@ -3,63 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Character Uploader</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-900 text-gray-100 min-h-screen flex items-center justify-center">
-    <div class="bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-md">
-        <h1 class="text-2xl font-bold text-center text-emerald-400 mb-6">Upload Character Sheet</h1>
-        <p class="text-gray-400 text-center mb-4">Please upload your JSON file to view your character details.</p>
-        <div class="space-y-4">
-            <label for="jsonFile" class="block text-gray-400">Select your character JSON file:</label>
-            <input type="file" id="jsonFile" accept=".json" class="block w-full text-gray-100
-                file:mr-4 file:py-2 file:px-4
-                file:rounded-full file:border-0
-                file:text-sm file:font-semibold
-                file:bg-emerald-50 file:text-emerald-700
-                hover:file:bg-emerald-100" />
-            <button id="uploadButton" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded transition">
-                Load Character
-            </button>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const fileInput = document.getElementById('jsonFile');
-            const uploadButton = document.getElementById('uploadButton');
-
-            uploadButton.addEventListener('click', function() {
-                if (fileInput.files.length === 0) {
-                    alert('Please select a JSON file to upload.');
-                    return;
-                }
-
-                const file = fileInput.files[0];
-                const reader = new FileReader();
-
-                reader.onload = function(event) {
-                    try {
-                        const characterData = JSON.parse(event.target.result);
-                        sessionStorage.setItem('characterData', JSON.stringify(characterData));
-                        window.location.href = 'character.html';
-                    } catch (error) {
-                        alert('Invalid JSON file. Please check the file format.');
-                        console.error('Parsing error:', error);
-                    }
-                };
-                reader.readAsText(file);
-            });
-        });
-    </script>
-</body>
-</html>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Character Sheet</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -87,10 +30,30 @@
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen">
-    <div class="container mx-auto px-4 py-8">
+
+    <div id="uploader-page" class="flex items-center justify-center min-h-screen">
+        <div class="bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-md">
+            <h1 class="text-2xl font-bold text-center text-emerald-400 mb-6">Upload Character Sheet</h1>
+            <p class="text-gray-400 text-center mb-4">Please upload your JSON file to view your character details.</p>
+            <div class="space-y-4">
+                <label for="jsonFile" class="block text-gray-400">Select your character JSON file:</label>
+                <input type="file" id="jsonFile" accept=".json" class="block w-full text-gray-100
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-full file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-emerald-50 file:text-emerald-700
+                    hover:file:bg-emerald-100" />
+                <button id="uploadButton" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded transition">
+                    Load Character
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="character-viewer" class="container mx-auto px-4 py-8" style="display: none;">
         <header class="flex justify-between items-center mb-8">
             <h1 class="text-3xl font-bold text-emerald-400" id="characterName">Character Name</h1>
-            <button onclick="window.location.href='index.html'" class="flex items-center text-gray-400 hover:text-emerald-400 transition">
+            <button id="backButton" class="flex items-center text-gray-400 hover:text-emerald-400 transition">
                 <i data-feather="arrow-left" class="mr-1"></i> Back
             </button>
         </header>
@@ -209,12 +172,12 @@
                             <div class="mb-6">
                                 <h3 class="text-lg font-semibold mb-3 text-emerald-400">Carried Items</h3>
                                 <div id="carriedItems" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    </div>
+                                        </div>
                             </div>
                             <div>
                                 <h3 class="text-lg font-semibold mb-3 text-emerald-400">Stored Items</h3>
                                 <div id="storedItems" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    </div>
+                                        </div>
                             </div>
                         </div>
 
@@ -222,7 +185,7 @@
                             <div class="mb-6">
                                 <h3 class="text-lg font-semibold mb-3 text-emerald-400">Past Adventures</h3>
                                 <div id="pastAdventures" class="space-y-4">
-                                    </div>
+                                        </div>
                             </div>
                         </div>
                     </div>
@@ -230,19 +193,64 @@
             </div>
         </div>
     </div>
-
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            feather.replace();
             AOS.init();
 
-            // Tab functionality
+            const uploaderPage = document.getElementById('uploader-page');
+            const characterViewer = document.getElementById('character-viewer');
+            const fileInput = document.getElementById('jsonFile');
+            const uploadButton = document.getElementById('uploadButton');
+            const backButton = document.getElementById('backButton');
+            const characterData = JSON.parse(sessionStorage.getItem('characterData'));
+
+            // Check if character data exists on page load and show the correct page
+            if (characterData) {
+                uploaderPage.style.display = 'none';
+                characterViewer.style.display = 'block';
+                populateCharacterData(characterData);
+            } else {
+                uploaderPage.style.display = 'flex';
+                characterViewer.style.display = 'none';
+            }
+
+            // --- Event Listeners ---
+            uploadButton.addEventListener('click', function() {
+                if (fileInput.files.length === 0) {
+                    alert('Please select a JSON file to upload.');
+                    return;
+                }
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    try {
+                        const data = JSON.parse(event.target.result);
+                        sessionStorage.setItem('characterData', JSON.stringify(data));
+                        populateCharacterData(data);
+                        uploaderPage.style.display = 'none';
+                        characterViewer.style.display = 'block';
+                        AOS.refresh();
+                    } catch (error) {
+                        alert('Invalid JSON file. Please check the file format.');
+                        console.error('Parsing error:', error);
+                    }
+                };
+                reader.readAsText(file);
+            });
+
+            backButton.addEventListener('click', function() {
+                sessionStorage.removeItem('characterData');
+                uploaderPage.style.display = 'flex';
+                characterViewer.style.display = 'none';
+            });
+
+            // --- Tab Functionality ---
             const tabs = document.querySelectorAll('.nav-tab');
             tabs.forEach(tab => {
                 tab.addEventListener('click', function() {
                     tabs.forEach(t => t.classList.remove('active'));
                     this.classList.add('active');
-                    
                     const tabId = this.getAttribute('data-tab');
                     document.querySelectorAll('.tab-content').forEach(content => {
                         content.classList.remove('active');
@@ -251,108 +259,62 @@
                 });
             });
 
-            // Load character data from session storage
-            const characterData = JSON.parse(sessionStorage.getItem('characterData'));
-            if (!characterData) {
-                window.location.href = 'index.html';
-                return;
+            // --- Functions to create and populate elements ---
+            function populateCharacterData(data) {
+                document.getElementById('characterName').textContent = data.name || 'Unnamed Character';
+                document.getElementById('charName').textContent = data.name || 'Unnamed Character';
+                document.getElementById('charRaceClass').textContent = `${data.race || 'Unknown'} ${data.class || 'Adventurer'}`;
+                document.getElementById('charLevel').textContent = data.level || '1';
+                document.getElementById('charHP').textContent = `${data.hp?.current || 0}/${data.hp?.max || 0}`;
+                document.getElementById('charAC').textContent = data.ac || '10';
+                
+                document.getElementById('charSTR').textContent = data.stats?.strength || '10';
+                document.getElementById('charDEX').textContent = data.stats?.dexterity || '10';
+                document.getElementById('charCON').textContent = data.stats?.constitution || '10';
+                document.getElementById('charINT').textContent = data.stats?.intelligence || '10';
+                document.getElementById('charWIS').textContent = data.stats?.wisdom || '10';
+                document.getElementById('charCHA').textContent = data.stats?.charisma || '10';
+                
+                document.getElementById('charRace').textContent = data.race || '-';
+                document.getElementById('charClass').textContent = data.class || '-';
+                document.getElementById('charBackground').textContent = data.background || '-';
+                document.getElementById('charAlignment').textContent = data.alignment || '-';
+                
+                updateList(document.getElementById('charProficiencies'), data.proficiencies, createProficiencyChip, '<p class="text-gray-500">No proficiencies</p>');
+                updateList(document.getElementById('charFeatures'), data.features, createFeatureElement, '<p class="text-gray-500">No features or traits</p>');
+                updateList(document.getElementById('carriedItems'), data.inventory?.carried, createInventoryItem, '<p class="text-gray-500 col-span-2">No items carried</p>');
+                updateList(document.getElementById('storedItems'), data.inventory?.stored, createInventoryItem, '<p class="text-gray-500 col-span-2">No items stored</p>');
+                updateList(document.getElementById('pastAdventures'), data.adventures?.past, adventure => createAdventureElement(adventure, false), '<p class="text-gray-500">No past adventures</p>');
+                updateList(document.getElementById('upcomingAdventures'), data.adventures?.upcoming, adventure => createAdventureElement(adventure, true), '<p class="text-gray-500">No upcoming adventures</p>');
+                feather.replace();
             }
 
-            // Populate character data
-            document.getElementById('characterName').textContent = characterData.name || 'Unnamed Character';
-            document.getElementById('charName').textContent = characterData.name || 'Unnamed Character';
-            document.getElementById('charRaceClass').textContent = `${characterData.race || 'Unknown'} ${characterData.class || 'Adventurer'}`;
-            document.getElementById('charLevel').textContent = characterData.level || '1';
-            document.getElementById('charHP').textContent = `${characterData.hp?.current || 0}/${characterData.hp?.max || 0}`;
-            document.getElementById('charAC').textContent = characterData.ac || '10';
-            
-            // Stats
-            document.getElementById('charSTR').textContent = characterData.stats?.strength || '10';
-            document.getElementById('charDEX').textContent = characterData.stats?.dexterity || '10';
-            document.getElementById('charCON').textContent = characterData.stats?.constitution || '10';
-            document.getElementById('charINT').textContent = characterData.stats?.intelligence || '10';
-            document.getElementById('charWIS').textContent = characterData.stats?.wisdom || '10';
-            document.getElementById('charCHA').textContent = characterData.stats?.charisma || '10';
-            
-            // Details
-            document.getElementById('charRace').textContent = characterData.race || '-';
-            document.getElementById('charClass').textContent = characterData.class || '-';
-            document.getElementById('charBackground').textContent = characterData.background || '-';
-            document.getElementById('charAlignment').textContent = characterData.alignment || '-';
-            
-            // Proficiencies
-            const proficienciesContainer = document.getElementById('charProficiencies');
-            if (characterData.proficiencies && characterData.proficiencies.length > 0) {
-                characterData.proficiencies.forEach(prof => {
-                    const chip = document.createElement('span');
-                    chip.className = 'bg-gray-700 text-sm px-3 py-1 rounded-full';
-                    chip.textContent = prof;
-                    proficienciesContainer.appendChild(chip);
-                });
-            } else {
-                proficienciesContainer.innerHTML = '<p class="text-gray-500">No proficiencies</p>';
+            function updateList(container, items, creator, emptyMessage) {
+                container.innerHTML = '';
+                if (items && items.length > 0) {
+                    items.forEach(item => container.appendChild(creator(item)));
+                } else {
+                    container.innerHTML = emptyMessage;
+                }
             }
-            
-            // Features & Traits
-            const featuresContainer = document.getElementById('charFeatures');
-            if (characterData.features && characterData.features.length > 0) {
-                characterData.features.forEach(feat => {
-                    const feature = document.createElement('div');
-                    feature.className = 'bg-gray-700 p-3 rounded-lg';
-                    feature.innerHTML = `
-                        <h4 class="font-medium">${feat.name || 'Feature'}</h4>
-                        <p class="text-sm text-gray-400 mt-1">${feat.description || 'No description available.'}</p>
-                    `;
-                    featuresContainer.appendChild(feature);
-                });
-            } else {
-                featuresContainer.innerHTML = '<p class="text-gray-500">No features or traits</p>';
+
+            function createProficiencyChip(prof) {
+                const chip = document.createElement('span');
+                chip.className = 'bg-gray-700 text-sm px-3 py-1 rounded-full';
+                chip.textContent = prof;
+                return chip;
             }
-            
-            // Inventory
-            const carriedItemsContainer = document.getElementById('carriedItems');
-            const storedItemsContainer = document.getElementById('storedItems');
-            
-            if (characterData.inventory?.carried && characterData.inventory.carried.length > 0) {
-                characterData.inventory.carried.forEach(item => {
-                    const itemElement = createInventoryItem(item);
-                    carriedItemsContainer.appendChild(itemElement);
-                });
-            } else {
-                carriedItemsContainer.innerHTML = '<p class="text-gray-500 col-span-2">No items carried</p>';
+
+            function createFeatureElement(feat) {
+                const feature = document.createElement('div');
+                feature.className = 'bg-gray-700 p-3 rounded-lg';
+                feature.innerHTML = `
+                    <h4 class="font-medium">${feat.name || 'Feature'}</h4>
+                    <p class="text-sm text-gray-400 mt-1">${feat.description || 'No description available.'}</p>
+                `;
+                return feature;
             }
-            
-            if (characterData.inventory?.stored && characterData.inventory.stored.length > 0) {
-                characterData.inventory.stored.forEach(item => {
-                    const itemElement = createInventoryItem(item);
-                    storedItemsContainer.appendChild(itemElement);
-                });
-            } else {
-                storedItemsContainer.innerHTML = '<p class="text-gray-500 col-span-2">No items stored</p>';
-            }
-            
-            // Adventures
-            const pastAdventuresContainer = document.getElementById('pastAdventures');
-            const upcomingAdventuresContainer = document.getElementById('upcomingAdventures');
-            
-            if (characterData.adventures?.past && characterData.adventures.past.length > 0) {
-                characterData.adventures.past.forEach(adventure => {
-                    const adventureElement = createAdventureElement(adventure, false);
-                    pastAdventuresContainer.appendChild(adventureElement);
-                });
-            } else {
-                pastAdventuresContainer.innerHTML = '<p class="text-gray-500">No past adventures</p>';
-            }
-            
-            if (characterData.adventures?.upcoming && characterData.adventures.upcoming.length > 0) {
-                characterData.adventures.upcoming.forEach(adventure => {
-                    const adventureElement = createAdventureElement(adventure, true);
-                    upcomingAdventuresContainer.appendChild(adventureElement);
-                });
-            } else {
-                upcomingAdventuresContainer.innerHTML = '<p class="text-gray-500">No upcoming adventures</p>';
-            }
-            
+
             function createInventoryItem(item) {
                 const element = document.createElement('div');
                 element.className = 'inventory-item bg-gray-700 p-3 rounded-lg transition duration-200';
@@ -368,7 +330,6 @@
                         </div>
                     </div>
                 `;
-                feather.replace();
                 return element;
             }
             
@@ -377,8 +338,8 @@
                 element.className = `bg-gray-700 p-4 rounded-lg ${isUpcoming ? 'mb-3' : ''}`;
                 
                 const date = adventure.date ? new Date(adventure.date).toLocaleDateString() : 'Date unknown';
-                const status = isUpcoming ? 
-                    `<span class="bg-emerald-900 text-emerald-300 text-xs px-2 py-1 rounded-full">Upcoming</span>` : 
+                const status = isUpcoming ?
+                    `<span class="bg-emerald-900 text-emerald-300 text-xs px-2 py-1 rounded-full">Upcoming</span>` :
                     `<span class="bg-purple-900 text-purple-300 text-xs px-2 py-1 rounded-full">Completed</span>`;
                 
                 element.innerHTML = `
