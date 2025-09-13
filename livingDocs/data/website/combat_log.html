@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combat Simulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        .body-part {
+            transition: all 0.3s ease;
+        }
+        .body-part:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+        .health-bar {
+            transition: width 0.5s ease;
+        }
+        .combat-log {
+            max-height: 300px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+        }
+        .character-card {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+        .character-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .dice-roll {
+            animation: diceRoll 0.5s ease-out;
+        }
+        @keyframes diceRoll {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.2); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">Combat Simulator</h1>
+            <p class="text-lg text-gray-600">A tactical combat system with body part damage and debuffs</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Character 1 -->
+            <div class="character-card bg-white rounded-lg p-6" id="character1">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-semibold text-gray-800" id="char1-name">Warrior</h2>
+                    <div class="flex space-x-2">
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium" id="char1-status">Conscious</span>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500 mb-1">Stats</h3>
+                        <ul class="space-y-1">
+                            <li class="flex justify-between">
+                                <span class="text-gray-600">Melee:</span>
+                                <span class="font-medium" id="char1-melee">12</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span class="text-gray-600">Ranged:</span>
+                                <span class="font-medium" id="char1-ranged">8</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span class="text-gray-600">Dodge:</span>
+                                <span class="font-medium" id="char1-dodge">10</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span class="text-gray-600">Soak:</span>
+                                <span class="font-medium" id="char1-soak">5</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500 mb-1">Weapon</h3>
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <div class="font-medium" id="char1-weapon">Longsword</div>
+                            <div class="text-sm text-gray-500" id="char1-weapon-dmg">1d8 damage</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 class="text-sm font-medium text-gray-500 mb-2">Body Parts</h3>
+                <div class="space-y-3">
+                    <div class="body-part bg-gray-50 p-3 rounded-lg" data-part="head">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-medium">Head</span>
+                            <span class="text-sm" id="char1-head-hp">10/10 HP</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="health-bar bg-green-500 h-2 rounded-full" style="width: 100%" id="char1-head-bar"></div>
+                        </div>
+                        <div class="text-xs text-red-500 mt-1 hidden" id="char1-head-debuff">-2 to all stats</div>
+                    </div>
+                    
+                    <div class="body-part bg-gray-50 p-3 rounded-lg" data-part="torso">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-medium">Torso</span>
+                            <span class="text-sm" id="char1-torso-hp">15/15 HP</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="health-bar bg-green-500 h-2 rounded-full" style="width: 100%" id="char1-torso-bar"></div>
+                        </div>
+                        <div class="text-xs text-red-500 mt-1 hidden" id="char1-torso-debuff">-1 to all actions</div>
+                    </div>
+                    
+                    <div class="body-part bg-gray-50 p-3 rounded-lg" data-part="right-arm">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-medium">Right Arm</span>
+                            <span class="text-sm" id="char1-right-arm-hp">8/8 HP</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="health-bar bg-green-500 h-2 rounded-full" style="width: 100%" id="char1-right-arm-bar"></div>
+                        </div>
+                        <div class="text-xs text-red-500 mt-1 hidden" id="char1-right-arm-debuff">-2 to Melee/Ranged</div>
+                    </div>
+                    
+                    <div class="body-part bg-gray-50 p-3 rounded-lg" data-part="left-arm">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-medium">Left Arm</span>
+                            <span class="text-sm" id="char1-left-arm-hp">8/8 HP</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="health-bar bg-green-500 h-2 rounded-full" style="width: 100%" id="char1-left-arm-bar"></div>
+                        </div>
+                        <div class="text-xs text-red-500 mt-1 hidden" id="char1-left-arm-debuff">-2 to Melee/Ranged</div>
+                    </div>
+                    
+                    <div class="body-part bg-gray-50 p-3 rounded-lg" data-part="right-leg">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-medium">Right Leg</span>
+                            <span class="text-sm" id="char1-right-leg-hp">10/10 HP</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="health-bar bg-green-500 h-2 rounded-full" style="width: 100%" id="char1-right-leg-bar"></div>
+                        </div>
+                        <div class="text-xs text-red-500 mt-1 hidden" id="char1-right-leg-debuff">-2 to Dodge</div>
+                    </div>
+                    
+                    <div class="body-part bg-gray-50 p-3 rounded-lg" data-part="left-leg">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-medium">Left Leg</span>
+                            <span class="text-sm" id="char1-left-leg-hp">10/10 HP</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="health-bar bg-green-500 h-2 rounded-full" style="width: 100%" id="char1-left-leg-bar"></div>
+                        </div>
+                        <div class="text-xs text-red-500 mt-1 hidden" id="char1-left-leg-debuff">-2 to Dodge</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Character 2 -->
+            <div class="character-card bg-white rounded-lg p-6" id="character2">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-semibold text-gray-800" id="char2-name">Archer</h2>
+                    <div class="flex space-x-2">
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium" id="char2-status">Conscious</span>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500 mb-1">Stats</h3>
+                        <ul class="space-y-1">
+                            <li class="flex justify-between">
+                                <span class="text-gray-600">Melee:</span>
+                                <span class="font-medium" id="char2-melee">8</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span class="text-gray-600">Ranged:</span>
+                                <span class="font-medium" id="char2-ranged">12</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span class="text-gray-600">Dodge:</span>
+                                <span class="font-medium" id="char2-dodge">12</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span class="text-gray-600">Soak:</span>
+                                <span class="font-medium" id="char2-soak">3</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500 mb-1">Weapon</h3>
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <div class="font-medium" id="char2-weapon">Longbow</div>
+                            <div class="text-sm text-gray-500" id="char2-weapon-dmg">1d6 damage</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 class="text-sm font-medium text-gray-500 mb-2">Body Parts</h3>
+                <div class="space-y-3">
+                    <div class="body-part bg-gray-50 p-3 rounded-lg" data-part="head">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-medium">Head</span>
+                            <span class="text-sm" id="char2-head-hp">10/10 HP</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="health-bar bg-green-500 h-2 rounded-full" style="width: 100%" id="char2-head-bar"></div>
+                        </div>
+                        <div class="text-xs text-red-500 mt-1 hidden" id="char2-head-debuff">-2 to all stats</div>
+                    </div>
+                    
+                    <div class="body-part bg-gray-50 p-3 rounded-lg" data-part="torso">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-medium">Torso</span>
+                            <span class="text-sm" id="char2-torso-hp">12/12 HP</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="health-bar bg-green-500 h-2 rounded-full" style="width: 100%" id="char2-torso-bar"></div>
+                        </div>
+                        <div class="text-xs text-red-500 mt-1 hidden" id="char2-torso-debuff">-1 to all actions</div>
+                    </div>
+                    
+                    <div class="body-part bg-gray-50 p-3 rounded-lg" data-part="right-arm">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-medium">Right Arm</span>
+                            <span class="text-sm" id="char2-right-arm-hp">8/8 HP</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="health-bar bg-green-500 h-2 rounded-full" style="width: 100%" id="char2-right-arm-bar"></div>
+                        </div>
+                        <div class="text-xs text-red-500 mt-1 hidden" id="char2-right-arm-debuff">-2 to Melee/Ranged</div>
+                    </div>
+                    
+                    <div class="body-part bg-gray-50 p-3 rounded-lg" data-part="left-arm">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-medium">Left Arm</span>
+                            <span class="text-sm" id="char2-left-arm-hp">8/8 HP</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="health-bar bg-green-500 h-2 rounded-full" style="width: 100%" id="char2-left-arm-bar"></div>
+                        </div>
+                        <div class="text-xs text-red-500 mt-1 hidden" id="char2-left-arm-debuff">-2 to Melee/Ranged</div>
+                    </div>
+                    
+                    <div class="body-part bg-gray-50 p-3 rounded-lg" data-part="right-leg">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-medium">Right Leg</span>
+                            <span class="text-sm" id="char2-right-leg-hp">10/10 HP</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="health-bar bg-green-500 h-2 rounded-full" style="width: 100%" id="char2-right-leg-bar"></div>
+                        </div>
+                        <div class="text-xs text-red-500 mt-1 hidden" id="char2-right-leg-debuff">-2 to Dodge</div>
+                    </div>
+                    
+                    <div class="body-part bg-gray-50 p-3 rounded-lg" data-part="left-leg">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-medium">Left Leg</span>
+                            <span class="text-sm" id="char2-left-leg-hp">10/10 HP</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="health-bar bg-green-500 h-2 rounded-full" style="width: 100%" id="char2-left-leg-bar"></div>
+                        </div>
+                        <div class="text-xs text-red-500 mt-1 hidden" id="char2-left-leg-debuff">-2 to Dodge</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Controls -->
+        <div class="bg-white rounded-lg p-6 mb-8">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Combat Controls</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Attacker</label>
+                    <select class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" id="attacker-select">
+                        <option value="1">Warrior</option>
+                        <option value="2">Archer</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Defender</label>
+                    <select class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" id="defender-select">
+                        <option value="2">Archer</option>
+                        <option value="1">Warrior</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Target Body Part</label>
+                    <select class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" id="target-part">
+                        <option value="random">Random</option>
+                        <option value="head">Head</option>
+                        <option value="torso">Torso</option>
+                        <option value="right-arm">Right Arm</option>
+                        <option value="left-arm">Left Arm</option>
+                        <option value="right-leg">Right Leg</option>
+                        <option value="left-leg">Left Leg</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap gap-4">
+                <button class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" id="attack-btn">
+                    <i data-feather="sword" class="mr-2"></i> Attack
+                </button>
+                <button class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2" id="called-shot-btn">
+                    <i data-feather="target" class="mr-2"></i> Called Shot (-10% hit, +5% dmg)
+                </button>
+                <button class="px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2" id="auto-combat-btn">
+                    <i data-feather="repeat" class="mr-2"></i> Auto Combat (5 rounds)
+                </button>
+                <button class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" id="reset-btn">
+                    <i data-feather="refresh-cw" class="mr-2"></i> Reset
+                </button>
+            </div>
+        </div>
+        
+        <!-- Combat Log -->
+        <div class="bg-white rounded-lg p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-gray-800">Combat Log</h2>
+                <button class="text-sm text-blue-600 hover:text-blue-800" id="clear-log-btn">Clear Log</button>
+            </div>
+            <div class="combat-log bg-gray-50 p-4 rounded-lg font-mono text-sm" id="combat-log">
+                <div class="text-gray-500">Combat log will appear here...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize components
+        feather.replace();
+        AOS.init();
+        
+        // Game state
+        const characters = {
+            1: {
+                name: "Warrior",
+                stats: { melee: 12, ranged: 8, dodge: 10, soak: 5 },
+                weapon: { name: "Longsword", damage: "1d8" },
+                bodyParts: {
+                    head: { maxHp: 10, currentHp: 10, debuff: false, debuffDesc: "-2 to all stats", threshold: 0.5 },
+                    torso: { maxHp: 15, currentHp: 15, debuff: false, debuffDesc: "-1 to all actions", threshold: 0.5 },
+                    rightArm: { maxHp: 8, currentHp: 8, debuff: false, debuffDesc: "-2 to Melee/Ranged", threshold: 0.5 },
+                    leftArm: { maxHp: 8, currentHp: 8, debuff: false, debuffDesc: "-2 to Melee/Ranged", threshold: 0.5 },
+                    rightLeg: { maxHp: 10, currentHp: 10, debuff: false, debuffDesc: "-2 to Dodge", threshold: 0.5 },
+                    leftLeg: { maxHp: 10, currentHp: 10, debuff: false, debuffDesc: "-2 to Dodge", threshold: 0.5 }
+                },
+                conscious: true
+            },
+            2: {
+                name: "Archer",
+                stats: { melee: 8, ranged: 12, dodge: 12, soak: 3 },
+                weapon: { name: "Longbow", damage: "1d6" },
+                bodyParts: {
+                    head: { maxHp: 10, currentHp: 10, debuff: false, debuffDesc: "-2 to all stats", threshold: 0.5 },
+                    torso: { maxHp: 12, currentHp: 12, debuff: false, debuffDesc: "-1 to all actions", threshold: 0.5 },
+                    rightArm: { maxHp: 8, currentHp: 8, debuff: false, debuffDesc: "-2 to Melee/Ranged", threshold: 0.5 },
+                    leftArm: { maxHp: 8, currentHp: 8, debuff: false, debuffDesc: "-2 to Melee/Ranged", threshold: 0.5 },
+                    rightLeg: { maxHp: 10, currentHp: 10, debuff: false, debuffDesc: "-2 to Dodge", threshold: 0.5 },
+                    leftLeg: { maxHp: 10, currentHp: 10, debuff: false, debuffDesc: "-2 to Dodge", threshold: 0.5 }
+                },
+                conscious: true
+            }
+        };
+        
+        // DOM elements
+        const combatLog = document.getElementById('combat-log');
+        const attackBtn = document.getElementById('attack-btn');
+        const calledShotBtn = document.getElementById('called-shot-btn');
+        const autoCombatBtn = document.getElementById('auto-combat-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const clearLogBtn = document.getElementById('clear-log-btn');
+        const attackerSelect = document.getElementById('attacker-select');
+        const defenderSelect = document.getElementById('defender-select');
+        const targetPartSelect = document.getElementById('target-part');
+        
+        // Helper functions
+        function rollDice(diceString) {
+            const [numDice, diceSides] = diceString.split('d').map(Number);
+            let total = 0;
+            for (let i = 0; i < numDice; i++) {
+                total += Math.floor(Math.random() * diceSides) + 1;
+            }
+            return total;
+        }
+        
+        function getRandomBodyPart() {
+            const parts = ['head', 'torso', 'right-arm', 'left-arm', 'right-leg', 'left-leg'];
+            return parts[Math.floor(Math.random() * parts.length)];
+        }
+        
+        function logMessage(message, type = 'info') {
+            const colors = {
+                info: 'text-gray-800',
+                success: 'text-green-600',
+                danger: 'text-red-600',
+                warning: 'text-yellow-600',
+                highlight: 'text-blue-600 font-medium'
+            };
+            
+            const logEntry = document.createElement('div');
+            logEntry.className = `mb-1 ${colors[type] || colors.info}`;
+            logEntry.textContent = message;
+            combatLog.appendChild(logEntry);
+            combatLog.scrollTop = combatLog.scrollHeight;
+        }
+        
+        function updateUI() {
+            // Update character 1
+            const char1 = characters[1];
+            document.getElementById('char1-name').textContent = char1.name;
+            document.getElementById('char1-status').textContent = char1.conscious ? 'Conscious' : 'Unconscious';
+            document.getElementById('char1-status').className = char1.conscious ? 
+                'px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium' : 
+                'px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium';
+                
+            document.getElementById('char1-melee').textContent = char1.stats.melee;
+            document.getElementById('char1-ranged').textContent = char1.stats.ranged;
+            document.getElementById('char1-dodge').textContent = char1.stats.dodge;
+            document.getElementById('char1-soak').textContent = char1.stats.soak;
+            
+            document.getElementById('char1-weapon').textContent = char1.weapon.name;
+            document.getElementById('char1-weapon-dmg').textContent = `${char1.weapon.damage} damage`;
+            
+            // Update character 1 body parts
+            for (const [part, data] of Object.entries(char1.bodyParts)) {
+                const hpPercent = (data.currentHp / data.maxHp) * 100;
+                const color = hpPercent > 50 ? 'bg-green-500' : hpPercent > 25 ? 'bg-yellow-500' : 'bg-red-500';
+                
+                document.getElementById(`char1-${part}-hp`).textContent = `${data.currentHp}/${data.maxHp} HP`;
+                const bar = document.getElementById(`char1-${part}-bar`);
+                bar.className = `health-bar ${color} h-2 rounded-full`;
+                bar.style.width = `${hpPercent}%`;
+                
+                const debuffElement = document.getElementById(`char1-${part}-debuff`);
+                if (data.debuff) {
+                    debuffElement.textContent = data.debuffDesc;
+                    debuffElement.classList.remove('hidden');
+                } else {
+                    debuffElement.classList.add('hidden');
+                }
+            }
+            
+            // Update character 2
+            const char2 = characters[2];
+            document.getElementById('char2-name').textContent = char2.name;
+            document.getElementById('char2-status').textContent = char2.conscious ? 'Conscious' : 'Unconscious';
+            document.getElementById('char2-status').className = char2.conscious ? 
+                'px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium' : 
+                'px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium';
+                
+            document.getElementById('char2-melee').textContent = char2.stats.melee;
+            document.getElementById('char2-ranged').textContent = char2.stats.ranged;
+            document.getElementById('char2-dodge').textContent = char2.stats.dodge;
+            document.getElementById('char2-soak').textContent = char2.stats.soak;
+            
+            document.getElementById('char2-weapon').textContent = char2.weapon.name;
+            document.getElementById('char2-weapon-dmg').textContent = `${char2.weapon.damage} damage`;
+            
+            // Update character 2 body parts
+            for (const [part, data] of Object.entries(char2.bodyParts)) {
+                const hpPercent = (data.currentHp / data.maxHp) * 100;
+                const color = hpPercent > 50 ? 'bg-green-500' : hpPercent > 25 ? 'bg-yellow-500' : 'bg-red-500';
+                
+                document.getElementById(`char2-${part}-hp`).textContent = `${data.currentHp}/${data.maxHp} HP`;
+                const bar = document.getElementById(`char2-${part}-bar`);
+                bar.className = `health-bar ${color} h-2 rounded-full`;
+                bar.style.width = `${hpPercent}%`;
+                
+                const debuffElement = document.getElementById(`char2-${part}-debuff`);
+                if (data.debuff) {
+                    debuffElement.textContent = data.debuffDesc;
+                    debuffElement.classList.remove('hidden');
+                } else {
+                    debuffElement.classList.add('hidden');
+                }
+            }
+        }
+        
+        function applyDebuff(character, bodyPart) {
+            const char = characters[character];
+            const part = char.bodyParts[bodyPart];
+            
+            if (part.debuff) return; // Debuff already applied
+            
+            part.debuff = true;
+            logMessage(`${char.name} suffers a debuff due to injury to their ${bodyPart.replace('-', ' ')}! Effect: ${part.debuffDesc}`, 'danger');
+            
+            // Apply debuff effects
+            if (bodyPart.includes('arm')) {
+                char.stats.melee = Math.max(0, char.stats.melee - 2);
+                char.stats.ranged = Math.max(0, char.stats.ranged - 2);
+            } else if (bodyPart.includes('leg')) {
+                char.stats.dodge = Math.max(0, char.stats.dodge - 2);
+            } else if (bodyPart === 'head') {
+                char.stats.melee = Math.max(0, char.stats.melee - 2);
+                char.stats.ranged = Math.max(0, char.stats.ranged - 2);
+                char.stats.dodge = Math.max(0, char.stats.dodge - 2);
+            } else if (bodyPart === 'torso') {
+                char.stats.melee = Math.max(0, char.stats.melee - 1);
+                char.stats.ranged = Math.max(0, char.stats.ranged - 1);
+                char.stats.dodge = Math.max(0, char.stats.dodge - 1);
+            }
+            
+            updateUI();
+        }
+        
+        function checkUnconscious(character) {
+            const char = characters[character];
+            
+            // Check if all body parts are at 0 HP
+            let allZero = true;
+            for (const part of Object.values(char.bodyParts)) {
+                if (part.currentHp > 0) {
+                    allZero = false;
+                    break;
+                }
+            }
+            
+            if (allZero) {
+                char.conscious = false;
+                logMessage(`${char.name} is knocked out!`, 'danger');
+                return true;
+            }
+            
+            return false;
+        }
+        
+        function simulateAttack(attackerId, defenderId, calledShot = false) {
+            const attacker = characters[attackerId];
+            const defender = characters[defenderId];
+            
+            if (!attacker.conscious) {
+                logMessage(`${attacker.name} is unconscious and cannot attack!`, 'warning');
+                return;
+            }
+            
+            if (!defender.conscious) {
+                logMessage(`${defender.name} is already unconscious!`, 'warning');
+                return;
+            }
+            
+            // Determine target body part
+            let targetPart = targetPartSelect.value;
+            if (targetPart === 'random') {
+                targetPart = getRandomBodyPart();
+            }
+            
+            // Called shot modifiers
+            const toHitModifier = calledShot ? -10 : 0;
+            const damageModifier = calledShot ? 5 : 0;
+            
+            logMessage(`${attacker.name} attacks ${defender.name}${calledShot ? ' with a called shot to the ' + targetPart.replace('-', ' ') : ''}...`, 'info');
+            
+            // Hit/Dodge roll
+            const hitRoll = rollDice('1d20') + attacker.stats.melee + toHitModifier;
+            const dodgeRoll = rollDice('1d20') + defender.stats.dodge;
+            
+            logMessage(`Hit Roll: ${hitRoll - attacker.stats.melee - toHitModifier} (d20) + ${attacker.stats.melee} (Melee)${toHitModifier !== 0 ? ` + ${toHitModifier} (Called Shot)` : ''} = ${hitRoll}`, 'highlight');
+            logMessage(`Dodge Roll: ${dodgeRoll - defender.stats.dodge} (d20) + ${defender.stats.dodge} (Dodge) = ${dodgeRoll}`, 'highlight');
+            
+            if (hitRoll >= dodgeRoll) {
+                logMessage(`${attacker.name} hits ${defender.name}!`, 'success');
+                
+                // Damage/Soak roll
+                const baseDamage = rollDice(attacker.weapon.damage);
+                const finalDamage = Math.max(0, baseDamage + damageModifier - defender.stats.soak);
+                
+                logMessage(`Damage: ${baseDamage} (${attacker.weapon.damage})${damageModifier !== 0 ? ` + ${damageModifier} (Called Shot)` : ''} - ${defender.stats.soak} (Soak) = ${finalDamage}`, 'highlight');
+                
+                if (finalDamage > 0) {
+                    // Apply damage to the targeted body part
+                    const part = defender.bodyParts[targetPart];
+                    part.currentHp = Math.max(0, part.currentHp - finalDamage);
+                    
+                    logMessage(`${defender.name} takes ${finalDamage} damage to the ${targetPart.replace('-', ' ')}! (${part.currentHp}/${part.maxHp} HP remaining)`, 'danger');
+                    
+                    // Check for debuff
+                    const hpPercent = part.currentHp / part.maxHp;
+                    if (hpPercent < part.threshold && !part.debuff) {
+                        applyDebuff(defenderId, targetPart);
+                    }
+                    
+                    // Check for unconsciousness
+                    checkUnconscious(defenderId);
+                } else {
+                    logMessage(`The attack was completely absorbed by ${defender.name}'s armor!`, 'info');
+                }
+            } else {
+                logMessage(`${attacker.name} misses!`, 'warning');
+            }
+            
+            updateUI();
+        }
+        
+        // Event listeners
+        attackBtn.addEventListener('click', () => {
+            const attackerId = parseInt(attackerSelect.value);
+            const defenderId = parseInt(defenderSelect.value);
+            simulateAttack(attackerId, defenderId);
+        });
+        
+        calledShotBtn.addEventListener('click', () => {
+            const attackerId = parseInt(attackerSelect.value);
+            const defenderId = parseInt(defenderSelect.value);
+            simulateAttack(attackerId, defenderId, true);
+        });
+        
+        autoCombatBtn.addEventListener('click', () => {
+            const attackerId = parseInt(attackerSelect.value);
+            const defenderId = parseInt(defenderSelect.value);
+            
+            let rounds = 0;
+            const maxRounds = 5;
+            
+            const interval = setInterval(() => {
+                if (rounds >= maxRounds || !characters[attackerId].conscious || !characters[defenderId].conscious) {
+                    clearInterval(interval);
+                    logMessage(`Auto combat completed after ${rounds} rounds.`, 'info');
+                    return;
+                }
+                
+                simulateAttack(attackerId, defenderId);
+                rounds++;
+            }, 1000);
+        });
+        
+        resetBtn.addEventListener('click', () => {
+            // Reset character 1
+            characters[1] = {
+                name: "Warrior",
+                stats: { melee: 12, ranged: 8, dodge: 10, soak: 5 },
+                weapon: { name: "Longsword", damage: "1d8" },
+                bodyParts: {
+                    head: { maxHp: 10, currentHp: 10, debuff: false, debuffDesc: "-2 to all stats", threshold: 0.5 },
+                    torso: { maxHp: 15, currentHp: 15, debuff: false, debuffDesc: "-1 to all actions", threshold: 0.5 },
+                    rightArm: { maxHp: 8, currentHp: 8, debuff: false, debuffDesc: "-2 to Melee/Ranged", threshold: 0.5 },
+                    leftArm: { maxHp: 8, currentHp: 8, debuff: false, debuffDesc: "-2 to Melee/Ranged", threshold: 0.5 },
+                    rightLeg: { maxHp: 10, currentHp: 10, debuff: false, debuffDesc: "-2 to Dodge", threshold: 0.5 },
+                    leftLeg: { maxHp: 10, currentHp: 10, debuff: false, debuffDesc: "-2 to Dodge", threshold: 0.5 }
+                },
+                conscious: true
+            };
+            
+            // Reset character 2
+            characters[2] = {
+                name: "Archer",
+                stats: { melee: 8, ranged: 12, dodge: 12, soak: 3 },
+                weapon: { name: "Longbow", damage: "1d6" },
+                bodyParts: {
+                    head: { maxHp: 10, currentHp: 10, debuff: false, debuffDesc: "-2 to all stats", threshold: 0.5 },
+                    torso: { maxHp: 12, currentHp: 12, debuff: false, debuffDesc: "-1 to all actions", threshold: 0.5 },
+                    rightArm: { maxHp: 8, currentHp: 8, debuff: false, debuffDesc: "-2 to Melee/Ranged", threshold: 0.5 },
+                    leftArm: { maxHp: 8, currentHp: 8, debuff: false, debuffDesc: "-2 to Melee/Ranged", threshold: 0.5 },
+                    rightLeg: { maxHp: 10, currentHp: 10, debuff: false, debuffDesc: "-2 to Dodge", threshold: 0.5 },
+                    leftLeg: { maxHp: 10, currentHp: 10, debuff: false, debuffDesc: "-2 to Dodge", threshold: 0.5 }
+                },
+                conscious: true
+            };
+            
+            updateUI();
+            logMessage('Game has been reset to initial state.', 'info');
+        });
+        
+        clearLogBtn.addEventListener('click', () => {
+            combatLog.innerHTML = '<div class="text-gray-500">Combat log cleared...</div>';
+        });
+        
+        // Initialize UI
+        updateUI();
+        logMessage('Combat simulator ready. Select attackers and targets to begin.', 'info');
+    </script>
+</body>
+</html>
