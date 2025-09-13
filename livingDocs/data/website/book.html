@@ -1,0 +1,226 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>The LLM Book</title>
+                <script src="https://cdn.tailwindcss.com"></script>
+                <style>
+                    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+                    body { font-family: 'Inter', sans-serif; background-color: #f7fafc; }
+                    .tab-button {
+                        padding: 10px 20px;
+                        cursor: pointer;
+                        border-radius: 8px 8px 0 0;
+                        transition: all 0.3s ease;
+                        @apply border-b-2 font-medium text-gray-500 hover:text-gray-900 border-transparent hover:border-blue-500;
+                    }
+                    .tab-button.active {
+                        @apply text-blue-600 border-blue-600 font-bold;
+                    }
+                    .tab-content { display: none; }
+                    .tab-content.active { display: block; }
+                    .cover-image {
+                        width: 96px; /* Tailwind w-24 */
+                        height: auto;
+                        border-radius: 8px; /* Tailwind rounded-lg */
+                        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Tailwind shadow-md */
+                    }
+                    .chapter-image {
+                        float: left;
+                        margin-right: 1rem; /* Tailwind mr-4 */
+                        margin-bottom: 0.5rem; /* Tailwind mb-2 */
+                        width: 128px; /* Tailwind w-32 */
+                        height: auto;
+                        border-radius: 8px; /* Tailwind rounded-lg */
+                        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Tailwind shadow-md */
+                    }
+                    .clear-both { clear: both; }
+                </style>
+            </head>
+            <body class="p-6">
+                <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-lg">
+                    <!-- Tabs -->
+                    <div class="flex border-b border-gray-200 mb-6">
+                        
+            <button class="tab-button active" onclick="openTab(event, 'cover')">Cover</button>
+        
+                <button class="tab-button" onclick="openTab(event, 'chapter_1')">Chapter 1</button>
+            
+                <button class="tab-button" onclick="openTab(event, 'chapter_2')">Chapter 2</button>
+            
+                <button class="tab-button" onclick="openTab(event, 'chapter_3')">Chapter 3</button>
+            
+            <button class="tab-button" onclick="openTab(event, 'data')">Data Export</button>
+        
+                    </div>
+
+                    <!-- Tab Content -->
+                    <div>
+                        
+            <div id="cover" class="tab-content active">
+                
+            <h1 class="text-3xl font-bold mb-4">Relight the lamp of the Shadow Realm.</h1>
+            <h2 class="text-xl mb-2">A Story by a Collaborative AI System</h2>
+            <p><strong>Characters:</strong> Elara, Kael</p>
+            <div class="flex flex-wrap gap-4 mb-4">
+        
+                <div class="text-center">
+                    <img src="elara.jpg" alt="Elara" class="cover-image">
+                    <p class="text-sm mt-1">Elara</p>
+                </div>
+                
+                <div class="text-center">
+                    <img src="kael.png" alt="Kael" class="cover-image">
+                    <p class="text-sm mt-1">Kael</p>
+                </div>
+                
+            </div>
+            <p><strong>Locations:</strong> The Whispering Peaks, The Obsidian City</p>
+            <div class="flex flex-wrap gap-4 mb-4">
+        
+                <div class="text-center">
+                     <img src="whispering_peaks.gif" alt="The Whispering Peaks" class="cover-image">
+                     <p class="text-sm mt-1">The Whispering Peaks</p>
+                </div>
+                
+                <div class="text-center">
+                     <img src="obsidian_city.webp" alt="The Obsidian City" class="cover-image">
+                     <p class="text-sm mt-1">The Obsidian City</p>
+                </div>
+                
+            </div>
+            <p class="mt-4 text-sm text-gray-500">Generated on: 2025-09-13</p>
+        
+            </div>
+        
+                <div id="chapter_1" class="tab-content">
+                    <h2 class="text-2xl font-semibold mb-4">Chapter 1</h2>
+                            <img src="elara.jpg" alt="Elara" class="chapter-image">
+                            <p class='mb-4'>Content for write the introduction, introducing the protagonist setting the scene in the whispering peaks.. In this section, we see Elara arrive in the Whispering Peaks.</p>
+                            <div class="clear-both"></div>
+                        <p class='mb-4'>More content, but also some dramatic moments.</p>
+                            <img src="kael.png" alt="Kael" class="chapter-image">
+                            <p class='mb-4'>The conflict with Kael begins to unfold. It is a very tense and negative situation.</p>
+                            <div class="clear-both"></div>
+                        
+                            <img src="obsidian_city.webp" alt="The Obsidian City" class="chapter-image">
+                            <p class='mb-4'>The final outcome is to reach the Obsidian City.</p>
+                            <div class="clear-both"></div>
+                        
+                </div>
+            
+                <div id="chapter_2" class="tab-content">
+                    <h2 class="text-2xl font-semibold mb-4">Chapter 2</h2>
+                            <img src="elara.jpg" alt="Elara" class="chapter-image">
+                            <p class='mb-4'>Content for introduce the secondary protagonist begin the initial conflict.. In this section, we see Elara arrive in the Whispering Peaks.</p>
+                            <div class="clear-both"></div>
+                        <p class='mb-4'>More content, but also some dramatic moments.</p>
+                            <img src="kael.png" alt="Kael" class="chapter-image">
+                            <p class='mb-4'>The conflict with Kael begins to unfold. It is a very tense and negative situation.</p>
+                            <div class="clear-both"></div>
+                        
+                            <img src="obsidian_city.webp" alt="The Obsidian City" class="chapter-image">
+                            <p class='mb-4'>The final outcome is to reach the Obsidian City.</p>
+                            <div class="clear-both"></div>
+                        
+                </div>
+            
+                <div id="chapter_3" class="tab-content">
+                    <h2 class="text-2xl font-semibold mb-4">Chapter 3</h2>
+                            <img src="elara.jpg" alt="Elara" class="chapter-image">
+                            <p class='mb-4'>Content for develop the main conflict by having the characters travel to the obsidian city meet the shadow king.. In this section, we see Elara arrive in the Whispering Peaks.</p>
+                            <div class="clear-both"></div>
+                        <p class='mb-4'>More content, but also some dramatic moments.</p>
+                            <img src="kael.png" alt="Kael" class="chapter-image">
+                            <p class='mb-4'>The conflict with Kael begins to unfold. It is a very tense and negative situation.</p>
+                            <div class="clear-both"></div>
+                        
+                            <img src="obsidian_city.webp" alt="The Obsidian City" class="chapter-image">
+                            <p class='mb-4'>The final outcome is to reach the Obsidian City.</p>
+                            <div class="clear-both"></div>
+                        
+                </div>
+            
+            <div id="data" class="tab-content">
+                <h2 class="text-2xl font-semibold mb-4">Raw Data Export</h2>
+                <button onclick="copyDataToClipboard()" class="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Copy to Clipboard</button>
+                <textarea id="data-export-textarea" class="w-full h-96 bg-gray-100 p-4 rounded-lg overflow-x-auto text-sm border border-gray-200" readonly>[
+  {
+    "id": "16e21502-1c51-470c-ac3d-af274964671e",
+    "content": [
+      "Content for write the introduction, introducing the protagonist setting the scene in the whispering peaks.. In this section, we see Elara arrive in the Whispering Peaks.",
+      "More content, but also some dramatic moments.",
+      "The conflict with Kael begins to unfold. It is a very tense and negative situation.",
+      "The final outcome is to reach the Obsidian City."
+    ],
+    "source_task_tag": "chapter_1",
+    "created_at": "2025-09-13T20:34:27.142504"
+  },
+  {
+    "id": "bb15d856-f0e4-471d-a336-a3b96e32814e",
+    "content": [
+      "Content for introduce the secondary protagonist begin the initial conflict.. In this section, we see Elara arrive in the Whispering Peaks.",
+      "More content, but also some dramatic moments.",
+      "The conflict with Kael begins to unfold. It is a very tense and negative situation.",
+      "The final outcome is to reach the Obsidian City."
+    ],
+    "source_task_tag": "chapter_2",
+    "created_at": "2025-09-13T20:34:27.149376"
+  },
+  {
+    "id": "a127df2e-4c17-44dc-bd3d-0ed4f400dc0c",
+    "content": [
+      "Content for develop the main conflict by having the characters travel to the obsidian city meet the shadow king.. In this section, we see Elara arrive in the Whispering Peaks.",
+      "More content, but also some dramatic moments.",
+      "The conflict with Kael begins to unfold. It is a very tense and negative situation.",
+      "The final outcome is to reach the Obsidian City."
+    ],
+    "source_task_tag": "chapter_3",
+    "created_at": "2025-09-13T20:34:27.156417"
+  }
+]</textarea>
+            </div>
+        
+                    </div>
+                </div>
+
+                <script>
+                    function openTab(evt, tabName) {
+                        // Get all tab content elements and hide them
+                        let tabContents = document.getElementsByClassName("tab-content");
+                        for (let i = 0; i < tabContents.length; i++) {
+                            tabContents[i].style.display = "none";
+                        }
+
+                        // Get all tab buttons and remove the "active" class
+                        let tabButtons = document.getElementsByClassName("tab-button");
+                        for (let i = 0; i < tabButtons.length; i++) {
+                            tabButtons[i].classList.remove("active");
+                        }
+
+                        // Show the current tab and add an "active" class to the button
+                        document.getElementById(tabName).style.display = "block";
+                        evt.currentTarget.classList.add("active");
+                    }
+
+                    async function copyDataToClipboard() {
+                        const textarea = document.getElementById('data-export-textarea');
+                        if (textarea) {
+                            try {
+                                await navigator.clipboard.writeText(textarea.value);
+                                alert('Data copied to clipboard!');
+                            } catch (err) {
+                                console.error('Failed to copy data: ', err);
+                                alert('Failed to copy data.');
+                            }
+                        }
+                    }
+
+                    // Initially display the cover tab
+                    document.getElementById('cover').style.display = 'block';
+                </script>
+            </body>
+            </html>
+        
