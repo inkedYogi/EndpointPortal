@@ -1,521 +1,607 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Character Sheet</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-    <script src="https://unpkg.com/feather-icons"></script>
-    <style>
-        .stat-block {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-        }
-        .inventory-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
-        }
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        .nav-tab.active {
-            border-bottom: 2px solid #10b981;
-            color: #10b981;
-        }
-        .modal-overlay {
-            background-color: rgba(0, 0, 0, 0.75);
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Sheet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        .stat-block {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        }
+        .inventory-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .nav-tab.active {
+            border-bottom: 2px solid #10b981;
+            color: #10b981;
+        }
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.75);
+        }
+    </style>
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen">
 
-    <div id="uploader-page" class="flex items-center justify-center min-h-screen">
-        <div class="bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-md">
-            <h1 class="text-2xl font-bold text-center text-emerald-400 mb-6">Upload Character Sheet</h1>
-            <p class="text-gray-400 text-center mb-4">Please upload your JSON file to view your character details.</p>
-            <div class="space-y-4">
-                <label for="jsonFile" class="block text-gray-400">Select your character JSON file:</label>
-                <input type="file" id="jsonFile" accept=".json" class="block w-full text-gray-100
-                    file:mr-4 file:py-2 file:px-4
-                    file:rounded-full file:border-0
-                    file:text-sm file:font-semibold
-                    file:bg-emerald-50 file:text-emerald-700
-                    hover:file:bg-emerald-100" />
-                <button id="uploadButton" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded transition">
-                    Load Character
-                </button>
-            </div>
-        </div>
-    </div>
+    <div id="uploader-page" class="flex items-center justify-center min-h-screen">
+        <div class="bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-md">
+            <h1 class="text-2xl font-bold text-center text-emerald-400 mb-6">Upload Character Sheet</h1>
+            <p class="text-gray-400 text-center mb-4">Please upload your JSON file to view your character details.</p>
+            <div class="space-y-4">
+                <label for="jsonFile" class="block text-gray-400">Select your character JSON file:</label>
+                <input type="file" id="jsonFile" accept=".json" class="block w-full text-gray-100
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-full file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-emerald-50 file:text-emerald-700
+                    hover:file:bg-emerald-100" />
+                <button id="uploadButton" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded transition">
+                    Load Character
+                </button>
+            </div>
+        </div>
+    </div>
 
-    <div id="character-viewer" class="container mx-auto px-4 py-8" style="display: none;">
-        <header class="flex justify-between items-center mb-8">
-            <h1 class="text-3xl font-bold text-emerald-400" id="characterName">Character Name</h1>
-            <button id="backButton" class="flex items-center text-gray-400 hover:text-emerald-400 transition">
-                <i data-feather="arrow-left" class="mr-1"></i> Back
-            </button>
-        </header>
+    <div id="character-viewer" class="container mx-auto px-4 py-8" style="display: none;">
+        <header class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-emerald-400" id="characterName">Character Name</h1>
+            <button id="backButton" class="flex items-center text-gray-400 hover:text-emerald-400 transition">
+                <i data-feather="arrow-left" class="mr-1"></i> Back
+            </button>
+        </header>
 
-        <div class="flex flex-col lg:flex-row gap-8">
-            <div class="lg:w-1/3">
-                <div class="bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-6" data-aos="fade-right">
-                    <div class="p-6">
-                        <div class="flex justify-center mb-6">
-                            <div class="w-40 h-40 rounded-full bg-gray-700 overflow-hidden border-2 border-emerald-500">
-                                <img src="http://static.photos/fantasy/200x200/1" alt="Character Portrait" class="w-full h-full object-cover">
-                            </div>
-                        </div>
-                        <div class="text-center">
-                            <p class="text-gray-400 mb-4" id="charRaceClass">Race & Class</p>
-                            <div class="flex justify-center gap-4">
-                                <div class="text-center">
-                                    <p class="text-sm text-gray-400">Level</p>
-                                    <p class="text-xl font-bold" id="charLevel">1</p>
-                                </div>
-                                <div class="text-center">
-                                    <p class="text-sm text-gray-400">HP</p>
-                                    <p class="text-xl font-bold" id="charHP">10/10</p>
-                                </div>
-                                <div class="text-center">
-                                    <p class="text-sm text-gray-400">AC</p>
-                                    <p class="text-xl font-bold" id="charAC">10</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="flex flex-col lg:flex-row gap-8">
+            <div class="lg:w-1/3">
+                <div class="bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-6" data-aos="fade-right">
+                    <div class="p-6">
+                        <div class="flex justify-center mb-6">
+                            <div class="w-40 h-40 rounded-full bg-gray-700 overflow-hidden border-2 border-emerald-500">
+                                <img src="http://static.photos/fantasy/200x200/1" alt="Character Portrait" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-gray-400 mb-4" id="charRaceClass">Race & Class</p>
+                            <div class="flex justify-center gap-4">
+                                <div class="text-center">
+                                    <p class="text-sm text-gray-400">Level</p>
+                                    <p class="text-xl font-bold" id="charLevel">1</p>
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-sm text-gray-400">HP</p>
+                                    <p class="text-xl font-bold" id="charHP">10/10</p>
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-sm text-gray-400">AC</p>
+                                    <p class="text-xl font-bold" id="charAC">10</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                <div class="bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-6" data-aos="fade-right">
-                    <div class="p-6">
-                        <h2 class="text-xl font-semibold mb-4 flex items-center">
-                            <i data-feather="activity" class="mr-2"></i> Stats
-                        </h2>
-                        <div class="grid grid-cols-3 gap-4">
-                            <div class="stat-block p-3 rounded-lg text-center">
-                                <p class="text-sm text-gray-400">STR</p>
-                                <p class="text-2xl font-bold" id="charSTR">10</p>
-                            </div>
-                            <div class="stat-block p-3 rounded-lg text-center">
-                                <p class="text-sm text-gray-400">DEX</p>
-                                <p class="text-2xl font-bold" id="charDEX">10</p>
-                            </div>
-                            <div class="stat-block p-3 rounded-lg text-center">
-                                <p class="text-sm text-gray-400">CON</p>
-                                <p class="text-2xl font-bold" id="charCON">10</p>
-                            </div>
-                            <div class="stat-block p-3 rounded-lg text-center">
-                                <p class="text-sm text-gray-400">INT</p>
-                                <p class="text-2xl font-bold" id="charINT">10</p>
-                            </div>
-                            <div class="stat-block p-3 rounded-lg text-center">
-                                <p class="text-sm text-gray-400">WIS</p>
-                                <p class="text-2xl font-bold" id="charWIS">10</p>
-                            </div>
-                            <div class="stat-block p-3 rounded-lg text-center">
-                                <p class="text-sm text-gray-400">CHA</p>
-                                <p class="text-2xl font-bold" id="charCHA">10</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div class="bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-6" data-aos="fade-right">
+                    <div class="p-6">
+                        <h2 class="text-xl font-semibold mb-4 flex items-center">
+                            <i data-feather="activity" class="mr-2"></i> Stats
+                        </h2>
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="stat-block p-3 rounded-lg text-center">
+                                <p class="text-sm text-gray-400">STR</p>
+                                <p class="text-2xl font-bold" id="charSTR">10</p>
+                            </div>
+                            <div class="stat-block p-3 rounded-lg text-center">
+                                <p class="text-sm text-gray-400">DEX</p>
+                                <p class="text-2xl font-bold" id="charDEX">10</p>
+                            </div>
+                            <div class="stat-block p-3 rounded-lg text-center">
+                                <p class="text-sm text-gray-400">CON</p>
+                                <p class="text-2xl font-bold" id="charCON">10</p>
+                            </div>
+                            <div class="stat-block p-3 rounded-lg text-center">
+                                <p class="text-sm text-gray-400">INT</p>
+                                <p class="text-2xl font-bold" id="charINT">10</p>
+                            </div>
+                            <div class="stat-block p-3 rounded-lg text-center">
+                                <p class="text-sm text-gray-400">WIS</p>
+                                <p class="text-2xl font-bold" id="charWIS">10</p>
+                            </div>
+                            <div class="stat-block p-3 rounded-lg text-center">
+                                <p class="text-sm text-gray-400">CHA</p>
+                                <p class="text-2xl font-bold" id="charCHA">10</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                <div class="bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-6" data-aos="fade-right">
-                    <div class="p-6">
-                        <h2 class="text-xl font-semibold mb-4 flex items-center">
-                            <i data-feather="book-open" class="mr-2"></i> Backstory
-                        </h2>
-                        <p id="charBackstory" class="text-sm text-gray-400 italic">No backstory available.</p>
-                    </div>
-                </div>
+                <div class="bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-6" data-aos="fade-right">
+                    <div class="p-6">
+                        <h2 class="text-xl font-semibold mb-4 flex items-center">
+                            <i data-feather="book-open" class="mr-2"></i> Backstory
+                        </h2>
+                        <p id="charBackstory" class="text-sm text-gray-400 italic">No backstory available.</p>
+                    </div>
+                </div>
 
-                <div class="bg-gray-800 rounded-xl shadow-lg overflow-hidden" data-aos="fade-right">
-                    <div class="p-6">
-                        <h2 class="text-xl font-semibold mb-4 flex items-center">
-                            <i data-feather="calendar" class="mr-2"></i> Upcoming Adventures
-                        </h2>
-                        <div id="upcomingAdventures" class="space-y-3">
-                        </div>
-                    </div>
-                </div>
-            </div>
+                <div class="bg-gray-800 rounded-xl shadow-lg overflow-hidden" data-aos="fade-right">
+                    <div class="p-6">
+                        <h2 class="text-xl font-semibold mb-4 flex items-center">
+                            <i data-feather="calendar" class="mr-2"></i> Upcoming Adventures
+                        </h2>
+                        <div id="upcomingAdventures" class="space-y-3">
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            <div class="lg:w-2/3">
-                <div class="bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-6" data-aos="fade-left">
-                    <div class="border-b border-gray-700">
-                        <nav class="flex -mb-px">
-                            <button class="nav-tab active py-4 px-6 font-medium" data-tab="character">Character</button>
-                            <button class="nav-tab py-4 px-6 font-medium" data-tab="inventory">Inventory</button>
-                            <button class="nav-tab py-4 px-6 font-medium" data-tab="skills">Skills</button>
-                            <button class="nav-tab py-4 px-6 font-medium" data-tab="adventures">Adventures</button>
-                        </nav>
-                    </div>
+            <div class="lg:w-2/3">
+                <div class="bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-6" data-aos="fade-left">
+                    <div class="border-b border-gray-700">
+                        <nav class="flex -mb-px overflow-x-auto">
+                            <button class="nav-tab active py-4 px-6 font-medium" data-tab="character">Character</button>
+                            <button class="nav-tab py-4 px-6 font-medium" data-tab="inventory">Inventory</button>
+                            <button class="nav-tab py-4 px-6 font-medium" data-tab="skills">Skills</button>
+                            <button class="nav-tab py-4 px-6 font-medium" data-tab="adventures">Adventures</button>
+                            <button class="nav-tab py-4 px-6 font-medium" data-tab="world">World</button>
+                            <button class="nav-tab py-4 px-6 font-medium" data-tab="combat">Combat</button>
+                            <button class="nav-tab py-4 px-6 font-medium" data-tab="puzzles">Puzzles</button>
+                            <button class="nav-tab py-4 px-6 font-medium" data-tab="vehicle">Vehicle</button>
+                        </nav>
+                    </div>
 
-                    <div class="p-6">
-                        <div id="character-tab" class="tab-content active">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <h3 class="text-lg font-semibold mb-3 text-emerald-400">Details</h3>
-                                    <div class="space-y-2">
-                                        <p><span class="text-gray-400">Race:</span> <span id="charRace">-</span></p>
-                                        <p><span class="text-gray-400">Class:</span> <span id="charClass">-</span></p>
-                                        <p><span class="text-gray-400">Background:</span> <span id="charBackground">-</span></p>
-                                        <p><span class="text-gray-400">Alignment:</span> <span id="charAlignment">-</span></p>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h3 class="text-lg font-semibold mb-3 text-emerald-400">Proficiencies</h3>
-                                    <div id="charProficiencies" class="flex flex-wrap gap-2">
-                                    </div>
-                                </div>
-                                <div class="md:col-span-2">
-                                    <h3 class="text-lg font-semibold mb-3 text-emerald-400">Features & Traits</h3>
-                                    <div id="charFeatures" class="space-y-3">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="p-6">
+                        <div id="character-tab" class="tab-content active">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h3 class="text-lg font-semibold mb-3 text-emerald-400">Details</h3>
+                                    <div class="space-y-2">
+                                        <p><span class="text-gray-400">Race:</span> <span id="charRace">-</span></p>
+                                        <p><span class="text-gray-400">Class:</span> <span id="charClass">-</span></p>
+                                        <p><span class="text-gray-400">Background:</span> <span id="charBackground">-</span></p>
+                                        <p><span class="text-gray-400">Alignment:</span> <span id="charAlignment">-</span></p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold mb-3 text-emerald-400">Proficiencies</h3>
+                                    <div id="charProficiencies" class="flex flex-wrap gap-2">
+                                    </div>
+                                </div>
+                                <div class="md:col-span-2">
+                                    <h3 class="text-lg font-semibold mb-3 text-emerald-400">Features & Traits</h3>
+                                    <div id="charFeatures" class="space-y-3">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                        <div id="inventory-tab" class="tab-content">
-                            <div class="mb-6">
-                                <h3 class="text-lg font-semibold mb-3 text-emerald-400">Carried Items</h3>
-                                <div id="carriedItems" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                </div>
-                            </div>
-                            <div>
-                                <h3 class="text-lg font-semibold mb-3 text-emerald-400">Stored Items</h3>
-                                <div id="storedItems" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                </div>
-                            </div>
-                        </div>
+                        <div id="inventory-tab" class="tab-content">
+                            <div class="mb-6">
+                                <h3 class="text-lg font-semibold mb-3 text-emerald-400">Carried Items</h3>
+                                <div id="carriedItems" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold mb-3 text-emerald-400">Stored Items</h3>
+                                <div id="storedItems" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                </div>
+                            </div>
+                        </div>
 
-                        <div id="skills-tab" class="tab-content">
-                            <div id="craftingSkills" class="space-y-4">
-                            </div>
-                        </div>
+                        <div id="skills-tab" class="tab-content">
+                            <div id="craftingSkills" class="space-y-4">
+                            </div>
+                        </div>
 
-                        <div id="adventures-tab" class="tab-content">
-                            <div class="mb-6">
-                                <h3 class="text-lg font-semibold mb-3 text-emerald-400">Past Adventures</h3>
-                                <div id="pastAdventures" class="space-y-4">
-                                </div>
-                            </div>
-                            <div class="bg-gray-700 p-4 rounded-xl border border-gray-600">
-                                <h4 class="text-lg font-semibold text-emerald-400 mb-2">Add New Adventure</h4>
-                                <p class="text-gray-400 text-sm mb-4">Paste the adventure summary JSON below and click 'Add'.</p>
-                                <textarea id="adventureInput" class="w-full h-32 p-2 mb-4 bg-gray-800 rounded-lg border border-gray-600 focus:outline-none focus:ring focus:ring-emerald-500 text-sm" placeholder="Paste JSON here, e.g., { 'name': '...', 'rewards': '...' }"></textarea>
-                                <button id="addAdventureButton" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded transition">
-                                    Add Adventure to Log
-                                </button>
-                                <p id="addMessage" class="text-sm text-center text-gray-500 mt-2 hidden"></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                        <div id="adventures-tab" class="tab-content">
+                            <div class="mb-6">
+                                <h3 class="text-lg font-semibold mb-3 text-emerald-400">Past Adventures</h3>
+                                <div id="pastAdventures" class="space-y-4">
+                                </div>
+                            </div>
+                            <div class="bg-gray-700 p-4 rounded-xl border border-gray-600">
+                                <h4 class="text-lg font-semibold text-emerald-400 mb-2">Add New Adventure</h4>
+                                <p class="text-gray-400 text-sm mb-4">Paste the adventure summary JSON below and click 'Add'.</p>
+                                <textarea id="adventureInput" class="w-full h-32 p-2 mb-4 bg-gray-800 rounded-lg border border-gray-600 focus:outline-none focus:ring focus:ring-emerald-500 text-sm" placeholder="Paste JSON here, e.g., { 'name': '...', 'rewards': '...' }"></textarea>
+                                <button id="addAdventureButton" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded transition">
+                                    Add Adventure to Log
+                                </button>
+                                <p id="addMessage" class="text-sm text-center text-gray-500 mt-2 hidden"></p>
+                            </div>
+                        </div>
 
-    <div id="itemModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">
-        <div class="absolute inset-0 modal-overlay" onclick="closeItemModal()"></div>
-        <div class="bg-gray-800 rounded-xl shadow-2xl p-6 w-full max-w-lg z-10 transition-transform transform scale-95 duration-300 ease-out">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-2xl font-bold text-emerald-400" id="itemModalName">Item Name</h3>
-                <button onclick="closeItemModal()" class="text-gray-400 hover:text-white transition">
-                    <i data-feather="x" class="w-6 h-6"></i>
-                </button>
-            </div>
-            <p id="itemModalDesc" class="text-gray-300 text-sm mb-4">Item description.</p>
-            <div id="itemModalDetails" class="space-y-2 text-sm text-gray-400">
-                </div>
-        </div>
-    </div>
+                        <div id="world-tab" class="tab-content">
+                            <h3 class="text-lg font-semibold mb-3 text-emerald-400">World Traversal</h3>
+                            <div id="mapContainer" class="bg-gray-700 h-64 rounded-lg flex items-center justify-center p-4">
+                                <p id="currentLocation" class="text-center text-gray-400">Current Location: Not Available</p>
+                            </div>
+                            <div class="mt-4">
+                                <h4 class="text-md font-medium mb-2">Explored Biomes</h4>
+                                <div id="exploredBiomes" class="flex flex-wrap gap-2"></div>
+                            </div>
+                        </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            AOS.init();
-            
-            // Simulating an external item database. In a real-world scenario, you would fetch this from a CSV file.
-            const itemDatabase = {
-                "longsword": {
-                    "name": "Longsword",
-                    "description": "A classic one-handed sword with a double-edged blade. Versatile and reliable.",
-                    "damage": "1d8",
-                    "type": "Slashing",
-                    "properties": ["Versatile (1d10)"],
-                    "weight": "3 lbs"
-                },
-                "chain_mail": {
-                    "name": "Chain Mail",
-                    "description": "Heavy armor made of interlocking metal rings. Offers excellent protection but is noisy.",
-                    "ac_bonus": "+16",
-                    "disadvantage": "Stealth checks",
-                    "weight": "55 lbs"
-                },
-                "healing_potion": {
-                    "name": "Potion of Healing",
-                    "description": "A crimson liquid that restores vitality. Instantly restores health when consumed.",
-                    "effect": "Restores 2d4 + 2 HP",
-                    "weight": "0.5 lbs"
-                },
-                "silver_locket": {
-                    "name": "Silver Locket",
-                    "description": "A small, heart-shaped locket crafted from silver. Inside, it holds a small, faded portrait of a loved one.",
-                    "value": "15 gp",
-                    "weight": "0.1 lbs"
-                }
-            };
-            
-            const uploaderPage = document.getElementById('uploader-page');
-            const characterViewer = document.getElementById('character-viewer');
-            const fileInput = document.getElementById('jsonFile');
-            const uploadButton = document.getElementById('uploadButton');
-            const backButton = document.getElementById('backButton');
-            const itemModal = document.getElementById('itemModal');
-            const characterData = JSON.parse(sessionStorage.getItem('characterData'));
-            
-            if (characterData) {
-                uploaderPage.style.display = 'none';
-                characterViewer.style.display = 'block';
-                populateCharacterData(characterData);
-            } else {
-                uploaderPage.style.display = 'flex';
-                characterViewer.style.display = 'none';
-            }
+                        <div id="combat-tab" class="tab-content">
+                            <h3 class="text-lg font-semibold mb-3 text-emerald-400">Active Combat</h3>
+                            <div id="combatStatus" class="space-y-4">
+                                <div id="enemyStats" class="bg-gray-700 p-4 rounded-lg">
+                                    <p class="font-medium text-emerald-400">Enemy: <span id="enemyName">-</span></p>
+                                    <p class="text-sm text-gray-400">HP: <span id="enemyHP">-</span></p>
+                                </div>
+                                <div id="turnLog" class="bg-gray-700 p-4 rounded-lg h-40 overflow-y-auto">
+                                    <p class="text-gray-400 text-sm">Combat log will appear here...</p>
+                                </div>
+                                <button id="combatAction" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition">
+                                    Attack
+                                </button>
+                            </div>
+                        </div>
 
-            uploadButton.addEventListener('click', function() {
-                if (fileInput.files.length === 0) {
-                    alert('Please select a JSON file to upload.');
-                    return;
-                }
-                const file = fileInput.files[0];
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    try {
-                        const data = JSON.parse(event.target.result);
-                        sessionStorage.setItem('characterData', JSON.stringify(data));
-                        populateCharacterData(data);
-                        uploaderPage.style.display = 'none';
-                        characterViewer.style.display = 'block';
-                        AOS.refresh();
-                    } catch (error) {
-                        alert('Invalid JSON file. Please check the file format.');
-                        console.error('Parsing error:', error);
-                    }
-                };
-                reader.readAsText(file);
-            });
+                        <div id="puzzles-tab" class="tab-content">
+                            <h3 class="text-lg font-semibold mb-3 text-emerald-400">Puzzles & Riddles</h3>
+                            <div id="activePuzzle" class="bg-gray-700 p-4 rounded-lg">
+                                <p id="puzzleText" class="text-gray-300 mb-4">A riddle will appear here.</p>
+                                <input type="text" id="puzzleAnswer" placeholder="Enter your answer" class="w-full p-2 rounded-lg bg-gray-800 border border-gray-600 focus:outline-none focus:ring focus:ring-emerald-500 text-sm mb-2">
+                                <button id="submitPuzzle" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded transition">
+                                    Submit Answer
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="vehicle-tab" class="tab-content">
+                            <h3 class="text-lg font-semibold mb-3 text-emerald-400">Vehicle</h3>
+                            <div id="vehicleDetails" class="bg-gray-700 p-4 rounded-lg">
+                                <p class="text-gray-400">Name: <span id="vehicleName">-</span></p>
+                                <p class="text-gray-400">Speed: <span id="vehicleSpeed">-</span></p>
+                                <p class="text-gray-400">Capacity: <span id="vehicleCapacity">-</span></p>
+                            </div>
+                            <div class="mt-4">
+                                <h4 class="text-md font-medium mb-2">Vehicle Inventory</h4>
+                                <div id="vehicleInventory" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-            backButton.addEventListener('click', function() {
-                sessionStorage.removeItem('characterData');
-                uploaderPage.style.display = 'flex';
-                characterViewer.style.display = 'none';
-            });
-            
-            window.closeItemModal = function() {
-                itemModal.style.display = 'none';
-            };
+    <div id="itemModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">
+        <div class="absolute inset-0 modal-overlay" onclick="closeItemModal()"></div>
+        <div class="bg-gray-800 rounded-xl shadow-2xl p-6 w-full max-w-lg z-10 transition-transform transform scale-95 duration-300 ease-out">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold text-emerald-400" id="itemModalName">Item Name</h3>
+                <button onclick="closeItemModal()" class="text-gray-400 hover:text-white transition">
+                    <i data-feather="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <p id="itemModalDesc" class="text-gray-300 text-sm mb-4">Item description.</p>
+            <div id="itemModalDetails" class="space-y-2 text-sm text-gray-400">
+                </div>
+        </div>
+    </div>
 
-            const tabs = document.querySelectorAll('.nav-tab');
-            tabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    tabs.forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    const tabId = this.getAttribute('data-tab');
-                    document.querySelectorAll('.tab-content').forEach(content => {
-                        content.classList.remove('active');
-                    });
-                    document.getElementById(`${tabId}-tab`).classList.add('active');
-                });
-            });
-            
-            function populateCharacterData(data) {
-                document.getElementById('characterName').textContent = data.name || 'Unnamed Character';
-                document.getElementById('charRaceClass').textContent = `${data.race || 'Unknown'} ${data.class || 'Adventurer'}`;
-                document.getElementById('charLevel').textContent = data.level || '1';
-                document.getElementById('charHP').textContent = `${data.hp?.current || 0}/${data.hp?.max || 0}`;
-                document.getElementById('charAC').textContent = data.ac || '10';
-                
-                document.getElementById('charSTR').textContent = data.stats?.strength || '10';
-                document.getElementById('charDEX').textContent = data.stats?.dexterity || '10';
-                document.getElementById('charCON').textContent = data.stats?.constitution || '10';
-                document.getElementById('charINT').textContent = data.stats?.intelligence || '10';
-                document.getElementById('charWIS').textContent = data.stats?.wisdom || '10';
-                document.getElementById('charCHA').textContent = data.stats?.charisma || '10';
-                
-                document.getElementById('charBackstory').textContent = data.backstory || 'No backstory available.';
-                
-                document.getElementById('charRace').textContent = data.race || '-';
-                document.getElementById('charClass').textContent = data.class || '-';
-                document.getElementById('charBackground').textContent = data.background || '-';
-                document.getElementById('charAlignment').textContent = data.alignment || '-';
-                
-                updateList(document.getElementById('charProficiencies'), data.proficiencies, createProficiencyChip, '<p class="text-gray-500">No proficiencies</p>');
-                updateList(document.getElementById('charFeatures'), data.features, createFeatureElement, '<p class="text-gray-500">No features or traits</p>');
-                updateList(document.getElementById('carriedItems'), data.inventory?.carried, createInventoryItem, '<p class="text-gray-500 col-span-2">No items carried</p>');
-                updateList(document.getElementById('storedItems'), data.inventory?.stored, createInventoryItem, '<p class="text-gray-500 col-span-2">No items stored</p>');
-                updateList(document.getElementById('craftingSkills'), data.skills, createSkillElement, '<p class="text-gray-500">No skills available.</p>');
-                updateList(document.getElementById('pastAdventures'), data.adventures?.past, adventure => createAdventureElement(adventure, false), '<p class="text-gray-500">No past adventures</p>');
-                updateList(document.getElementById('upcomingAdventures'), data.adventures?.upcoming, adventure => createAdventureElement(adventure, true), '<p class="text-gray-500">No upcoming adventures</p>');
-                feather.replace();
-            }
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init();
+            
+            // Simulating an external item database. In a real-world scenario, you would fetch this from a CSV file.
+            const itemDatabase = {
+                "longsword": {
+                    "name": "Longsword",
+                    "description": "A classic one-handed sword with a double-edged blade. Versatile and reliable.",
+                    "damage": "1d8",
+                    "type": "Slashing",
+                    "properties": ["Versatile (1d10)"],
+                    "weight": "3 lbs"
+                },
+                "chain_mail": {
+                    "name": "Chain Mail",
+                    "description": "Heavy armor made of interlocking metal rings. Offers excellent protection but is noisy.",
+                    "ac_bonus": "+16",
+                    "disadvantage": "Stealth checks",
+                    "weight": "55 lbs"
+                },
+                "healing_potion": {
+                    "name": "Potion of Healing",
+                    "description": "A crimson liquid that restores vitality. Instantly restores health when consumed.",
+                    "effect": "Restores 2d4 + 2 HP",
+                    "weight": "0.5 lbs"
+                },
+                "silver_locket": {
+                    "name": "Silver Locket",
+                    "description": "A small, heart-shaped locket crafted from silver. Inside, it holds a small, faded portrait of a loved one.",
+                    "value": "15 gp",
+                    "weight": "0.1 lbs"
+                }
+            };
+            
+            const uploaderPage = document.getElementById('uploader-page');
+            const characterViewer = document.getElementById('character-viewer');
+            const fileInput = document.getElementById('jsonFile');
+            const uploadButton = document.getElementById('uploadButton');
+            const backButton = document.getElementById('backButton');
+            const itemModal = document.getElementById('itemModal');
+            const characterData = JSON.parse(sessionStorage.getItem('characterData'));
+            
+            if (characterData) {
+                uploaderPage.style.display = 'none';
+                characterViewer.style.display = 'block';
+                populateCharacterData(characterData);
+            } else {
+                uploaderPage.style.display = 'flex';
+                characterViewer.style.display = 'none';
+            }
 
-            function updateList(container, items, creator, emptyMessage) {
-                container.innerHTML = '';
-                if (items && items.length > 0) {
-                    items.forEach(item => container.appendChild(creator(item)));
-                } else {
-                    container.innerHTML = emptyMessage;
-                }
-            }
+            uploadButton.addEventListener('click', function() {
+                if (fileInput.files.length === 0) {
+                    alert('Please select a JSON file to upload.');
+                    return;
+                }
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    try {
+                        const data = JSON.parse(event.target.result);
+                        sessionStorage.setItem('characterData', JSON.stringify(data));
+                        populateCharacterData(data);
+                        uploaderPage.style.display = 'none';
+                        characterViewer.style.display = 'block';
+                        AOS.refresh();
+                    } catch (error) {
+                        alert('Invalid JSON file. Please check the file format.');
+                        console.error('Parsing error:', error);
+                    }
+                };
+                reader.readAsText(file);
+            });
 
-            function createProficiencyChip(prof) {
-                const chip = document.createElement('span');
-                chip.className = 'bg-gray-700 text-sm px-3 py-1 rounded-full';
-                chip.textContent = prof;
-                return chip;
-            }
+            backButton.addEventListener('click', function() {
+                sessionStorage.removeItem('characterData');
+                uploaderPage.style.display = 'flex';
+                characterViewer.style.display = 'none';
+            });
+            
+            window.closeItemModal = function() {
+                itemModal.style.display = 'none';
+            };
 
-            function createFeatureElement(feat) {
-                const feature = document.createElement('div');
-                feature.className = 'bg-gray-700 p-3 rounded-lg';
-                feature.innerHTML = `
-                    <h4 class="font-medium">${feat.name || 'Feature'}</h4>
-                    <p class="text-sm text-gray-400 mt-1">${feat.description || 'No description available.'}</p>
-                `;
-                return feature;
-            }
-            
-            function createSkillElement(skill) {
-                const element = document.createElement('div');
-                element.className = 'bg-gray-700 p-4 rounded-lg';
-                element.innerHTML = `
-                    <h3 class="font-medium text-lg mb-2">${skill.name || 'Skill'}</h3>
-                    <p class="text-sm text-gray-400 mb-2">${skill.description || 'No description available.'}</p>
-                    ${skill.details ? `<p class="text-xs text-gray-500">Details: ${skill.details}</p>` : ''}
-                `;
-                return element;
-            }
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    const tabId = this.getAttribute('data-tab');
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
+            });
+            
+            function populateCharacterData(data) {
+                document.getElementById('characterName').textContent = data.name || 'Unnamed Character';
+                document.getElementById('charRaceClass').textContent = `${data.race || 'Unknown'} ${data.class || 'Adventurer'}`;
+                document.getElementById('charLevel').textContent = data.level || '1';
+                document.getElementById('charHP').textContent = `${data.hp?.current || 0}/${data.hp?.max || 0}`;
+                document.getElementById('charAC').textContent = data.ac || '10';
+                
+                document.getElementById('charSTR').textContent = data.stats?.strength || '10';
+                document.getElementById('charDEX').textContent = data.stats?.dexterity || '10';
+                document.getElementById('charCON').textContent = data.stats?.constitution || '10';
+                document.getElementById('charINT').textContent = data.stats?.intelligence || '10';
+                document.getElementById('charWIS').textContent = data.stats?.wisdom || '10';
+                document.getElementById('charCHA').textContent = data.stats?.charisma || '10';
+                
+                document.getElementById('charBackstory').textContent = data.backstory || 'No backstory available.';
+                
+                document.getElementById('charRace').textContent = data.race || '-';
+                document.getElementById('charClass').textContent = data.class || '-';
+                document.getElementById('charBackground').textContent = data.background || '-';
+                document.getElementById('charAlignment').textContent = data.alignment || '-';
+                
+                updateList(document.getElementById('charProficiencies'), data.proficiencies, createProficiencyChip, '<p class="text-gray-500">No proficiencies</p>');
+                updateList(document.getElementById('charFeatures'), data.features, createFeatureElement, '<p class="text-gray-500">No features or traits</p>');
+                updateList(document.getElementById('carriedItems'), data.inventory?.carried, createInventoryItem, '<p class="text-gray-500 col-span-2">No items carried</p>');
+                updateList(document.getElementById('storedItems'), data.inventory?.stored, createInventoryItem, '<p class="text-gray-500 col-span-2">No items stored</p>');
+                updateList(document.getElementById('craftingSkills'), data.skills, createSkillElement, '<p class="text-gray-500">No skills available.</p>');
+                updateList(document.getElementById('pastAdventures'), data.adventures?.past, adventure => createAdventureElement(adventure, false), '<p class="text-gray-500">No past adventures</p>');
+                updateList(document.getElementById('upcomingAdventures'), data.adventures?.upcoming, adventure => createAdventureElement(adventure, true), '<p class="text-gray-500">No upcoming adventures</p>');
+                
+                // New data population for new tabs
+                document.getElementById('currentLocation').textContent = `Current Location: ${data.world?.location || 'Unknown'}`;
+                updateList(document.getElementById('exploredBiomes'), data.world?.biomes, createBiomeChip, '<p class="text-gray-500">No biomes explored</p>');
+                
+                document.getElementById('enemyName').textContent = data.combat?.enemy?.name || 'No Active Combat';
+                document.getElementById('enemyHP').textContent = data.combat?.enemy?.hp || '-';
+                updateList(document.getElementById('turnLog'), data.combat?.log, createCombatLog, '<p class="text-gray-400 text-sm">Combat log will appear here...</p>');
+                
+                document.getElementById('puzzleText').textContent = data.puzzle?.text || 'No active puzzle.';
+                document.getElementById('puzzleAnswer').value = '';
+                
+                document.getElementById('vehicleName').textContent = data.vehicle?.name || 'No Vehicle';
+                document.getElementById('vehicleSpeed').textContent = data.vehicle?.speed || '-';
+                document.getElementById('vehicleCapacity').textContent = data.vehicle?.capacity || '-';
+                updateList(document.getElementById('vehicleInventory'), data.vehicle?.inventory, createInventoryItem, '<p class="text-gray-500 col-span-2">No vehicle inventory</p>');
 
-            function createInventoryItem(item) {
-                const element = document.createElement('div');
-                element.className = 'inventory-item bg-gray-700 p-3 rounded-lg transition duration-200 cursor-pointer';
-                element.setAttribute('onclick', `showItemDetailsModal('${item.id || item.name}')`);
-                element.innerHTML = `
-                    <div class="flex items-start">
-                        <div class="bg-gray-600 p-2 rounded-lg mr-3">
-                            <i data-feather="${item.type === 'weapon' ? 'sword' : item.type === 'armor' ? 'shield' : 'package'}" class="w-5 h-5"></i>
-                        </div>
-                        <div class="flex-1">
-                            <h4 class="font-medium">${item.name || 'Item'}</h4>
-                            <p class="text-sm text-gray-400">${item.description || 'No description'}</p>
-                            ${item.quantity ? `<p class="text-xs text-gray-500 mt-1">Quantity: ${item.quantity}</p>` : ''}
-                        </div>
-                    </div>
-                `;
-                return element;
-            }
-            
-            function showItemDetailsModal(itemId) {
-                const details = itemDatabase[itemId.toLowerCase().replace(/ /g, '_')] || {name: itemId, description: 'Details not found.', details: 'This item is not in the canonical item database.'};
-                
-                document.getElementById('itemModalName').textContent = details.name;
-                document.getElementById('itemModalDesc').textContent = details.description;
-                
-                const detailsContainer = document.getElementById('itemModalDetails');
-                detailsContainer.innerHTML = '';
-                
-                for (const key in details) {
-                    if (key !== 'name' && key !== 'description') {
-                        const detailElement = document.createElement('p');
-                        detailElement.innerHTML = `<span class="font-semibold capitalize">${key.replace(/_/g, ' ')}:</span> ${details[key]}`;
-                        detailsContainer.appendChild(detailElement);
-                    }
-                }
-                
-                itemModal.style.display = 'flex';
-            }
-            
-            function createAdventureElement(adventure, isUpcoming) {
-                const element = document.createElement('div');
-                element.className = `bg-gray-700 p-4 rounded-lg ${isUpcoming ? 'mb-3' : ''}`;
-                
-                const date = adventure.date ? new Date(adventure.date).toLocaleDateString() : 'Date unknown';
-                const status = isUpcoming ?
-                    `<span class="bg-emerald-900 text-emerald-300 text-xs px-2 py-1 rounded-full">Upcoming</span>` :
-                    `<span class="bg-purple-900 text-purple-300 text-xs px-2 py-1 rounded-full">Completed</span>`;
-                
-                element.innerHTML = `
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-medium">${adventure.name || 'Adventure'}</h3>
-                        ${status}
-                    </div>
-                    <p class="text-sm text-gray-400 mb-2">${date} • ${adventure.dm || 'DM unknown'}</p>
-                    <p class="text-sm">${adventure.description || 'No description available.'}</p>
-                    ${adventure.rewards ? `
-                        <div class="mt-3 pt-3 border-t border-gray-600">
-                            <h4 class="text-xs font-semibold text-gray-400 mb-1">REWARDS</h4>
-                            <p class="text-sm">${adventure.rewards}</p>
-                        </div>
-                    ` : ''}
-                `;
-                return element;
-            }
+                feather.replace();
+            }
 
-            // New event listener for adding adventures
-            const adventureInput = document.getElementById('adventureInput');
-            const addAdventureButton = document.getElementById('addAdventureButton');
-            const addMessage = document.getElementById('addMessage');
+            function updateList(container, items, creator, emptyMessage) {
+                container.innerHTML = '';
+                if (items && items.length > 0) {
+                    items.forEach(item => container.appendChild(creator(item)));
+                } else {
+                    container.innerHTML = emptyMessage;
+                }
+            }
 
-            addAdventureButton.addEventListener('click', function() {
-                const jsonText = adventureInput.value.trim();
-                if (!jsonText) {
-                    addMessage.textContent = "Please paste a JSON object.";
-                    addMessage.classList.remove('hidden');
-                    return;
-                }
+            function createProficiencyChip(prof) {
+                const chip = document.createElement('span');
+                chip.className = 'bg-gray-700 text-sm px-3 py-1 rounded-full';
+                chip.textContent = prof;
+                return chip;
+            }
+            
+            function createBiomeChip(biome) {
+                const chip = document.createElement('span');
+                chip.className = 'bg-emerald-700 text-sm px-3 py-1 rounded-full';
+                chip.textContent = biome;
+                return chip;
+            }
 
-                try {
-                    const newAdventure = JSON.parse(jsonText);
-                    
-                    let characterData = JSON.parse(sessionStorage.getItem('characterData'));
-                    if (!characterData) {
-                        addMessage.textContent = "Please load a character sheet first.";
-                        addMessage.classList.remove('hidden');
-                        return;
-                    }
+            function createFeatureElement(feat) {
+                const feature = document.createElement('div');
+                feature.className = 'bg-gray-700 p-3 rounded-lg';
+                feature.innerHTML = `
+                    <h4 class="font-medium">${feat.name || 'Feature'}</h4>
+                    <p class="text-sm text-gray-400 mt-1">${feat.description || 'No description available.'}</p>
+                `;
+                return feature;
+            }
+            
+            function createSkillElement(skill) {
+                const element = document.createElement('div');
+                element.className = 'bg-gray-700 p-4 rounded-lg';
+                element.innerHTML = `
+                    <h3 class="font-medium text-lg mb-2">${skill.name || 'Skill'}</h3>
+                    <p class="text-sm text-gray-400 mb-2">${skill.description || 'No description available.'}</p>
+                    ${skill.details ? `<p class="text-xs text-gray-500">Details: ${skill.details}</p>` : ''}
+                `;
+                return element;
+            }
 
-                    if (!characterData.adventures) {
-                        characterData.adventures = {};
-                    }
-                    if (!characterData.adventures.past) {
-                        characterData.adventures.past = [];
-                    }
+            function createInventoryItem(item) {
+                const element = document.createElement('div');
+                element.className = 'inventory-item bg-gray-700 p-3 rounded-lg transition duration-200 cursor-pointer';
+                element.setAttribute('onclick', `showItemDetailsModal('${item.id || item.name}')`);
+                element.innerHTML = `
+                    <div class="flex items-start">
+                        <div class="bg-gray-600 p-2 rounded-lg mr-3">
+                            <i data-feather="${item.type === 'weapon' ? 'sword' : item.type === 'armor' ? 'shield' : 'package'}" class="w-5 h-5"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-medium">${item.name || 'Item'}</h4>
+                            <p class="text-sm text-gray-400">${item.description || 'No description'}</p>
+                            ${item.quantity ? `<p class="text-xs text-gray-500 mt-1">Quantity: ${item.quantity}</p>` : ''}
+                        </div>
+                    </div>
+                `;
+                return element;
+            }
+            
+            function createCombatLog(entry) {
+                const element = document.createElement('p');
+                element.className = 'text-xs text-gray-400';
+                element.textContent = `[${new Date(entry.time).toLocaleTimeString()}] ${entry.text}`;
+                return element;
+            }
 
-                    characterData.adventures.past.unshift(newAdventure); // Add new adventure to the beginning
+            function showItemDetailsModal(itemId) {
+                const details = itemDatabase[itemId.toLowerCase().replace(/ /g, '_')] || {name: itemId, description: 'Details not found.', details: 'This item is not in the canonical item database.'};
+                
+                document.getElementById('itemModalName').textContent = details.name;
+                document.getElementById('itemModalDesc').textContent = details.description;
+                
+                const detailsContainer = document.getElementById('itemModalDetails');
+                detailsContainer.innerHTML = '';
+                
+                for (const key in details) {
+                    if (key !== 'name' && key !== 'description') {
+                        const detailElement = document.createElement('p');
+                        detailElement.innerHTML = `<span class="font-semibold capitalize">${key.replace(/_/g, ' ')}:</span> ${details[key]}`;
+                        detailsContainer.appendChild(detailElement);
+                    }
+                }
+                
+                itemModal.style.display = 'flex';
+            }
+            
+            function createAdventureElement(adventure, isUpcoming) {
+                const element = document.createElement('div');
+                element.className = `bg-gray-700 p-4 rounded-lg ${isUpcoming ? 'mb-3' : ''}`;
+                
+                const date = adventure.date ? new Date(adventure.date).toLocaleDateString() : 'Date unknown';
+                const status = isUpcoming ?
+                    `<span class="bg-emerald-900 text-emerald-300 text-xs px-2 py-1 rounded-full">Upcoming</span>` :
+                    `<span class="bg-purple-900 text-purple-300 text-xs px-2 py-1 rounded-full">Completed</span>`;
+                
+                element.innerHTML = `
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-medium">${adventure.name || 'Adventure'}</h3>
+                        ${status}
+                    </div>
+                    <p class="text-sm text-gray-400 mb-2">${date} • ${adventure.dm || 'DM unknown'}</p>
+                    <p class="text-sm">${adventure.description || 'No description available.'}</p>
+                    ${adventure.rewards ? `
+                        <div class="mt-3 pt-3 border-t border-gray-600">
+                            <h4 class="text-xs font-semibold text-gray-400 mb-1">REWARDS</h4>
+                            <p class="text-sm">${adventure.rewards}</p>
+                        </div>
+                    ` : ''}
+                `;
+                return element;
+            }
 
-                    // Update sessionStorage and re-render the page
-                    sessionStorage.setItem('characterData', JSON.stringify(characterData));
-                    populateCharacterData(characterData);
-                    
-                    addMessage.textContent = "Adventure added successfully!";
-                    addMessage.classList.remove('hidden');
-                    adventureInput.value = ''; // Clear the text area
+            // New event listener for adding adventures
+            const adventureInput = document.getElementById('adventureInput');
+            const addAdventureButton = document.getElementById('addAdventureButton');
+            const addMessage = document.getElementById('addMessage');
 
-                    setTimeout(() => {
-                        addMessage.classList.add('hidden');
-                    }, 3000);
+            addAdventureButton.addEventListener('click', function() {
+                const jsonText = adventureInput.value.trim();
+                if (!jsonText) {
+                    addMessage.textContent = "Please paste a JSON object.";
+                    addMessage.classList.remove('hidden');
+                    return;
+                }
 
-                } catch (error) {
-                    addMessage.textContent = `Error: Invalid JSON format. Details: ${error.message}`;
-                    addMessage.classList.remove('hidden');
-                }
-            });
-        });
-    </script>
+                try {
+                    const newAdventure = JSON.parse(jsonText);
+                    
+                    let characterData = JSON.parse(sessionStorage.getItem('characterData'));
+                    if (!characterData) {
+                        addMessage.textContent = "Please load a character sheet first.";
+                        addMessage.classList.remove('hidden');
+                        return;
+                    }
+
+                    if (!characterData.adventures) {
+                        characterData.adventures = {};
+                    }
+                    if (!characterData.adventures.past) {
+                        characterData.adventures.past = [];
+                    }
+
+                    characterData.adventures.past.unshift(newAdventure); // Add new adventure to the beginning
+
+                    // Update sessionStorage and re-render the page
+                    sessionStorage.setItem('characterData', JSON.stringify(characterData));
+                    populateCharacterData(characterData);
+                    
+                    addMessage.textContent = "Adventure added successfully!";
+                    addMessage.classList.remove('hidden');
+                    adventureInput.value = ''; // Clear the text area
+
+                    setTimeout(() => {
+                        addMessage.classList.add('hidden');
+                    }, 3000);
+
+                } catch (error) {
+                    addMessage.textContent = `Error: Invalid JSON format. Details: ${error.message}`;
+                    addMessage.classList.remove('hidden');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
