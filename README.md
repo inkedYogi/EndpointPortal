@@ -122,6 +122,11 @@ https://drive.google.com/drive/home - Google Drive Home Page
     sprite_sheet
   </a>
 </div>
+<div>
+  <a href="https://inkedYogi.github.io/EndpointPortal/livingDocs/data/website/character.html">
+    character
+  </a>
+</div>
 
 
 Mage: Caravan - Unprecedented.
