@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Character Loadout</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #1e293b;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #334155;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: white;
+        }
+        .inventory-item {
+            transition: all 0.2s ease;
+        }
+        .inventory-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-gray-200 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <header class="mb-8">
+            <h1 class="text-4xl font-bold text-center mb-2">My Character Loadout</h1>
+            <p class="text-center text-gray-400">All my gear, inventory, and equipment</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Character Portrait Section -->
+            <div class="bg-slate-800 rounded-xl p-6 shadow-lg" data-aos="fade-right">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-semibold">Character Portrait</h2>
+                    <button id="exportBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2">
+                        <i data-feather="download"></i>
+                        Export JSON
+                    </button>
+                </div>
+                <div class="flex flex-col items-center">
+                    <img src="http://static.photos/people/640x360/42" alt="Character Portrait" class="w-full h-64 object-cover rounded-lg mb-4">
+                    <div class="w-full">
+                        <h3 class="text-xl font-medium mb-2">John "Reaper" Doe</h3>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <p class="text-gray-400">Level</p>
+                                <p class="font-medium">42</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-400">Faction</p>
+                                <p class="font-medium">Shadow Company</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-400">Health</p>
+                                <p class="font-medium">100/100</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-400">Stamina</p>
+                                <p class="font-medium">85/100</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loadout Section -->
+            <div class="bg-slate-800 rounded-xl p-6 shadow-lg" data-aos="fade-up">
+                <h2 class="text-2xl font-semibold mb-4">Current Loadout</h2>
+                <div class="space-y-4">
+                    <div class="tooltip">
+                        <div class="inventory-item bg-slate-700 p-3 rounded-lg cursor-pointer flex items-center gap-3" onclick="openModal('primary-weapon')">
+                            <div class="bg-slate-600 p-2 rounded-lg">
+                                <i data-feather="target" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium">M4A1 Carbine</h3>
+                                <p class="text-sm text-gray-400">Primary Weapon</p>
+                            </div>
+                        </div>
+                        <span class="tooltiptext">Damage: 42, Accuracy: 85, Fire Rate: 800 RPM</span>
+                    </div>
+
+                    <div class="tooltip">
+                        <div class="inventory-item bg-slate-700 p-3 rounded-lg cursor-pointer flex items-center gap-3" onclick="openModal('secondary-weapon')">
+                            <div class="bg-slate-600 p-2 rounded-lg">
+                                <i data-feather="target" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium">Glock 19</h3>
+                                <p class="text-sm text-gray-400">Secondary Weapon</p>
+                            </div>
+                        </div>
+                        <span class="tooltiptext">Damage: 28, Accuracy: 75, Fire Rate: 600 RPM</span>
+                    </div>
+
+                    <div class="tooltip">
+                        <div class="inventory-item bg-slate-700 p-3 rounded-lg cursor-pointer flex items-center gap-3" onclick="openModal('armor')">
+                            <div class="bg-slate-600 p-2 rounded-lg">
+                                <i data-feather="shield" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium">Tactical Plate Carrier</h3>
+                                <p class="text-sm text-gray-400">Armor</p>
+                            </div>
+                        </div>
+                        <span class="tooltiptext">Protection: 85%, Weight: Medium, Slots: 4</span>
+                    </div>
+
+                    <div class="tooltip">
+                        <div class="inventory-item bg-slate-700 p-3 rounded-lg cursor-pointer flex items-center gap-3" onclick="openModal('helmet')">
+                            <div class="bg-slate-600 p-2 rounded-lg">
+                                <i data-feather="hard-drive" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium">Advanced Combat Helmet</h3>
+                                <p class="text-sm text-gray-400">Headgear</p>
+                            </div>
+                        </div>
+                        <span class="tooltiptext">Protection: 60%, Night Vision: Yes, Comms: Integrated</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory Sections -->
+            <div class="space-y-6">
+                <!-- Personal Inventory -->
+                <div class="bg-slate-800 rounded-xl p-6 shadow-lg" data-aos="fade-left">
+                    <h2 class="text-2xl font-semibold mb-4">Personal Inventory</h2>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="tooltip">
+                            <div class="inventory-item bg-slate-700 p-3 rounded-lg cursor-pointer" onclick="openModal('medkit')">
+                                <div class="flex items-center gap-2">
+                                    <i data-feather="heart" class="w-5 h-5"></i>
+                                    <span>Medkit</span>
+                                </div>
+                            </div>
+                            <span class="tooltiptext">Restores 50 HP, Uses: 3/3</span>
+                        </div>
+                        <div class="tooltip">
+                            <div class="inventory-item bg-slate-700 p-3 rounded-lg cursor-pointer" onclick="openModal('grenade')">
+                                <div class="flex items-center gap-2">
+                                    <i data-feather="zap" class="w-5 h-5"></i>
+                                    <span>Frag Grenade</span>
+                                </div>
+                            </div>
+                            <span class="tooltiptext">Damage: 75, Radius: 5m</span>
+                        </div>
+                        <div class="tooltip">
+                            <div class="inventory-item bg-slate-700 p-3 rounded-lg cursor-pointer" onclick="openModal('ammo')">
+                                <div class="flex items-center gap-2">
+                                    <i data-feather="box" class="w-5 h-5"></i>
+                                    <span>5.56mm Ammo</span>
+                                </div>
+                            </div>
+                            <span class="tooltiptext">Quantity: 120 rounds</span>
+                        </div>
+                        <div class="tooltip">
+                            <div class="inventory-item bg-slate-700 p-3 rounded-lg cursor-pointer" onclick="openModal('rations')">
+                                <div class="flex items-center gap-2">
+                                    <i data-feather="coffee" class="w-5 h-5"></i>
+                                    <span>Field Rations</span>
+                                </div>
+                            </div>
+                            <span class="tooltiptext">Restores 25 Stamina</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vehicle Inventory -->
+                <div class="bg-slate-800 rounded-xl p-6 shadow-lg" data-aos="fade-left">
+                    <h2 class="text-2xl font-semibold mb-4">Vehicle Inventory</h2>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="tooltip">
+                            <div class="inventory-item bg-slate-700 p-3 rounded-lg cursor-pointer" onclick="openModal('fuel-can')">
+                                <div class="flex items-center gap-2">
+                                    <i data-feather="droplet" class="w-5 h-5"></i>
+                                    <span>Fuel Can</span>
+                                </div>
+                            </div>
+                            <span class="tooltiptext">Capacity: 20L, Current: 15L</span>
+                        </div>
+                        <div class="tooltip">
+                            <div class="inventory-item bg-slate-700 p-3 rounded-lg cursor-pointer" onclick="openModal('spare-tire')">
+                                <div class="flex items-center gap-2">
+                                    <i data-feather="circle" class="w-5 h-5"></i>
+                                    <span>Spare Tire</span>
+                                </div>
+                            </div>
+                            <span class="tooltiptext">Condition: 100%</span>
+                        </div>
+                        <div class="tooltip">
+                            <div class="inventory-item bg-slate-700 p-3 rounded-lg cursor-pointer" onclick="openModal('toolkit')">
+                                <div class="flex items-center gap-2">
+                                    <i data-feather="tool" class="w-5 h-5"></i>
+                                    <span>Toolkit</span>
+                                </div>
+                            </div>
+                            <span class="tooltiptext">Repair: +25% per use</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HQ Storage -->
+                <div class="bg-slate-800 rounded-xl p-6 shadow-lg" data-aos="fade-left">
+                    <h2 class="text-2xl font-semibold mb-4">HQ Storage</h2>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="tooltip">
+                            <div class="inventory-item bg-slate-700 p-3 rounded-lg cursor-pointer" onclick="openModal('spare-rifle')">
+                                <div class="flex items-center gap-2">
+                                    <i data-feather="target" class="w-5 h-5"></i>
+                                    <span>AK-74</span>
+                                </div>
+                            </div>
+                            <span class="tooltiptext">Damage: 45, Accuracy: 75, Fire Rate: 650 RPM</span>
+                        </div>
+                        <div class="tooltip">
+                            <div class="inventory-item bg-slate-700 p-3 rounded-lg cursor-pointer" onclick="openModal('heavy-armor')">
+                                <div class="flex items-center gap-2">
+                                    <i data-feather="shield" class="w-5 h-5"></i>
+                                    <span>Heavy Armor</span>
+                                </div>
+                            </div>
+                            <span class="tooltiptext">Protection: 95%, Weight: Heavy, Slots: 6</span>
+                        </div>
+                        <div class="tooltip">
+                            <div class="inventory-item bg-slate-700 p-3 rounded-lg cursor-pointer" onclick="openModal('supplies')">
+                                <div class="flex items-center gap-2">
+                                    <i data-feather="package" class="w-5 h-5"></i>
+                                    <span>Supply Crate</span>
+                                </div>
+                            </div>
+                            <span class="tooltiptext">Contains: 3 Medkits, 5 Rations, 200 5.56mm</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="itemModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="modalContent">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize AOS and Feather Icons
+        AOS.init();
+        feather.replace();
+
+        // Sample character data
+        const characterData = {
+            name: "John 'Reaper' Doe",
+            level: 42,
+            faction: "Shadow Company",
+            health: 100,
+            stamina: 85,
+            portrait: "http://static.photos/people/640x360/42",
+            loadout: {
+                primaryWeapon: {
+                    name: "M4A1 Carbine",
+                    type: "Assault Rifle",
+                    damage: 42,
+                    accuracy: 85,
+                    fireRate: 800,
+                    ammoType: "5.56mm",
+                    attachments: ["Red Dot Sight", "Foregrip", "Suppressor"]
+                },
+                secondaryWeapon: {
+                    name: "Glock 19",
+                    type: "Pistol",
+                    damage: 28,
+                    accuracy: 75,
+                    fireRate: 600,
+                    ammoType: "9mm",
+                    attachments: ["Extended Magazine"]
+                },
+                armor: {
+                    name: "Tactical Plate Carrier",
+                    protection: 85,
+                    weight: "Medium",
+                    slots: 4
+                },
+                helmet: {
+                    name: "Advanced Combat Helmet",
+                    protection: 60,
+                    nightVision: true,
+                    comms: "Integrated"
+                }
+            },
+            personalInventory: [
+                { name: "Medkit", type: "Medical", uses: 3, effect: "Restores 50 HP" },
+                { name: "Frag Grenade", type: "Explosive", damage: 75, radius: "5m" },
+                { name: "5.56mm Ammo", type: "Ammunition", quantity: 120 },
+                { name: "Field Rations", type: "Consumable", effect: "Restores 25 Stamina" }
+            ],
+            vehicleInventory: [
+                { name: "Fuel Can", type: "Vehicle", capacity: 20, current: 15 },
+                { name: "Spare Tire", type: "Vehicle", condition: 100 },
+                { name: "Toolkit", type: "Vehicle", effect: "Repairs +25%" }
+            ],
+            hqStorage: [
+                { name: "AK-74", type: "Assault Rifle", damage: 45, accuracy: 75, fireRate: 650 },
+                { name: "Heavy Armor", type: "Armor", protection: 95, weight: "Heavy", slots: 6 },
+                { name: "Supply Crate", type: "Container", contents: ["3 Medkits", "5 Rations", "200 5.56mm"] }
+            ]
+        };
+
+        // Modal functions
+        function openModal(itemType) {
+            const modal = document.getElementById("itemModal");
+            const modalContent = document.getElementById("modalContent");
+            
+            let content = '';
+            
+            switch(itemType) {
+                case 'primary-weapon':
+                    const primary = characterData.loadout.primaryWeapon;
+                    content = `
+                        <h2 class="text-2xl font-bold mb-4">${primary.name}</h2>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-gray-400">Type</p>
+                                <p class="font-medium">${primary.type}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-400">Damage</p>
+                                <p class="font-medium">${primary.damage}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-400">Accuracy</p>
+                                <p class="font-medium">${primary.accuracy}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-400">Fire Rate</p>
+                                <p class="font-medium">${primary.fireRate} RPM</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-400">Ammo Type</p>
+                                <p class="font-medium">${primary.ammoType}</p>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <p class="text-gray-400">Attachments</p>
+                            <ul class="list-disc list-inside">
+                                ${primary.attachments.map(att => `<li>${att}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                    break;
+                
+                case 'secondary-weapon':
+                    const secondary = characterData.loadout.secondaryWeapon;
+                    content = `
+                        <h2 class="text-2xl font-bold mb-4">${secondary.name}</h2>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-gray-400">Type</p>
+                                <p class="font-medium">${secondary.type}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-400">Damage</p>
+                                <p class="font-medium">${secondary.damage}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-400">Accuracy</p>
+                                <p class="font-medium">${secondary.accuracy}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-400">Fire Rate</p>
+                                <p class="font-medium">${secondary.fireRate} RPM</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-400">Ammo Type</p>
+                                <p class="font-medium">${secondary.ammoType}</p>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <p class="text-gray-400">Attachments</p>
+                            <ul class="list-disc list-inside">
+                                ${secondary.attachments.map(att => `<li>${att}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                    break;
+                
+                case 'armor':
+                    const armor = characterData.loadout.armor;
+                    content = `
+                        <h2 class="text-2xl font-bold mb-4">${armor.name}</h2>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-gray-400">Protection</p>
+                                <p class="font-medium">${armor.protection}%</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-400">Weight</p>
+                                <p class="font-medium">${armor.weight}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-400">Inventory Slots</p>
+                                <p class="font-medium">${armor.slots}</p>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                
+                case 'helmet':
+                    const helmet = characterData.loadout.helmet;
+                    content = `
+                        <h2 class="text-2xl font-bold mb-4">${helmet.name}</h2>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-gray-400">Protection</p>
+                                <p class="font-medium">${helmet.protection}%</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-400">Night Vision</p>
+                                <p class="font-medium">${helmet.nightVision ? 'Yes' : 'No'}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-400">Communication</p>
+                                <p class="font-medium">${helmet.comms}</p>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                
+                case 'medkit':
+                    const medkit = characterData.personalInventory.find(item => item.name === "Medkit");
+                    content = `
+                        <h2 class="text-2xl font-bold mb-4">${medkit.name}</h2>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-gray-400">Type</p>
+                                <p class="font-medium">${medkit.type}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-400">Uses</p>
+                                <p class="font-medium">${medkit.uses}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-400">Effect</p>
+                                <p class="font-medium">${medkit.effect}</p>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                
+                // Add more cases for other items as needed
+                default:
+                    content = `<h2 class="text-2xl font-bold mb-4">Item Details</h2><p>Detailed information about this item.</p>`;
+            }
+            
+            modalContent.innerHTML = content;
+            modal.style.display = "block";
+        }
+
+        function closeModal() {
+            const modal = document.getElementById("itemModal");
+            modal.style.display = "none";
+        }
+
+        // Export JSON function
+        document.getElementById('exportBtn').addEventListener('click', function() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(characterData, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "character_data.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        });
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById("itemModal");
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
