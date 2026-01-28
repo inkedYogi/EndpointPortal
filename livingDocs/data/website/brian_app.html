@@ -1,0 +1,459 @@
+import React, { useState } from 'react';
+
+import { Volume2, Mic, Star, Heart, Smile } from 'lucide-react';
+
+
+
+const SpeechLearningApp = () => {
+
+  const [currentLevel, setCurrentLevel] = useState('sounds');
+
+  const [selectedActivity, setSelectedActivity] = useState(null);
+
+  const [stars, setStars] = useState(0);
+
+  const [isListening, setIsListening] = useState(false);
+
+  const [feedback, setFeedback] = useState('');
+
+
+
+  // Sample activities organized by difficulty
+
+  const activities = {
+
+    sounds: [
+
+      { id: 1, sound: 'B', word: 'Ball', image: '', color: 'bg-blue-100' },
+
+      { id: 2, sound: 'M', word: 'Mom', image: '', color: 'bg-pink-100' },
+
+      { id: 3, sound: 'P', word: 'Pop', image: '', color: 'bg-purple-100' },
+
+      { id: 4, sound: 'T', word: 'Top', image: '', color: 'bg-green-100' },
+
+    ],
+
+    words: [
+
+      { id: 5, word: 'Cat', phrase: 'I see a cat', image: '', color: 'bg-orange-100' },
+
+      { id: 6, word: 'Dog', phrase: 'I see a dog', image: '', color: 'bg-yellow-100' },
+
+      { id: 7, word: 'Cup', phrase: 'I want a cup', image: '', color: 'bg-blue-100' },
+
+    ],
+
+    phrases: [
+
+      { id: 8, phrase: 'I want more', image: '', color: 'bg-green-100' },
+
+      { id: 9, phrase: 'Help me please', image: '', color: 'bg-purple-100' },
+
+      { id: 10, phrase: 'Thank you', image: '', color: 'bg-pink-100' },
+
+    ]
+
+  };
+
+
+
+  // Simulate TTS - in real app, this would call ElevenLabs API
+
+  const playSound = (text) => {
+
+    setFeedback(` Playing: "${text}"`);
+
+    setTimeout(() => setFeedback(''), 2000);
+
+    // Real implementation: await elevenLabs.textToSpeech(text, childVoice)
+
+  };
+
+
+
+  // Simulate STT - in real app, this would call Deepgram API
+
+  const startListening = (targetText) => {
+
+    setIsListening(true);
+
+    setFeedback(' Listening...');
+
+   
+
+    // Simulate recognition after 2 seconds
+
+    setTimeout(() => {
+
+      setIsListening(false);
+
+      const success = Math.random() > 0.3; // 70% success rate for demo
+
+     
+
+      if (success) {
+
+        setFeedback(' Great job! You said it!');
+
+        setStars(stars + 1);
+
+      } else {
+
+        setFeedback(' Let\'s try again together!');
+
+      }
+
+     
+
+      setTimeout(() => setFeedback(''), 3000);
+
+    }, 2000);
+
+   
+
+    // Real implementation:
+
+    // const result = await deepgram.listen(audioStream)
+
+    // compareWithTarget(result.transcript, targetText)
+
+  };
+
+
+
+  const ActivityCard = ({ activity, type }) => (
+
+    <div
+
+      className={`${activity.color} p-6 rounded-lg cursor-pointer hover:shadow-lg transition-all`}
+
+      onClick={() => setSelectedActivity({...activity, type})}
+
+    >
+
+      <div className="text-6xl text-center mb-3">{activity.image}</div>
+
+      <div className="text-2xl font-bold text-center text-gray-800">
+
+        {type === 'sounds' ? activity.sound : activity.word || activity.phrase}
+
+      </div>
+
+    </div>
+
+  );
+
+
+
+  return (
+
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50 p-6">
+
+      {/* Header */}
+
+      <div className="max-w-4xl mx-auto mb-8">
+
+        <div className="bg-white rounded-xl shadow-lg p-6 flex justify-between items-center">
+
+          <h1 className="text-3xl font-bold text-purple-600">Speech Practice Fun!</h1>
+
+          <div className="flex items-center gap-2 text-2xl">
+
+            <Star className="text-yellow-400 fill-yellow-400" />
+
+            <span className="font-bold text-gray-700">{stars}</span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      {/* Level Selector */}
+
+      <div className="max-w-4xl mx-auto mb-6">
+
+        <div className="flex gap-4 justify-center">
+
+          <button
+
+            onClick={() => setCurrentLevel('sounds')}
+
+            className={`px-6 py-3 rounded-lg font-bold text-lg transition-all ${
+
+              currentLevel === 'sounds'
+
+                ? 'bg-purple-500 text-white shadow-lg'
+
+                : 'bg-white text-gray-600 hover:bg-gray-100'
+
+            }`}
+
+          >
+
+             Sounds
+
+          </button>
+
+          <button
+
+            onClick={() => setCurrentLevel('words')}
+
+            className={`px-6 py-3 rounded-lg font-bold text-lg transition-all ${
+
+              currentLevel === 'words'
+
+                ? 'bg-purple-500 text-white shadow-lg'
+
+                : 'bg-white text-gray-600 hover:bg-gray-100'
+
+            }`}
+
+          >
+
+             Words
+
+          </button>
+
+          <button
+
+            onClick={() => setCurrentLevel('phrases')}
+
+            className={`px-6 py-3 rounded-lg font-bold text-lg transition-all ${
+
+              currentLevel === 'phrases'
+
+                ? 'bg-purple-500 text-white shadow-lg'
+
+                : 'bg-white text-gray-600 hover:bg-gray-100'
+
+            }`}
+
+          >
+
+             Phrases
+
+          </button>
+
+        </div>
+
+      </div>
+
+
+
+      {/* Feedback Area */}
+
+      {feedback && (
+
+        <div className="max-w-4xl mx-auto mb-6">
+
+          <div className="bg-white rounded-lg shadow-lg p-4 text-center text-xl font-bold text-purple-600 animate-bounce">
+
+            {feedback}
+
+          </div>
+
+        </div>
+
+      )}
+
+
+
+      {/* Main Content */}
+
+      <div className="max-w-4xl mx-auto">
+
+        {!selectedActivity ? (
+
+          // Activity Grid
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+            {activities[currentLevel].map(activity => (
+
+              <ActivityCard key={activity.id} activity={activity} type={currentLevel} />
+
+            ))}
+
+          </div>
+
+        ) : (
+
+          // Practice Screen
+
+          <div className="bg-white rounded-xl shadow-xl p-8">
+
+            <button
+
+              onClick={() => setSelectedActivity(null)}
+
+              className="mb-6 text-purple-600 hover:text-purple-800 font-bold"
+
+            >
+
+              ← Back
+
+            </button>
+
+           
+
+            <div className="text-center">
+
+              <div className="text-8xl mb-6">{selectedActivity.image}</div>
+
+              <h2 className="text-4xl font-bold text-gray-800 mb-8">
+
+                {selectedActivity.type === 'sounds'
+
+                  ? `Sound: ${selectedActivity.sound}`
+
+                  : selectedActivity.word || selectedActivity.phrase}
+
+              </h2>
+
+             
+
+              {selectedActivity.type === 'sounds' && (
+
+                <p className="text-2xl text-gray-600 mb-8">
+
+                  Like in: <span className="font-bold text-purple-600">{selectedActivity.word}</span>
+
+                </p>
+
+              )}
+
+             
+
+              {selectedActivity.phrase && selectedActivity.type !== 'phrases' && (
+
+                <p className="text-2xl text-gray-600 mb-8">
+
+                  Say: <span className="font-bold text-purple-600">{selectedActivity.phrase}</span>
+
+                </p>
+
+              )}
+
+             
+
+              {/* Action Buttons */}
+
+              <div className="flex gap-4 justify-center mb-8">
+
+                <button
+
+                  onClick={() => playSound(
+
+                    selectedActivity.type === 'sounds'
+
+                      ? selectedActivity.word
+
+                      : selectedActivity.phrase || selectedActivity.word
+
+                  )}
+
+                  className="flex items-center gap-2 bg-blue-500 text-white px-8 py-4 rounded-xl text-xl font-bold hover:bg-blue-600 transition-all shadow-lg"
+
+                >
+
+                  <Volume2 size={28} />
+
+                  Listen
+
+                </button>
+
+               
+
+                <button
+
+                  onClick={() => startListening(
+
+                    selectedActivity.type === 'sounds'
+
+                      ? selectedActivity.word
+
+                      : selectedActivity.phrase || selectedActivity.word
+
+                  )}
+
+                  disabled={isListening}
+
+                  className={`flex items-center gap-2 px-8 py-4 rounded-xl text-xl font-bold transition-all shadow-lg ${
+
+                    isListening
+
+                      ? 'bg-red-500 text-white animate-pulse'
+
+                      : 'bg-green-500 text-white hover:bg-green-600'
+
+                  }`}
+
+                >
+
+                  <Mic size={28} />
+
+                  {isListening ? 'Listening...' : 'Your Turn'}
+
+                </button>
+
+              </div>
+
+             
+
+              {/* Tips */}
+
+              <div className="bg-purple-50 rounded-lg p-6 text-left">
+
+                <h3 className="font-bold text-lg mb-2 text-purple-700"> Tips for Practice:</h3>
+
+                <ul className="space-y-2 text-gray-700">
+
+                  <li>• Listen first, then try!</li>
+
+                  <li>• Watch your mouth in a mirror</li>
+
+                  <li>• Take your time</li>
+
+                  <li>• Practice makes progress!</li>
+
+                </ul>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        )}
+
+      </div>
+
+
+
+      {/* Technical Integration Notes */}
+
+      <div className="max-w-4xl mx-auto mt-8 bg-white rounded-lg shadow-lg p-6">
+
+        <h3 className="font-bold text-lg mb-3 text-gray-800"> Integration Points:</h3>
+
+        <div className="space-y-2 text-sm text-gray-600">
+
+          <p><strong>Deepgram STT:</strong> Captures child's speech attempt, provides real-time transcription, can detect specific phonemes</p>
+
+          <p><strong>ElevenLabs TTS:</strong> Models target sounds with clear, child-friendly voice; adjustable speed for demonstration</p>
+
+          <p><strong>Creative Features:</strong> Visual feedback, rewards system, gradual complexity increase, multi-sensory approach</p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  );
+
+};
