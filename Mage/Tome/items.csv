@@ -1,45 +1,45 @@
 item_id,item_name,item_commands,item_description,item_attributes,item_associations,location_created,creating_character,creation_timestamp,current_owner,Item_Weight,Item_Scarab_Value,Item_Type,Item_Capacity
-0,candle,"Light(), Snuff()",A plain white candle. It is very smooth, round, and about 3 inches long.,light source (3 h, mild),None,Herbalist,The Genie,0,None,0.1,1,"Utility",None
-1,lamp,"Light(), Snuff()",A metallic lamp that can be lit, and will oil at a steady rate.,"light source (8h, bright)",oil,Blacksmith,The Genie,0,None,0.5,50,"Utility",None
-2,metal_ingot,Craft(),A metallic prism of base metal that can be worked by a smith,base material of specific alloy,oil,Blacksmith,The Genie,0,None,5,7.5,"Raw Material",None
-3,key,Unlock(),A metallic key. It has distictive teeth...,unlocks by a certain KEY,"lock, metal_ingot",Blacksmith,The Genie,0,None,0.2,-,"Utility",None
-4,lock,Lock(),A metallic lock. It has a distictive keyhole...,locks to a certain KEY,"key, metal_ingot",Blacksmith,The Genie,0,None,1,80,"Tool",None
-5,dagger,"Cut(), Stab()",A metallic cutting tool, with a balanced handle.,"slashing, piercing",metal_ingot,Blacksmith,The Genie,0,BP-DU47,1,10,"Weapon",None
-6,map,"OpenMap(), CloseMap(), MarkMap()",A roll of paper that shows nearby locations.,"bijective, continuous","map_case, world_atlas",Great Hall,The Genie,0,CL-M463,0.5,60,"Tool",None
-7,herb,"Eat(), Sweep()",A specimen of locally growing herbs.,"magical, sealed_under_magic",alchemists_supplies,Gathered Naturally,The Genie,0,AM-W1N6,0.2,1,"Raw Material",None
-8,potion,"Drink(), Throw(), Pour()",A super-item for all potions. The specific potion depends on the specific ingredients.,"Consumable, Throwable, Pourable",alchemists_supplies,Herbalist,The Genie,0,Herbalist,0.3,25,"Consumable",None
-9,alchemists_supplies,Transmute(),A group of special tools for making potions,transforms specific herb combinations into Basic Herbal Remedies,potion,Blacksmith,The Genie,0,Blacksmith,2,100,"Tool",None
-10,short_bow,"Shoot(), Reload(), Restring()",A hunter's staple survival tool. Shoots basic arrow types.,"Short Range, Two-Handed (Attack)","basic_arrows, basic_quiver",Great Hall,The Genie,0,AM-W1N6,2,50,"Weapon",None
-11,basic_arrows,"Shoot(), Reload()",A metal tipped flight shaft, with feathers for guidance.,"straight, breakable (metallic tips recoverable)","short_bow, basic_quiver",Great Hall,The Genie,0,AM-W1N6,0.3,2,"Consumable",None
-12,basic_quiver,"Reload(), Unload()",A rigid leather container that can carry 20 arrows.,"Reloadable, Container","short_bow, basic_arrows",Great Hall,The Genie,0,AM-W1N6,0.5,50,"Container",20
-13,leather_armor,"Don(), Remove()",A full body covering of thick natural leather. Non-Flamable, Shock-Reistant.,Shock-Resistant,herb,Great Hall,The Genie,0,BP-DU47,3,50,"Armor",None
-14,cloth_armor,"Don(), Remove()",A full body covering of thick natural fibers. Warning, flamable. Shock-Absorbing,"Flamable, Shock-Absorbing",herb,Great Hall,The Genie,0,AM-W1N6,2,40,"Armor",None
-15,cloth_robes,"Don(), Remove()",A full body covering of thin natural fibers, with small pockets for spell components.,"Flamable, Shock-Absorbing",herb,Great Hall,The Genie,0,CL-M463,1,30,"Armor",2
-16,ink_vial,"Reload(), Throw(), Pour()",A vial of permanent writting liquid, typically black. Enough to write 4 pages.,"permanent staining, Shatterable",ink_pen,Great Hall,The Genie,0,CL-M463,0.2,5,"Consumable",None
-17,ink_pen,"Write(), Reload()",A small writting pen with an ink dispensing nib, holds 1 vial of ink inside.,Fragile,ink_vial,Great Hall,The Genie,0,CL-M463,0.1,100,"Tool",4
-18,vellum,"Write(), Seal()",A page of delicate writing skin suitable for maps, scrolls, contracts, or bounties.,"Fragile, Sealable",ink_pen,Great Hall,The Genie,0,CL-M463,0.1,5,"Consumable",None
-19,sealing_wax,Seal(),A small amount of wax that can be used with a candle to hold a scoll closed.,"Meltable, Sealable","vellum, candle",Great Hall,The Genie,0,CL-M463,0.2,10,"Consumable",None
-20,hardwood_staff,"Poke(), Whack()",A natural worked wooden staff with tighty woven coth bindings.,"Flamable, Shock-Resistant, Two-Handed (Attack)",None,Great Hall,The Genie,0,CL-M463,3,50,"Weapon",None
-21,steel_sword,"Cut(), Stab()",Forged steel blade,Sharp,"metal_ingot, oil",Blacksmith,The Scaraber,1,Blacksmith,5,100,"Weapon",None
-22,padded_armor,"Don(), Remove()",Protective gear,Light,cloth_armor,Great Hall,The Scaraber,1,None,5,5,"Armor",None
-23,healing_potion,"Drink(), Throw(), Pour()",Restores health,Healing Effect,None,Herbalist,The Scaraber,1,None,0.5,50,"Consumable",None
-24,herb_bundle,Craft(),Medicinal herbs,Various Uses,alchemists_supplies,Gathered Naturally,The Scaraber,1,None,1,10,"Raw Material",None
-25,obsidian_dagger,"Cut(), Stab(), Activate()",Razor-sharp obsidian blade,Precise,firestone,Runecarver,The Scaraber,1,Runecarver,2.5,150,"Weapon",None
-26,reinforced_shield,"Don(), Remove()",Sturdy shield for protection,Resilient,metal_ingot,Blacksmith,The Scaraber,1,None,7,20,"Armor",None
-27,mana_elixir,"Drink(), Throw(), Pour()",Enhances magical abilities,Magic Boost,arcane_crystal,Herbalist,The Scaraber,1,None,0.3,75,"Consumable",None
-28,firestone,"Craft(), Throw()",Magical gem for fire spells,Pyrokinetic,arcane_crystal,Herbalist,The Scaraber,1,None,0.2,30,"Raw Material",None
-29,enchanted_bow,"Shoot(), Reload(), Restring(), Activate()",Bow imbued with arcane power,Arcane,obsidian_dagger,Runecarver,The Scaraber,1,Runecarver,3,250,"Weapon",None
-30,starmetal_chainmail,"Don(), Remove()",Lightweight yet strong armor,Flexible,starmetal_ingot,Blacksmith,The Scaraber,1,None,4.5,80,"Armor",None
-31,potion_of_invisibility,"Drink(), Throw(), Pour()",Renders the drinker invisible,Invisibility,herb_bundle,Herbalist,The Scaraber,1,None,0.5,100,"Consumable",None
-32,poisonous_mushroom,"Eat(), Craft()",Deadly toxin when ingested,Toxic,alchemists_supplies,Gathered Naturally,The Scaraber,1,None,0.1,8,"Raw Material",None
-33,frostblade,"Cut(), Stab(), Activate()",Blade infused with frost magic,Frostbite,firestone,Runecarver,The Scaraber,1,Runecarver,4,350,"Weapon",None
-34,reinforced_plate_armor,"Don(), Remove()",Heavy-duty protective gear,Heavy,metal_ingot,Blacksmith,The Scaraber,1,None,10,100,"Armor",None
-35,potion_of_strength,"Drink(), Throw(), Pour()",Enhances physical abilities,Strength Boost,poisonous_mushroom,Herbalist,The Scaraber,1,None,0.5,80,"Consumable",None
-36,arcane_crystal,"Craft(), Throw()",Crystal imbued with magic,Arcane Energy,alchemists_supplies,Gathered Naturally,The Scaraber,1,None,0.5,45,"Raw Material",None
-37,thunderstaff,"Poke(), Whack(), Activate()",Staff crackling with electricity,Electric,obsidian_dagger,Runecarver,The Scaraber,1,Runecarver,6,55,"Weapon",None
-38,elven_cloak,"Don(), Remove()",Cloak woven with elven magic,Camouflage,padded_armor,Great Hall,The Scaraber,1,None,2.5,60,"Armor",None
-39,potion_of_flight,"Drink(), Throw(), Pour()",Grants temporary flight,Levitation,ink_vial,Herbalist,The Scaraber,1,None,1,120,"Consumable",None
-40,starmetal_ingot,Craft(),Rare metal of celestial origin.,Star-forged; High-Density,"starmetal_chainmail, oil",Blacksmith,The Scaraber,1,None,5.0,150,"Raw Material",None
-41,oil,Pour(),A viscous liquid used for lamps and smithing.,Flammable,"lamp, metal_ingot, steel_sword, starmetal_ingot",Blacksmith,The Genie,0,None,0.2,5,"Consumable",None
-42,map_case,Open(),A rigid leather tube for protecting delicate papers.,Waterproof; Rigid,"map, vellum",Great Hall,The Genie,0,None,0.5,15,"Container",5
-43,world_atlas,Open(),A bound collection of maps covering the known realms.,Comprehensive,"map, vellum",Great Hall,The Genie,0,None,1.5,200,"Tool",None
+0,candle,"Light(), Snuff()","A plain white candle. It is very smooth, round, and about 3 inches long.","light source (3 h, mild)",None,Herbalist,The Genie,0,None,0.1,1,"Utility",None
+1,lamp,"Light(), Snuff()","A metallic lamp that can be lit, and will oil at a steady rate.","light source (8h, bright)",oil,Blacksmith,The Genie,0,None,0.5,50,"Utility",None
+2,metal_ingot,Craft(),"A metallic prism of base metal that can be worked by a smith.","base material of specific alloy",oil,Blacksmith,The Genie,0,None,5,7.5,"Raw Material",None
+3,key,Unlock(),"A metallic key. It has distictive teeth...","unlocks by a certain KEY","lock, metal_ingot",Blacksmith,The Genie,0,None,0.2,-,"Utility",None
+4,lock,Lock(),"A metallic lock. It has a distictive keyhole...","locks to a certain KEY","key, metal_ingot",Blacksmith,The Genie,0,None,1,80,"Tool",None
+5,dagger,"Cut(), Stab()","A metallic cutting tool, with a balanced handle.","slashing, piercing",metal_ingot,Blacksmith,The Genie,0,BP-DU47,1,10,"Weapon",None
+6,map,"OpenMap(), CloseMap(), MarkMap()","A roll of paper that shows nearby locations.","bijective, continuous","map_case, world_atlas",Great Hall,The Genie,0,CL-M463,0.5,60,"Tool",None
+7,herb,"Eat(), Sweep()","A specimen of locally growing herbs.","magical, sealed_under_magic",alchemists_supplies,Gathered Naturally,The Genie,0,AM-W1N6,0.2,1,"Raw Material",None
+8,potion,"Drink(), Throw(), Pour()","A super-item for all potions. The specific potion depends on the specific ingredients.","Consumable, Throwable, Pourable",alchemists_supplies,Herbalist,The Genie,0,Herbalist,0.3,25,"Consumable",None
+9,alchemists_supplies,Transmute(),"A group of special tools for making potions.","transforms specific herb combinations",potion,Blacksmith,The Genie,0,Blacksmith,2,100,"Tool",None
+10,short_bow,"Shoot(), Reload(), Restring()","A hunter's staple survival tool. Shoots basic arrow types.","Short Range, Two-Handed (Attack)","basic_arrows, basic_quiver",Great Hall,The Genie,0,AM-W1N6,2,50,"Weapon",None
+11,basic_arrows,"Shoot(), Reload()","A metal tipped flight shaft, with feathers for guidance.","straight, breakable (metallic tips recoverable)","short_bow, basic_quiver",Great Hall,The Genie,0,AM-W1N6,0.3,2,"Consumable",None
+12,basic_quiver,"Reload(), Unload()","A rigid leather container that can carry 20 arrows.","Reloadable, Container","short_bow, basic_arrows",Great Hall,The Genie,0,AM-W1N6,0.5,50,"Container",20
+13,leather_armor,"Don(), Remove()","A full body covering of thick natural leather. Non-Flamable, Shock-Reistant.",Shock-Resistant,herb,Great Hall,The Genie,0,BP-DU47,3,50,"Armor",None
+14,cloth_armor,"Don(), Remove()","A full body covering of thick natural fibers. Warning, flamable. Shock-Absorbing","Flamable, Shock-Absorbing",herb,Great Hall,The Genie,0,AM-W1N6,2,40,"Armor",None
+15,cloth_robes,"Don(), Remove()","A full body covering of thin natural fibers, with small pockets for spell components.","Flamable, Shock-Absorbing",herb,Great Hall,The Genie,0,CL-M463,1,30,"Armor",2
+16,ink_vial,"Reload(), Throw(), Pour()","A vial of permanent writting liquid, typically black. Enough to write 4 pages.","permanent staining, Shatterable",ink_pen,Great Hall,The Genie,0,CL-M463,0.2,5,"Consumable",None
+17,ink_pen,"Write(), Reload()","A small writting pen with an ink dispensing nib, holds 1 vial of ink inside.",Fragile,ink_vial,Great Hall,The Genie,0,CL-M463,0.1,100,"Tool",4
+18,vellum,"Write(), Seal()","A page of delicate writing skin suitable for maps, scrolls, contracts, or bounties.","Fragile, Sealable",ink_pen,Great Hall,The Genie,0,CL-M463,0.1,5,"Consumable",None
+19,sealing_wax,Seal(),"A small amount of wax that can be used with a candle to hold a scoll closed.","Meltable, Sealable","vellum, candle",Great Hall,The Genie,0,CL-M463,0.2,10,"Consumable",None
+20,hardwood_staff,"Poke(), Whack()","A natural worked wooden staff with tighty woven coth bindings.","Flamable, Shock-Resistant, Two-Handed (Attack)",None,Great Hall,The Genie,0,CL-M463,3,50,"Weapon",None
+21,steel_sword,"Cut(), Stab()","Forged steel blade",Sharp,"metal_ingot, oil",Blacksmith,The Scaraber,1,Blacksmith,5,100,"Weapon",None
+22,padded_armor,"Don(), Remove()","Protective gear",Light,cloth_armor,Great Hall,The Scaraber,1,None,5,5,"Armor",None
+23,healing_potion,"Drink(), Throw(), Pour()","Restores health","Healing Effect",None,Herbalist,The Scaraber,1,None,0.5,50,"Consumable",None
+24,herb_bundle,Craft(),"Medicinal herbs","Various Uses",alchemists_supplies,Gathered Naturally,The Scaraber,1,None,1,10,"Raw Material",None
+25,obsidian_dagger,"Cut(), Stab(), Activate()","Razor-sharp obsidian blade",Precise,firestone,Runecarver,The Scaraber,1,Runecarver,2.5,150,"Weapon",None
+26,reinforced_shield,"Don(), Remove()","Sturdy shield for protection",Resilient,metal_ingot,Blacksmith,The Scaraber,1,None,7,20,"Armor",None
+27,mana_elixir,"Drink(), Throw(), Pour()","Enhances magical abilities","Magic Boost",arcane_crystal,Herbalist,The Scaraber,1,None,0.3,75,"Consumable",None
+28,firestone,"Craft(), Throw()","Magical gem for fire spells",Pyrokinetic,arcane_crystal,Herbalist,The Scaraber,1,None,0.2,30,"Raw Material",None
+29,enchanted_bow,"Shoot(), Reload(), Restring(), Activate()","Bow imbued with arcane power",Arcane,obsidian_dagger,Runecarver,The Scaraber,1,Runecarver,3,250,"Weapon",None
+30,starmetal_chainmail,"Don(), Remove()","Lightweight yet strong armor",Flexible,starmetal_ingot,Blacksmith,The Scaraber,1,None,4.5,80,"Armor",None
+31,potion_of_invisibility,"Drink(), Throw(), Pour()","Renders the drinker invisible",Invisibility,herb_bundle,Herbalist,The Scaraber,1,None,0.5,100,"Consumable",None
+32,poisonous_mushroom,"Eat(), Craft()","Deadly toxin when ingested",Toxic,alchemists_supplies,Gathered Naturally,The Scaraber,1,None,0.1,8,"Raw Material",None
+33,frostblade,"Cut(), Stab(), Activate()","Blade infused with frost magic",Frostbite,firestone,Runecarver,The Scaraber,1,Runecarver,4,350,"Weapon",None
+34,reinforced_plate_armor,"Don(), Remove()","Heavy-duty protective gear",Heavy,metal_ingot,Blacksmith,The Scaraber,1,None,10,100,"Armor",None
+35,potion_of_strength,"Drink(), Throw(), Pour()","Enhances physical abilities","Strength Boost",poisonous_mushroom,Herbalist,The Scaraber,1,None,0.5,80,"Consumable",None
+36,arcane_crystal,"Craft(), Throw()","Crystal imbued with magic","Arcane Energy",alchemists_supplies,Gathered Naturally,The Scaraber,1,None,0.5,45,"Raw Material",None
+37,thunderstaff,"Poke(), Whack(), Activate()","Staff crackling with electricity",Electric,obsidian_dagger,Runecarver,The Scaraber,1,Runecarver,6,55,"Weapon",None
+38,elven_cloak,"Don(), Remove()","Cloak woven with elven magic",Camouflage,padded_armor,Great Hall,The Scaraber,1,None,2.5,60,"Armor",None
+39,potion_of_flight,"Drink(), Throw(), Pour()","Grants temporary flight",Levitation,ink_vial,Herbalist,The Scaraber,1,None,1,120,"Consumable",None
+40,starmetal_ingot,Craft(),"Rare metal of celestial origin.","Star-forged; High-Density","starmetal_chainmail, oil",Blacksmith,The Scaraber,1,None,5.0,150,"Raw Material",None
+41,oil,Pour(),"A viscous liquid used for lamps and smithing.",Flammable,"lamp, metal_ingot, steel_sword, starmetal_ingot",Blacksmith,The Genie,0,None,0.2,5,"Consumable",None
+42,map_case,Open(),"A rigid leather tube for protecting delicate papers.","Waterproof; Rigid","map, vellum",Great Hall,The Genie,0,None,0.5,15,"Container",5
+43,world_atlas,Open(),"A bound collection of maps covering the known realms.",Comprehensive,"map, vellum",Great Hall,The Genie,0,None,1.5,200,"Tool",None
