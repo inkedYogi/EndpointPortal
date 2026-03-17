@@ -1,0 +1,320 @@
+{
+  "Mage/BookReqs.csv": {
+    "status": "OK",
+    "columns": [
+      "Title",
+      " Field",
+      " Bounus",
+      " Int_Req",
+      " Field",
+      " Bonus",
+      " Wis_Req",
+      " Field",
+      " Bonus"
+    ]
+  },
+  "Mage/DRM.csv": {
+    "status": "OK",
+    "columns": [
+      "DRM",
+      "💃",
+      "🦌",
+      "🐎",
+      "🐘",
+      "🦉",
+      "🦊",
+      "🧜",
+      "🦁",
+      "🦑"
+    ]
+  },
+  "Mage/FRM.csv": {
+    "status": "OK",
+    "columns": [
+      "FRM",
+      "🪔 The Lamplighters (NG)",
+      "👴 The Wanderer (LG)",
+      "🦄 The Church of the New God (LG)",
+      "💮 ‘White Lotus’ secret society (LG & NG & CG)",
+      "🦢 The Monks (NG)",
+      "🍄 Myconids (N)",
+      "Gold Dragons",
+      "🗺️ The Cartographer’s Guild (LN)",
+      "🎊 The Brotherhood of Magic (LN)",
+      "🍀 The Druid’s Circle (N)",
+      "🐲 The Cult of the Dragon (LE)",
+      "💂 The Followers of the Wanderer (LG)",
+      "Copper Dragons",
+      "🏆 The Arcane Sisterhood (NG)",
+      "🚶‍♂️ The Nomadic Tribes of the Great Plains (CN)",
+      "🛠️ The Rebels of the Global Desert Age (CG)",
+      "🏳️‍🌈 The Buckaneers of the Enlightenment Age (CN)",
+      "🌄 The Order of the Undying Sun (LG)",
+      "🐢 The Guardians of the Elemental Temples (NG)",
+      "Silver Dragons",
+      "🐦 The Knights of the Crimson Moon (CG)",
+      "🐉 White Dragon (N)",
+      "Brass Dragons",
+      "🐪 The Trade Caravaners of The Bronze Age (NG)",
+      "🧝 Wild Elves (CN)",
+      "⚜️ Metallic Dragons (G)",
+      "🌟 The Order of the Silver Star (LG)",
+      "🐭 The Guild of Thieves (NE)",
+      "🕵The Assassins Guild (subset of merchant’s guild) (NE)",
+      "🦎 Kobolds and Dragonkin (NE)",
+      "🎃 The BBEG and his cohort (LE)",
+      "👓 The Shadowy Syndicate (LE)",
+      "🦚 The Cult of the Raven Queen (LE)",
+      "🐱 The Lion’s Legion (LG)",
+      "🦟 The Highway Patrollers (LN)",
+      "🏴‍☠️ The Sky-pirates (Who have portable portal tech) (NE)",
+      "⛏️ The Dwarven Clans (LG)",
+      "⚔️ The Warriors of the Global Desert Age (LE)",
+      "🐙 The Cult of the Great Old One (CE)",
+      "Red Dragons",
+      "Green Dragons",
+      "🧛 The Undead Warlord of the Dark Age (CE)",
+      "🧚 The Fey (LG)",
+      "🤺 The Elven Kingdoms (CG)",
+      "Blue Dragons",
+      "🀄 Chromatic Dragons (E)",
+      "🔱 Troglodytes (CN)",
+      "👹 Goblins & Ogres (CE)",
+      "Black Dragons",
+      "🦂 Gnoll Raiders (CE)",
+      "🐌 The Cult of the Devourer (CE)"
+    ]
+  },
+  "Mage/LCM.csv": {
+    "status": "OK",
+    "columns": [
+      "LCM",
+      "Common",
+      "Neko'ya",
+      "Felisian",
+      "Urtiodactyln",
+      "Wildtounge",
+      "Ignan",
+      "Terran",
+      "Celestial",
+      "Infernal",
+      "Draconic"
+    ]
+  },
+  "Mage/Landforms.csv": {
+    "status": "OK",
+    "columns": [
+      "Name",
+      "Desc",
+      "mountain",
+      "dry mountain",
+      "wet mountain",
+      "peak mountain",
+      "forest",
+      "tundra forest",
+      "rain forest",
+      "dead forest",
+      "plains",
+      "lush plains",
+      "dry plains",
+      "rocky plains",
+      "desert",
+      "high desert",
+      "windy desert",
+      "cold desert",
+      "ocean",
+      "reef ocean",
+      "shallow ocean",
+      "deep ocean",
+      "beach coast",
+      "cliff coast",
+      "snow",
+      "glacier"
+    ]
+  },
+  "Mage/Portal_Map.csv": {
+    "status": "OK",
+    "columns": [
+      "🌌",
+      "🏔️",
+      "⚒️",
+      "🏰",
+      "🏫",
+      "🛤️",
+      "⚡",
+      "🔬",
+      "🚀",
+      "🥀",
+      "💐",
+      "☢️",
+      "🌋",
+      "🛰️"
+    ]
+  },
+  "Mage/RLM.csv": {
+    "status": "OK",
+    "columns": [
+      "RLM",
+      "[Human]",
+      "[Dwarf]",
+      "[Elf]",
+      "[Gnome]",
+      "[Half-Elf]",
+      "[Half-orc]",
+      "[Halfling]",
+      "[Luxodon]",
+      "[Rhinodon]",
+      "[Hippodon]",
+      "[Ursid]",
+      "[Leonid]",
+      "[Tigron]",
+      "[Lynxian]",
+      "[Kajit]",
+      "[Gnoll]",
+      "[Salamander]",
+      "[Bullywug]",
+      "[Lizardfolk]",
+      "[Gekian]",
+      "[Avian]",
+      "[Tengu]",
+      "[Tiefling]",
+      "[Aasimar]",
+      "[Ifriti]",
+      "[Udine]",
+      "[Slyph]",
+      "[Oread]"
+    ]
+  },
+  "Mage/Tome/abilities.csv": {
+    "status": "OK",
+    "columns": [
+      "Ability_ID",
+      "Emoji",
+      "Name",
+      "Description"
+    ]
+  },
+  "Mage/Tome/actions.csv": {
+    "status": "OK",
+    "columns": [
+      "Action_ID",
+      "ActionEmoji",
+      "ActionKeyword",
+      "ActionSynonyms",
+      "ActionDesc",
+      "ActionPointCost",
+      "ActionType",
+      "ActionDuration",
+      "ActionCategory",
+      "One_Handed_Commands",
+      "Two_Handed_Commands"
+    ]
+  },
+  "Mage/Tome/characters.csv": {
+    "status": "OK",
+    "columns": [
+      "📖",
+      "Character_ID",
+      "Name",
+      "Memberships",
+      "Role",
+      "Description",
+      "Relationships",
+      "Items_CSV_Path",
+      "Character_CSV",
+      "Notes",
+      "Room_Password"
+    ]
+  },
+  "Mage/Tome/great_trees.csv": {
+    "status": "OK",
+    "columns": [
+      "Tree_ID",
+      "Tree",
+      "Guardian Info",
+      "Great Properties",
+      "Hydropathy index",
+      "Molecular mass",
+      "Amino Acid group"
+    ]
+  },
+  "Mage/Tome/items.csv": {
+    "status": "OK",
+    "columns": [
+      "item_id",
+      "item_name",
+      "item_commands",
+      "item_description",
+      "item_attributes",
+      "item_associations",
+      "location_created",
+      "creating_character",
+      "creation_timestamp",
+      "current_owner",
+      "Item_Weight",
+      "Item_Scarab_Value",
+      "Item_Type",
+      "Item_Capacity"
+    ]
+  },
+  "Mage/Tome/locations.csv": {
+    "status": "OK",
+    "columns": [
+      "location_id",
+      "name",
+      "description",
+      "type",
+      "accessibility",
+      "current_city",
+      "special_features",
+      "environmental_conditions",
+      "mana_interaction"
+    ]
+  },
+  "Mage/Tome/skills.csv": {
+    "status": "OK",
+    "columns": [
+      "id",
+      "Skill",
+      "Category",
+      "Base Stat",
+      "Untrained Description",
+      "Trained Description"
+    ]
+  },
+  "Mage/Tome/spells.csv": {
+    "status": "OK",
+    "columns": [
+      "type",
+      "Spell_ID",
+      "MagicSchool",
+      "Level",
+      "Spellbook Pages",
+      "RequiredComponents",
+      "CastingTIme",
+      "SpellRange",
+      "AreaOfEffect",
+      "NumTargets",
+      "EffectDuration",
+      "DamageDelt",
+      "ArcaneFocus",
+      "Traditional Material Component"
+    ]
+  },
+  "Mage/Tome/tomes.csv": {
+    "status": "OK",
+    "columns": [
+      "Tome_ID",
+      "Title",
+      "Unlocks",
+      "Field_1",
+      "Bonus_1",
+      "Int_Req",
+      "Field_2",
+      "Bonus_2",
+      "Wis_Req",
+      "Field_3",
+      "Bonus_3"
+    ]
+  }
+}
