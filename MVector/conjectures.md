@@ -30,7 +30,9 @@ Formally: The transition cost between fiber regimes σ_a → σ_b via the Galile
 ΔE∼∣ω∣3/4,ω=2−1\Delta E \sim |\omega|^{3/4}, \quad \omega = \sqrt{2} - 1ΔE∼∣ω∣3/4,ω=2​−1
 where ω is the characteristic frequency of the transition. Low-frequency (slow, deliberate) reorientation approaches zero cost; high-frequency (rapid, oscillating) reorientation diverges.
 
-Conjecture E: The four operators are not independent — they're coordinate projections of one object
+Conjecture E: 
+
+The four operators are not independent — they're coordinate projections of one object
 Plain language: D_s, D_k, and the other operators on H₄ look like four separate things you can apply to a MonadElement. The conjecture says they're actually four views of the same underlying geometric object — the σ-fiber bundle — seen from four different angles.
 Formally: There exists a single operator Ω on the σ-fiber bundle such that:
 Ds=Ω∣σ=0,Dk=Ω∣σ=1,etc.D_s = \Omega\big|_{\sigma=0}, \quad D_k = \Omega\big|_{\sigma=1}, \quad \text{etc.}Ds​=Ω​σ=0​,Dk​=Ω​σ=1​,etc.
